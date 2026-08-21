@@ -274,7 +274,7 @@ export const defaultSiteSettings: SiteSettings = {
     containerWidth: 1280,
     fontFamily: "'Lexend', 'Montserrat', sans-serif",
     headingFontFamily: "'Oxanium', 'Lexend', sans-serif",
-    baseFontSize: 16,
+    baseFontSize: 20,
     primaryColor: '#183b83',
     secondaryColor: '#7045dd',
     accentColor: '#7feeff',
