@@ -1,12 +1,17 @@
 <script setup lang="ts">
+import BackgroundPresetPicker from './BackgroundPresetPicker.vue'
 import type { GlobalSettings, HeaderSettings, SiteSettings } from '../../data/site-content'
 
 const props = defineProps<{
   modelValue: SiteSettings
   mode: 'global' | 'header'
+  heroBackground?: string
 }>()
 
-const emit = defineEmits<{ 'update:modelValue': [value: SiteSettings] }>()
+const emit = defineEmits<{
+  'update:modelValue': [value: SiteSettings]
+  'update:heroBackground': [value: string]
+}>()
 
 const updateGlobal = <K extends keyof GlobalSettings>(key: K, value: GlobalSettings[K]) => {
   emit('update:modelValue', { ...props.modelValue, global: { ...props.modelValue.global, [key]: value } })
@@ -30,6 +35,11 @@ const globalColors: Array<{ key: keyof GlobalSettings; label: string; fallback: 
 
 <template>
   <div v-if="mode === 'global'" class="global-style-editor">
+    <div class="design-group">
+      <div class="design-group__title"><strong>Ảnh nền cố định toàn website</strong><span>Nền luôn luôn cố định xuyên suốt tất cả các section</span></div>
+      <BackgroundPresetPicker :model-value="heroBackground || ''" @update:model-value="emit('update:heroBackground', $event)" />
+    </div>
+
     <div class="design-group">
       <div class="design-group__title"><strong>Typography</strong><span>Font và cỡ chữ toàn website</span></div>
       <label class="config-field"><span>Font nội dung</span><input type="text" :value="modelValue.global.fontFamily" @input="updateGlobal('fontFamily', ($event.target as HTMLInputElement).value)" /></label>

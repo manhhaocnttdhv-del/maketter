@@ -17,6 +17,7 @@ const colorWithOpacity = (color: string, opacity: number) => {
 
 export const globalSiteStyle = (site: SiteContent): CSSProperties => {
   const global = site.settings.global
+  const bgImage = site.assets.heroBackground ? `url("${site.assets.heroBackground}")` : undefined
   return {
     '--site-container-width': `${global.containerWidth}px`,
     '--site-font-family': global.fontFamily,
@@ -29,7 +30,13 @@ export const globalSiteStyle = (site: SiteContent): CSSProperties => {
     '--site-heading-color': global.headingColor,
     '--site-button-radius': `${global.buttonRadius}px`,
     '--site-page-background': global.pageBackground,
+    '--site-global-bg-image': bgImage,
     backgroundColor: global.pageBackground,
+    backgroundImage: bgImage,
+    backgroundAttachment: 'fixed',
+    backgroundPosition: 'center center',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
     color: global.textColor,
     fontFamily: global.fontFamily,
     fontSize: `${global.baseFontSize}px`,

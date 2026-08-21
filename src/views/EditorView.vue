@@ -116,7 +116,7 @@ const selectedModel = computed<unknown>({
     if (!site.value) return {}
     const value = site.value
     switch (activeSection.value) {
-      case 'global': return { meta: value.meta }
+      case 'global': return { meta: value.meta, heroBackground: value.assets.heroBackground }
       case 'header': return { navigation: value.navigation, headerLogo: value.assets.headerLogo }
       case 'hero': return { ...value.hero, heroBackground: value.assets.heroBackground, heroTitleArtwork: value.assets.heroTitleArtwork, heroOrganizations: value.assets.heroOrganizations }
       case 'intro': return { ...value.intro, organizerSlides: value.assets.organizerSlides }
@@ -142,9 +142,12 @@ const selectedModel = computed<unknown>({
     if (!site.value || typeof model !== 'object' || model === null) return
     const value = model as Record<string, unknown>
     switch (activeSection.value) {
-      case 'global':
-        site.value.meta = value.meta as SiteContent['meta']
+      case 'global': {
+        const { heroBackground, meta } = value as { meta: SiteContent['meta']; heroBackground?: string }
+        if (meta) site.value.meta = meta
+        if (heroBackground !== undefined) site.value.assets.heroBackground = String(heroBackground)
         break
+      }
       case 'header':
         site.value.navigation = value.navigation as SiteContent['navigation']
         site.value.assets.headerLogo = String(value.headerLogo ?? '')
@@ -460,7 +463,13 @@ onBeforeUnmount(() => {
         </div>
         <div class="inspector-scroll">
           <ConfigField v-if="activeTab === 'content'" v-model="selectedModel" @upload-error="handleUploadError" />
-          <GlobalStyleEditor v-else-if="activeSection === 'global' || activeSection === 'header'" v-model="site.settings" :mode="activeSection" />
+          <GlobalStyleEditor
+            v-else-if="activeSection === 'global' || activeSection === 'header'"
+            v-model="site.settings"
+            :hero-background="site.assets.heroBackground"
+            :mode="activeSection"
+            @update:hero-background="site.assets.heroBackground = $event"
+          />
           <SectionStyleEditor v-else v-model="selectedSectionStyle" @upload-error="handleUploadError" />
         </div>
         <div class="inspector-actions">
