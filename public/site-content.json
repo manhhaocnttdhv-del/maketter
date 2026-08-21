@@ -1,0 +1,222 @@
+{
+  "meta": {
+    "title": "Tầm Nhìn Thương Hiệu 2026",
+    "description": "Tầm Nhìn Thương Hiệu 2026 – Round To Unbound"
+  },
+  "settings": {
+    "global": {
+      "containerWidth": 1280,
+      "fontFamily": "'Lexend', 'Montserrat', sans-serif",
+      "headingFontFamily": "'Oxanium', 'Lexend', sans-serif",
+      "baseFontSize": 16,
+      "primaryColor": "#183b83",
+      "secondaryColor": "#7045dd",
+      "accentColor": "#7feeff",
+      "pageBackground": "#08183f",
+      "textColor": "#eef6ff",
+      "headingColor": "#ffffff",
+      "buttonRadius": 999,
+      "scrollBehavior": "smooth"
+    },
+    "header": {
+      "enabled": true,
+      "sticky": true,
+      "height": 78,
+      "logoWidth": 64,
+      "containerWidth": 1280,
+      "paddingX": 28,
+      "navGap": 40,
+      "fontSize": 16,
+      "backgroundColor": "rgba(4, 7, 28, 0.96)",
+      "textColor": "#ffffff",
+      "backdropBlur": 16
+    },
+    "sectionOrder": [
+      "intro", "about", "metrics", "voices", "theme", "rules", "timeline",
+      "prizes", "benefits", "activities", "faq", "partners", "footer"
+    ],
+    "sections": {
+      "hero": { "enabled": true, "paddingTop": 0, "paddingBottom": 0, "marginTop": 0, "marginBottom": 0, "minHeight": 650, "containerWidth": 1280, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "left", "layout": "default", "columns": 0, "borderRadius": 0, "customClass": "" },
+      "intro": { "enabled": true, "paddingTop": 52, "paddingBottom": 58, "marginTop": 0, "marginBottom": 0, "minHeight": 0, "containerWidth": 1180, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "left", "layout": "default", "columns": 0, "borderRadius": 0, "customClass": "" },
+      "about": { "enabled": true, "paddingTop": 52, "paddingBottom": 52, "marginTop": 0, "marginBottom": 0, "minHeight": 0, "containerWidth": 1180, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "left", "layout": "default", "columns": 0, "borderRadius": 0, "customClass": "" },
+      "metrics": { "enabled": true, "paddingTop": 44, "paddingBottom": 48, "marginTop": 0, "marginBottom": 0, "minHeight": 0, "containerWidth": 1180, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "center", "layout": "default", "columns": 3, "borderRadius": 0, "customClass": "" },
+      "voices": { "enabled": true, "paddingTop": 48, "paddingBottom": 54, "marginTop": 0, "marginBottom": 0, "minHeight": 0, "containerWidth": 1180, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "center", "layout": "default", "columns": 0, "borderRadius": 0, "customClass": "" },
+      "theme": { "enabled": true, "paddingTop": 52, "paddingBottom": 52, "marginTop": 0, "marginBottom": 0, "minHeight": 0, "containerWidth": 1180, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "left", "layout": "default", "columns": 0, "borderRadius": 0, "customClass": "" },
+      "rules": { "enabled": true, "paddingTop": 52, "paddingBottom": 52, "marginTop": 0, "marginBottom": 0, "minHeight": 0, "containerWidth": 1180, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "left", "layout": "default", "columns": 3, "borderRadius": 0, "customClass": "" },
+      "timeline": { "enabled": true, "paddingTop": 52, "paddingBottom": 52, "marginTop": 0, "marginBottom": 0, "minHeight": 0, "containerWidth": 1180, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "left", "layout": "default", "columns": 0, "borderRadius": 0, "customClass": "" },
+      "prizes": { "enabled": true, "paddingTop": 52, "paddingBottom": 52, "marginTop": 0, "marginBottom": 0, "minHeight": 0, "containerWidth": 1180, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "left", "layout": "default", "columns": 2, "borderRadius": 0, "customClass": "" },
+      "benefits": { "enabled": true, "paddingTop": 52, "paddingBottom": 52, "marginTop": 0, "marginBottom": 0, "minHeight": 0, "containerWidth": 1180, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "left", "layout": "default", "columns": 2, "borderRadius": 0, "customClass": "" },
+      "activities": { "enabled": true, "paddingTop": 52, "paddingBottom": 52, "marginTop": 0, "marginBottom": 0, "minHeight": 0, "containerWidth": 1180, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "left", "layout": "default", "columns": 0, "borderRadius": 0, "customClass": "" },
+      "faq": { "enabled": true, "paddingTop": 48, "paddingBottom": 54, "marginTop": 0, "marginBottom": 0, "minHeight": 0, "containerWidth": 900, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "left", "layout": "default", "columns": 0, "borderRadius": 0, "customClass": "" },
+      "partners": { "enabled": true, "paddingTop": 52, "paddingBottom": 54, "marginTop": 0, "marginBottom": 0, "minHeight": 0, "containerWidth": 1180, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "center", "layout": "default", "columns": 4, "borderRadius": 0, "customClass": "" },
+      "footer": { "enabled": true, "paddingTop": 36, "paddingBottom": 42, "marginTop": 0, "marginBottom": 0, "minHeight": 0, "containerWidth": 1180, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "left", "layout": "default", "columns": 0, "borderRadius": 0, "customClass": "" }
+    },
+    "customCss": ""
+  },
+  "assets": {
+    "headerLogo": "/assets/tnth-canva/03-mahsv-hibxi-MAHSv-hIBxI.png",
+    "heroBackground": "/assets/tnth-canva/01-mahscd5rwcc-MAHScd5RwCc.png",
+    "heroTitleArtwork": "/assets/tnth-canva/06-mahstkk4kow-MAHStKK4Kow.png",
+    "heroOrganizations": "/assets/tnth-canva/04-magucn8vs0s-MAGucN8vS0s.png",
+    "organizerSlides": [
+      { "image": "/assets/tnth-canva/07-mahsy0l1pt4-MAHSy0l1pT4.jpg", "position": "center", "label": "" },
+      { "image": "/assets/tnth-canva/08-mahsy0vtyai-MAHSy0vtyAI.jpg", "position": "center", "label": "" }
+    ],
+    "aboutImage": "/assets/tnth-canva/08-mahsy0vtyai-MAHSy0vtyAI.jpg",
+    "statisticIcon": "/assets/tnth-canva/02-magto6-z-j8-MAGto6_z-j8.png",
+    "themePoster": "/assets/tnth-canva/09-mahswgghvnk-MAHSwGghVnk.png",
+    "compassOverlay": "/assets/tnth-canva/11-mahsv9hppfa-MAHSv9HpPfA.png",
+    "timelineBackground": "/assets/tnth-canva/10-mahsd0narra-MAHSd0NArRA.png",
+    "activitiesBackground": "/assets/tnth-canva/10-mahsd0narra-MAHSd0NArRA.png",
+    "facebookIcon": "/assets/tnth-canva/13-facebook-logo-MAGzNqKrzKM.svg",
+    "tiktokIcon": "/assets/tnth-canva/14-tik-tok-icon-MAGzNtv5p7o.svg",
+    "footerLogo": "/assets/tnth-canva/02-magto6-z-j8-MAGto6_z-j8.png",
+    "footerBackground": "/assets/tnth-canva/10-mahsd0narra-MAHSd0NArRA.png"
+  },
+  "navigation": [
+    { "label": "Về chúng tôi", "target": "organizers" },
+    { "label": "Giới thiệu", "target": "about" },
+    { "label": "Thể lệ", "target": "rules" },
+    { "label": "Giải thưởng", "target": "prizes" },
+    { "label": "Đối tác đồng hành", "target": "partners" },
+    { "label": "Liên hệ", "target": "footer" }
+  ],
+  "hero": {
+    "titleLineOne": "TẦM NHÌN",
+    "titleLineTwo": "THƯƠNG HIỆU",
+    "edition": "2026",
+    "tagline": "ROUND TO UNBOUND",
+    "deadline": "2026-09-29T23:59:00+07:00",
+    "ctaLabel": "ĐĂNG KÝ NGAY",
+    "ctaHref": "#register"
+  },
+  "intro": {
+    "paragraphsHtml": [
+      "<strong>Ban Đối Ngoại</strong> là đơn vị trực thuộc <strong>Hội Sinh viên Đại học Kinh tế Quốc Dân</strong> với vai trò tiêu biểu là phụ trách công tác Đối Ngoại cho các sự kiện của Hội Sinh viên – Đại học Kinh tế Quốc dân.",
+      "Trải qua <strong>19 năm</strong> hoạt động, <strong>Ban Đối Ngoại</strong> đã không ngừng khẳng định vị thế của mình với chuyên môn chính gồm Mời tài trợ, Truyền thông báo chí, góp phần tạo nên thành công cho các chương trình bên trong và ngoài khuôn khổ Đại học.",
+      "Với phong thái tự tin chuyên nghiệp, <strong>Ban Đối Ngoại</strong> đã kết nối hàng trăm doanh nghiệp, báo đài với cộng đồng sinh viên, tham gia tổ chức <strong>200+ sự kiện</strong>. Fanpage của Ban Đối Ngoại đã thu hút được <strong>36.000+ lượt theo dõi</strong> từ các bạn sinh viên và các doanh nghiệp, tổ chức, đối tác đồng hành."
+    ],
+    "ctaLabel": "TÌM HIỂU THÊM",
+    "ctaHref": "#about"
+  },
+  "about": {
+    "kicker": "Round to unbound",
+    "title": "TẦM NHÌN THƯƠNG HIỆU",
+    "description": "TẦM NHÌN THƯƠNG HIỆU là cuộc thi giải case study đầu tiên về lĩnh vực Truyền thông thương hiệu được đặt nền móng bởi Ban Đối Ngoại – HSV – NEU.",
+    "imageLabel": "BRAND\nVISION",
+    "paragraphsHtml": [
+      "Với lĩnh vực sáng tạo, độc đáo, chủ đề <strong>TRUYỀN THÔNG THƯƠNG HIỆU</strong> hứa hẹn sẽ đem lại cho các bạn sinh viên nhiều ý tưởng mới mẻ, đột phá cùng cơ hội phát triển thương hiệu của mình.",
+      "Sau hơn một thập kỷ thành công, chương trình quay trở lại với diện mạo mới, mang đến sân chơi bổ ích và thử thách đột phá."
+    ],
+    "statistics": [
+      { "value": "2.000+", "label": "Thí sinh tham dự" },
+      { "value": "700+", "label": "Đội thi đăng ký" },
+      { "value": "60+", "label": "Trường Đại học, Cao đẳng trên cả nước" },
+      { "value": "1.000.000+", "label": "Lượt tiếp cận trên các nền tảng trực tuyến" },
+      { "value": "70+", "label": "Doanh nghiệp, đơn vị truyền thông" },
+      { "value": "70+", "label": "Bài báo mạng và các đơn vị truyền thông uy tín" }
+    ]
+  },
+  "voices": {
+    "title": "TẦM NHÌN THƯƠNG HIỆU 2025\nVỚI GIÁM KHẢO, THÍ SINH",
+    "slides": [
+      {
+        "image": "/assets/tnth-canva/07-mahsy0l1pt4-MAHSy0l1pT4.jpg",
+        "name": "CHỊ NGUYỄN THỊ A",
+        "role": "Giám khảo",
+        "quote": "Tầm Nhìn Thương Hiệu là một hành trình để người trẻ thử sức, kết nối và biến góc nhìn thương hiệu thành giải pháp thực tế."
+      },
+      {
+        "image": "/assets/tnth-canva/08-mahsy0vtyai-MAHSy0vtyAI.jpg",
+        "name": "BẠN NGUYỄN MINH AN",
+        "role": "Thí sinh mùa 2025",
+        "quote": "Cuộc thi đã giúp mình nhìn một bài toán thương hiệu bằng tư duy sâu hơn, đồng thời gặp gỡ những người đồng đội đầy cảm hứng."
+      }
+    ]
+  },
+  "theme": {
+    "kicker": "Tầm Nhìn Thương Hiệu 2026",
+    "title": "CHỦ ĐỀ: ROUND TO UNBOUND",
+    "cardLabel": "ROUND\nTO\nUNBOUND",
+    "quote": "“La bàn vận mệnh”",
+    "paragraphsHtml": [
+      "Thế giới từng kẹt trong những vòng lặp vô hướng khi ngừng quay. Giữa sự bế tắc trên những lối mòn cũ, thương hiệu cần nhìn xa hơn, không chỉ để tiến mà phải để bứt phá.",
+      "<strong>Round To Unbound</strong> là hành trình của những Marketers tiên phong: từ việc thấu hiểu một thành phố đang mắc kẹt trong những lối mòn đến tìm ra những góc nhìn mới, kiến tạo điểm chạm và mở rộng giới hạn của thương hiệu."
+    ]
+  },
+  "rules": {
+    "title": "THỂ LỆ",
+    "cards": [
+      { "title": "ĐỐI TƯỢNG THAM GIA", "items": ["Sinh viên hiện đang học tại các trường Đại học, Cao đẳng trên địa bàn toàn quốc.", "Độ tuổi từ 18–24 tuổi hoặc vừa tốt nghiệp trong vòng 06 tháng."] },
+      { "title": "ĐỐI TƯỢNG KHÔNG ĐƯỢC THAM GIA", "items": ["Thành viên Ban Tổ chức, Ban Cố vấn và Ban Giám khảo.", "Thành viên Ban Tổ chức của Tầm Nhìn Thương Hiệu 2025."] },
+      { "title": "HÌNH THỨC DỰ THI", "items": ["Thí sinh đăng ký dự thi theo đội với số lượng 03 người/đội.", "Mỗi thí sinh chỉ được đăng ký dự thi với 01 đội duy nhất."] }
+    ]
+  },
+  "timeline": {
+    "title": "TIMELINE DỰ KIẾN CÁC VÒNG THI",
+    "rounds": [
+      { "title": "Vòng Khởi động: Brand Kickstart", "date": "(2/9 – 5/9)", "description": "Vòng thi warm up cho sinh viên tìm hiểu nền tảng và nhận diện cuộc thi, kèm theo đó là các đề án ứng dụng. Thí sinh trình bày đề án dưới dạng 3-Page Proposal, từ đó chọn ra Top 2 đội xuất sắc nhất." },
+      { "title": "Vòng 1: Online Test", "date": "(12/9 – 18/9)", "description": "Thí sinh vận dụng tư duy chiến lược để xử lý bài toán truyền thông thương hiệu theo đề bài từ Ban tổ chức." },
+      { "title": "Vòng 2: IMC Plan", "date": "(24/9 – 10/10)", "description": "Các đội thi phát triển kế hoạch truyền thông tích hợp và bảo vệ ý tưởng với chuyên gia trong ngành." },
+      { "title": "Đêm Chung kết", "date": "(26/10)", "description": "Top đội thi xuất sắc nhất trình bày đề án và chinh phục hội đồng giám khảo trong đêm Chung kết." }
+    ]
+  },
+  "prizes": {
+    "title": "CƠ CẤU GIẢI THƯỞNG",
+    "totalLabel": "TỔNG GIÁ TRỊ HIỆN KIM",
+    "totalValue": "50.000.000 triệu đồng",
+    "cards": [
+      { "title": "QUÁN QUÂN", "value": "1XX.XXX.XXX VND", "benefits": ["Hiện kim và phần quà từ đối tác", "Certificate và mentoring chuyên sâu", "Cơ hội đồng hành cùng doanh nghiệp"] },
+      { "title": "Á QUÂN", "value": "XX.XXX.XXX VND", "benefits": ["Hiện kim và phần quà từ đối tác", "Certificate và mentoring chuyên sâu", "Cơ hội đồng hành cùng doanh nghiệp"] },
+      { "title": "QUÝ QUÂN", "value": "XX.XXX.XXX VND", "benefits": ["Hiện kim và phần quà từ đối tác", "Certificate và mentoring chuyên sâu", "Cơ hội đồng hành cùng doanh nghiệp"] },
+      { "title": "ĐỘI ĐƯỢC YÊU THÍCH NHẤT", "value": "XX.XXX.XXX VND", "benefits": ["Hiện kim và phần quà từ đối tác", "Certificate và mentoring chuyên sâu", "Cơ hội đồng hành cùng doanh nghiệp"] }
+    ]
+  },
+  "benefits": {
+    "title": "QUY ĐỊNH CHUNG VÀ QUYỀN LỢI THÍ SINH",
+    "groups": [
+      { "title": "QUY ĐỊNH CHUNG", "items": ["BTC có quyền điều chỉnh thể lệ, thời gian và nội dung các vòng thi trong trường hợp cần thiết.", "Thí sinh cam kết các thông tin cung cấp là chính xác và tuân thủ pháp luật.", "Quyết định của Ban Tổ chức là quyết định cuối cùng."] },
+      { "title": "QUYỀN LỢI THÍ SINH", "items": ["Có cơ hội vận dụng kiến thức chuyên môn để giải quyết các bài toán thực tế từ thương hiệu.", "Kết nối đa chiều qua chuỗi sự kiện Webinar, Information Day và Training Day.", "Top 27 đội thi nhận đánh giá chi tiết từ đội ngũ Ban giám khảo."] }
+    ]
+  },
+  "activities": {
+    "kicker": "Cùng đồng hành",
+    "title": "HOẠT ĐỘNG BÊN LỀ",
+    "cards": [
+      { "title": "Webinar: Brand or Blend", "date": "28/08", "description": "Webinar giúp sinh viên có góc nhìn về Brand Distinctiveness – khả năng tạo nên sự khác biệt và dấu ấn riêng từ thương hiệu trong bối cảnh cạnh tranh.", "ctaLabel": "ĐĂNG KÝ NGAY", "ctaHref": "#register" },
+      { "title": "Information Day", "date": "18/09", "description": "Cung cấp thông tin đầy đủ về cuộc thi, dòng thời gian và những chia sẻ hữu ích từ các chuyên gia Marketing.", "ctaLabel": "ĐĂNG KÝ NGAY", "ctaHref": "#register" }
+    ]
+  },
+  "faq": [
+    { "question": "Thí sinh đăng ký tham gia cuộc thi có cần phải đóng lệ phí không?", "answer": "Không. Thí sinh không cần đóng bất kỳ khoản lệ phí nào khi đăng ký tham gia cuộc thi." },
+    { "question": "BTC có hỗ trợ thí sinh ghép đội không?", "answer": "Có. Ban tổ chức sẽ hỗ trợ kết nối các thí sinh phù hợp trong thời gian mở đơn đăng ký." },
+    { "question": "Khi nào đội thi được xác nhận đăng ký thành công?", "answer": "Đội thi sẽ nhận được email xác nhận sau khi hoàn tất thông tin và được Ban tổ chức kiểm duyệt." },
+    { "question": "Thí sinh lọt top bao nhiêu sẽ nhận được Certificate?", "answer": "Certificate được trao cho Top 25 đội thi của Vòng 1 và Top 2 đội thi của Vòng Khởi động." }
+  ],
+  "partners": {
+    "kicker": "Kết nối để bứt phá",
+    "title": "ĐỐI TÁC ĐỒNG HÀNH",
+    "markers": ["NEU", "HSV", "YOUTH", "BRAND", "NEU"],
+    "levels": [
+      { "label": "NHÀ TÀI TRỢ", "value": "HOÀNG KIM" },
+      { "label": "NHÀ TÀI TRỢ", "value": "KIM CƯƠNG" },
+      { "label": "NHÀ TÀI TRỢ", "value": "VÀNG" },
+      { "label": "BẢO TRỢ", "value": "CHUYÊN MÔN" }
+    ]
+  },
+  "footer": {
+    "title": "Kênh liên hệ:",
+    "organization": "",
+    "contact": "",
+    "contactTitle": "Kênh liên hệ:",
+    "contactLines": [
+      "Trưởng Ban Tổ chức: 0369218999 (Nguyễn Thị Minh Hiền)",
+      "Trưởng Ban Truyền thông: 0822446348 (Nguyễn Trần Lâm Hoàng)"
+    ],
+    "socials": [
+      { "icon": "/assets/tnth-canva/13-facebook-logo-MAGzNqKrzKM.svg", "label": "Fanpage Tầm Nhìn Thương Hiệu", "href": "#" },
+      { "icon": "/assets/tnth-canva/13-facebook-logo-MAGzNqKrzKM.svg", "label": "Group Tầm Nhìn Thương Hiệu", "href": "#" },
+      { "icon": "/assets/tnth-canva/14-tik-tok-icon-MAGzNtv5p7o.svg", "label": "TikTok Tầm Nhìn Thương Hiệu", "href": "#" }
+    ]
+  }
+}
