@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ImagePlus, RotateCcw } from '@lucide/vue'
+import BackgroundPresetPicker from './BackgroundPresetPicker.vue'
 import type { SectionSettings } from '../../data/site-content'
 
 const props = defineProps<{ modelValue: SectionSettings }>()
@@ -105,6 +106,11 @@ const handleImageUpload = (event: Event) => {
 
       <div class="config-field config-image-field">
         <span>Ảnh nền riêng của section</span>
+        <BackgroundPresetPicker
+          :model-value="modelValue.backgroundImage"
+          title="Chọn ảnh nền mẫu cho section"
+          @update:model-value="update('backgroundImage', $event)"
+        />
         <div v-if="modelValue.backgroundImage" class="config-image-preview"><img :src="modelValue.backgroundImage" alt="" /></div>
         <input type="text" :value="modelValue.backgroundImage" placeholder="Để trống để dùng ảnh/màu gốc" @input="update('backgroundImage', ($event.target as HTMLInputElement).value)" />
         <div class="config-image-actions">

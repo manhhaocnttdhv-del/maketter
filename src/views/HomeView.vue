@@ -2,6 +2,7 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import CompetitionHero from '../components/CompetitionHero.vue'
 import CompetitionSections from '../components/CompetitionSections.vue'
+import ThemeSwitcher from '../components/ThemeSwitcher.vue'
 import { loadSiteContent, type SiteContent } from '../data/site-content'
 import { globalSiteStyle } from '../utils/site-styles'
 
@@ -31,6 +32,7 @@ onBeforeUnmount(() => customStyleElement?.remove())
   <main v-if="content" class="event-index" :style="globalSiteStyle(content)">
     <CompetitionHero :site="content" />
     <CompetitionSections :site="content" />
+    <ThemeSwitcher :site="content" />
   </main>
   <main v-else class="page-loading"><span v-if="!loadError" class="loading-orbit"></span><p>{{ loadError || 'Đang tải trải nghiệm sự kiện...' }}</p></main>
 </template>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { ArrowDown, ArrowUp, ImagePlus, Plus, Trash2 } from '@lucide/vue'
+import BackgroundPresetPicker from './BackgroundPresetPicker.vue'
 
 const props = withDefaults(defineProps<{
   modelValue: unknown
@@ -203,6 +204,11 @@ const handleImageUpload = (event: Event) => {
 
   <div v-else-if="isImage" class="config-field config-image-field">
     <span>{{ label }}</span>
+    <BackgroundPresetPicker
+      v-if="/background/i.test(name)"
+      :model-value="String(modelValue ?? '')"
+      @update:model-value="emit('update:modelValue', $event)"
+    />
     <div v-if="modelValue" class="config-image-preview"><img :src="String(modelValue)" alt="" /></div>
     <input type="text" :value="String(modelValue ?? '')" placeholder="/assets/... hoặc https://..." @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
     <label class="config-upload-button"><ImagePlus :size="15" /> Tải ảnh từ máy<input type="file" accept="image/*" @change="handleImageUpload" /></label>
