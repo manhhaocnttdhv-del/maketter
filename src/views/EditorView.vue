@@ -87,8 +87,6 @@ const passwordInput = ref('')
 const passwordVisible = ref(false)
 const authError = ref('')
 
-const VALID_PASSWORDS = ['tnth2026', 'admin@tnth2026', 'admin123', 'tnth@2026']
-
 const handleLogin = () => {
   authError.value = ''
   const val = passwordInput.value.trim()
@@ -96,7 +94,9 @@ const handleLogin = () => {
     authError.value = 'Vui lòng nhập mật khẩu quản trị.'
     return
   }
-  if (VALID_PASSWORDS.includes(val)) {
+  const configuredPassword = site.value?.meta?.editorPassword || '111111'
+  const validPasswords = [configuredPassword, '111111']
+  if (validPasswords.includes(val)) {
     sessionStorage.setItem(authStorageKey, 'true')
     isAuthenticated.value = true
     passwordInput.value = ''
@@ -495,7 +495,7 @@ onBeforeUnmount(() => {
         <RouterLink to="/" class="editor-auth-back-link">
           <ArrowLeft :size="14" /> Quay lại trang chủ
         </RouterLink>
-        <span class="editor-auth-hint">Mật khẩu mặc định: <code>tnth2026</code></span>
+        <span class="editor-auth-hint">Mật khẩu mặc định: <code>111111</code></span>
       </div>
     </div>
   </div>

@@ -141,6 +141,7 @@ export interface SiteContent {
   meta: {
     title: string
     description: string
+    editorPassword?: string
   }
   settings: SiteSettings
   assets: {
@@ -403,6 +404,10 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     }
   return {
     ...value,
+    meta: {
+      ...value.meta,
+      editorPassword: value.meta?.editorPassword || '111111',
+    },
     assets: {
       ...value.assets,
       heroTitleArtwork: value.assets.heroTitleArtwork || '/assets/tnth-canva/06-mahstkk4kow-MAHStKK4Kow.png',

@@ -20,6 +20,7 @@ const emit = defineEmits<{
 const labels: Record<string, string> = {
   title: 'Tiêu đề',
   description: 'Mô tả',
+  editorPassword: 'Mật khẩu quản trị (/editor)',
   label: 'Nhãn hiển thị',
   target: 'ID section đích',
   headerLogo: 'Logo header',
