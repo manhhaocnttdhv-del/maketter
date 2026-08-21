@@ -29,6 +29,7 @@ import {
   isSiteContent,
   loadSiteContent,
   normalizeSiteContent,
+  sectionKeys,
   type SectionKey,
   type SectionSettings,
   type SiteContent,
@@ -267,6 +268,26 @@ const saveDraft = (showMessage = false) => {
   }
 }
 
+const applyBackgroundToAllSections = (image: string) => {
+  if (!site.value) return
+  const currentSite = site.value
+  currentSite.assets.heroBackground = image
+  sectionKeys.forEach((key) => {
+    if (currentSite.settings.sections[key]) {
+      currentSite.settings.sections[key].backgroundImage = image
+    }
+  })
+  statusMessage.value = 'Đã áp dụng ảnh nền cho tất cả các section!'
+  saveDraft(true)
+}
+
+const setAsGlobalBackground = (image: string) => {
+  if (!site.value) return
+  site.value.assets.heroBackground = image
+  statusMessage.value = 'Đã đặt làm ảnh nền cố định toàn website!'
+  saveDraft(true)
+}
+
 const scheduleSave = () => {
   if (!ready) return
   savedState.value = 'saving'
@@ -469,8 +490,15 @@ onBeforeUnmount(() => {
             :hero-background="site.assets.heroBackground"
             :mode="activeSection"
             @update:hero-background="site.assets.heroBackground = $event"
+            @apply-to-all-sections="applyBackgroundToAllSections"
           />
-          <SectionStyleEditor v-else v-model="selectedSectionStyle" @upload-error="handleUploadError" />
+          <SectionStyleEditor
+            v-else
+            v-model="selectedSectionStyle"
+            @upload-error="handleUploadError"
+            @apply-to-all-sections="applyBackgroundToAllSections"
+            @set-as-global-bg="setAsGlobalBackground"
+          />
         </div>
         <div class="inspector-actions">
           <button type="button" class="inspector-save-button" @click="saveDraft(true)"><Save :size="15" /> Lưu bản nháp</button>

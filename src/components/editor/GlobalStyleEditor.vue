@@ -11,6 +11,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   'update:modelValue': [value: SiteSettings]
   'update:heroBackground': [value: string]
+  'apply-to-all-sections': [image: string]
 }>()
 
 const updateGlobal = <K extends keyof GlobalSettings>(key: K, value: GlobalSettings[K]) => {
@@ -38,6 +39,16 @@ const globalColors: Array<{ key: keyof GlobalSettings; label: string; fallback: 
     <div class="design-group">
       <div class="design-group__title"><strong>Ảnh nền cố định toàn website</strong><span>Nền luôn luôn cố định xuyên suốt tất cả các section</span></div>
       <BackgroundPresetPicker :model-value="heroBackground || ''" @update:model-value="emit('update:heroBackground', $event)" />
+      
+      <div v-if="heroBackground" style="margin-top: 8px;">
+        <button
+          type="button"
+          style="width: 100%; padding: 8px 12px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; background: rgba(112, 69, 221, 0.25); border: 1px solid rgba(112, 69, 221, 0.6); border-radius: 8px; color: #e5d8ff; font-size: 12px; font-weight: 700; cursor: pointer;"
+          @click="emit('apply-to-all-sections', heroBackground)"
+        >
+          🚀 Đồng bộ ảnh nền này cho TẤT CẢ các section
+        </button>
+      </div>
     </div>
 
     <div class="design-group">
