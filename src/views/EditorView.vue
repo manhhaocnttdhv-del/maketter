@@ -3,13 +3,18 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import {
   ArrowDown,
+  ArrowLeft,
   ArrowUp,
   Check,
   Download,
   ExternalLink,
+  Eye,
+  EyeOff,
   FileJson2,
   Image,
+  KeyRound,
   LayoutDashboard,
+  Lock,
   Monitor,
   PanelLeft,
   RotateCcw,
@@ -17,6 +22,7 @@ import {
   Settings2,
   Smartphone,
   Tablet,
+  Unlock,
   Upload,
 } from '@lucide/vue'
 import CompetitionHero from '../components/CompetitionHero.vue'
@@ -75,6 +81,41 @@ const jsonText = ref('')
 const errorMessage = ref('')
 const statusMessage = ref('Đang tải cấu hình website...')
 const savedState = ref<'saved' | 'saving' | 'error'>('saved')
+const authStorageKey = 'tnth-editor-auth-token'
+const isAuthenticated = ref(sessionStorage.getItem(authStorageKey) === 'true')
+const passwordInput = ref('')
+const passwordVisible = ref(false)
+const authError = ref('')
+
+const VALID_PASSWORDS = ['tnth2026', 'admin@tnth2026', 'admin123', 'tnth@2026']
+
+const handleLogin = () => {
+  authError.value = ''
+  const val = passwordInput.value.trim()
+  if (!val) {
+    authError.value = 'Vui lòng nhập mật khẩu quản trị.'
+    return
+  }
+  if (VALID_PASSWORDS.includes(val)) {
+    sessionStorage.setItem(authStorageKey, 'true')
+    isAuthenticated.value = true
+    passwordInput.value = ''
+    authError.value = ''
+    void nextTick(() => {
+      void setupPreviewObservers()
+    })
+  } else {
+    authError.value = 'Mật khẩu không chính xác! Vui lòng thử lại.'
+  }
+}
+
+const handleLogout = () => {
+  sessionStorage.removeItem(authStorageKey)
+  isAuthenticated.value = false
+  passwordInput.value = ''
+  authError.value = ''
+}
+
 const fileInput = ref<HTMLInputElement | null>(null)
 const previewViewport = ref<HTMLElement | null>(null)
 const previewDocument = ref<HTMLElement | null>(null)
@@ -411,7 +452,56 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <main class="site-editor-page">
+  <!-- 1. Màn hình bảo mật nhập mật khẩu khi chưa xác thực -->
+  <div v-if="!isAuthenticated" class="editor-auth-overlay">
+    <div class="editor-auth-box">
+      <div class="editor-auth-badge">
+        <Lock :size="28" />
+      </div>
+      <h1 class="editor-auth-title">TNTH Page Builder</h1>
+      <p class="editor-auth-subtitle">Nhập mật khẩu quản trị để truy cập trình chỉnh sửa website Tầm Nhìn Thương Hiệu.</p>
+
+      <form class="editor-auth-form" @submit.prevent="handleLogin">
+        <div class="editor-auth-field">
+          <KeyRound :size="16" class="editor-auth-icon" />
+          <input
+            v-model="passwordInput"
+            :type="passwordVisible ? 'text' : 'password'"
+            placeholder="Nhập mật khẩu quản trị..."
+            autofocus
+            autocomplete="current-password"
+          />
+          <button
+            type="button"
+            class="editor-auth-eye"
+            :title="passwordVisible ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'"
+            @click="passwordVisible = !passwordVisible"
+          >
+            <EyeOff v-if="passwordVisible" :size="16" />
+            <Eye v-else :size="16" />
+          </button>
+        </div>
+
+        <p v-if="authError" class="editor-auth-error-msg">
+          {{ authError }}
+        </p>
+
+        <button type="submit" class="editor-auth-btn">
+          <Unlock :size="16" /> Mở khóa Editor
+        </button>
+      </form>
+
+      <div class="editor-auth-links">
+        <RouterLink to="/" class="editor-auth-back-link">
+          <ArrowLeft :size="14" /> Quay lại trang chủ
+        </RouterLink>
+        <span class="editor-auth-hint">Mật khẩu mặc định: <code>tnth2026</code></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Không gian làm việc Editor khi đã xác thực -->
+  <main v-else class="site-editor-page">
     <header class="site-editor-topbar">
       <RouterLink to="/" class="site-editor-brand"><LayoutDashboard :size="21" /><span><strong>TNTH Page Builder</strong><small>Visual content & layout editor</small></span></RouterLink>
       <div class="editor-mode-switch" role="tablist">
@@ -423,6 +513,7 @@ onBeforeUnmount(() => {
         <button type="button" @click="chooseFile"><Upload :size="15" /> Nhập JSON</button>
         <button type="button" @click="downloadJson"><Download :size="15" /> Tải JSON</button>
         <RouterLink to="/" target="_blank"><ExternalLink :size="15" /> Mở website</RouterLink>
+        <button type="button" class="editor-lock-action" title="Khóa màn hình Editor" @click="handleLogout"><Lock :size="14" /> Khóa</button>
         <input ref="fileInput" class="d-none" type="file" accept="application/json,.json" @change="importJson" />
       </div>
     </header>
