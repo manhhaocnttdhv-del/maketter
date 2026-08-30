@@ -107,7 +107,7 @@ onBeforeUnmount(() => {
               <span>{{ site.hero.titleLineTwo }}</span>
               <span class="event-edition">{{ site.hero.edition }}</span>
             </h1>
-            <p class="event-tagline">{{ site.hero.tagline }}</p>
+            <p v-if="site.hero.tagline" class="event-tagline">{{ site.hero.tagline }}</p>
 
             <div class="countdown" aria-label="Thời gian đến sự kiện">
               <div v-for="(value, index) in countdown" :key="countdownLabels[index]" class="countdown-item">

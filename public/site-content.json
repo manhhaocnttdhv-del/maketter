@@ -23,7 +23,7 @@
       "enabled": true,
       "sticky": true,
       "height": 78,
-      "logoWidth": 64,
+      "logoWidth": 78,
       "containerWidth": 1280,
       "paddingX": 28,
       "navGap": 40,
@@ -34,10 +34,10 @@
     },
     "sectionOrder": [
       "intro", "about", "metrics", "voices", "theme", "rules", "timeline",
-      "prizes", "benefits", "activities", "faq", "partners", "footer"
+      "prizes", "benefits", "activities", "partners", "faq", "footer"
     ],
     "sections": {
-      "hero": { "enabled": true, "paddingTop": 0, "paddingBottom": 0, "marginTop": 0, "marginBottom": 0, "minHeight": 650, "containerWidth": 1280, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "left", "layout": "default", "columns": 0, "borderRadius": 0, "customClass": "" },
+      "hero": { "enabled": true, "paddingTop": 0, "paddingBottom": 0, "marginTop": 0, "marginBottom": 0, "minHeight": 650, "containerWidth": 1280, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.05, "textColor": "", "contentAlign": "left", "layout": "default", "columns": 0, "borderRadius": 0, "customClass": "" },
       "intro": { "enabled": true, "paddingTop": 52, "paddingBottom": 58, "marginTop": 0, "marginBottom": 0, "minHeight": 0, "containerWidth": 1180, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "left", "layout": "default", "columns": 0, "borderRadius": 0, "customClass": "" },
       "about": { "enabled": true, "paddingTop": 52, "paddingBottom": 52, "marginTop": 0, "marginBottom": 0, "minHeight": 0, "containerWidth": 1180, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "left", "layout": "default", "columns": 0, "borderRadius": 0, "customClass": "" },
       "metrics": { "enabled": true, "paddingTop": 44, "paddingBottom": 48, "marginTop": 0, "marginBottom": 0, "minHeight": 0, "containerWidth": 1180, "backgroundColor": "", "backgroundImage": "", "backgroundPosition": "center center", "backgroundSize": "cover", "backgroundRepeat": "no-repeat", "overlayColor": "#071438", "overlayOpacity": 0.45, "textColor": "", "contentAlign": "center", "layout": "default", "columns": 3, "borderRadius": 0, "customClass": "" },
@@ -58,13 +58,21 @@
     "headerLogo": "/assets/tnth-canva/03-mahsv-hibxi-MAHSv-hIBxI.png",
     "heroBackground": "/assets/tnth-canva/01-mahscd5rwcc-MAHScd5RwCc.png",
     "heroTitleArtwork": "/assets/tnth-canva/06-mahstkk4kow-MAHStKK4Kow.png",
-    "heroOrganizations": "/assets/tnth-canva/04-magucn8vs0s-MAGucN8vS0s.png",
+    "heroOrganizations": "/assets/tnth-canva/04-organizations-transparent-v2.png",
     "organizerSlides": [
       { "image": "/assets/tnth-canva/07-mahsy0l1pt4-MAHSy0l1pT4.jpg", "position": "center", "label": "" },
       { "image": "/assets/tnth-canva/08-mahsy0vtyai-MAHSy0vtyAI.jpg", "position": "center", "label": "" }
     ],
     "aboutImage": "/assets/tnth-canva/08-mahsy0vtyai-MAHSy0vtyAI.jpg",
-    "statisticIcon": "/assets/tnth-canva/02-magto6-z-j8-MAGto6_z-j8.png",
+    "aboutGallery": [
+      "/assets/tnth-years/01.jpg",
+      "/assets/tnth-years/02.jpg",
+      "/assets/tnth-years/03.jpg",
+      "/assets/tnth-years/04.jpg",
+      "/assets/tnth-years/05.jpg",
+      "/assets/tnth-years/06.jpg"
+    ],
+    "statisticIcon": "/assets/tnth-canva/03-mahsv-hibxi-MAHSv-hIBxI.png",
     "themePoster": "/assets/tnth-canva/09-mahswgghvnk-MAHSwGghVnk.png",
     "compassOverlay": "/assets/tnth-canva/11-mahsv9hppfa-MAHSv9HpPfA.png",
     "timelineBackground": "/assets/tnth-canva/10-mahsd0narra-MAHSd0NArRA.png",
@@ -86,28 +94,30 @@
     "titleLineOne": "TẦM NHÌN",
     "titleLineTwo": "THƯƠNG HIỆU",
     "edition": "2026",
-    "tagline": "ROUND TO UNBOUND",
+    "tagline": "",
     "deadline": "2026-09-29T23:59:00+07:00",
     "ctaLabel": "ĐĂNG KÝ NGAY",
     "ctaHref": "#register"
   },
   "intro": {
+    "title": "BAN TỔ CHỨC",
+    "subtitle": "BAN ĐỐI NGOẠI - HỘI SINH VIÊN - NEU",
     "paragraphsHtml": [
       "<strong>Ban Đối Ngoại</strong> là đơn vị trực thuộc <strong>Hội Sinh viên Đại học Kinh tế Quốc Dân</strong> với vai trò tiêu biểu là phụ trách công tác Đối Ngoại cho các sự kiện của Hội Sinh viên – Đại học Kinh tế Quốc dân.",
       "Trải qua <strong>19 năm</strong> hoạt động, <strong>Ban Đối Ngoại</strong> đã không ngừng khẳng định vị thế của mình với chuyên môn chính gồm Mời tài trợ, Truyền thông báo chí, góp phần tạo nên thành công cho các chương trình bên trong và ngoài khuôn khổ Đại học.",
       "Với phong thái tự tin chuyên nghiệp, <strong>Ban Đối Ngoại</strong> đã kết nối hàng trăm doanh nghiệp, báo đài với cộng đồng sinh viên, tham gia tổ chức <strong>200+ sự kiện</strong>. Fanpage của Ban Đối Ngoại đã thu hút được <strong>36.000+ lượt theo dõi</strong> từ các bạn sinh viên và các doanh nghiệp, tổ chức, đối tác đồng hành."
     ],
     "ctaLabel": "TÌM HIỂU THÊM",
-    "ctaHref": "#about"
+    "ctaHref": "https://web.facebook.com/bandoingoai.neu?locale=vi_VN"
   },
   "about": {
-    "kicker": "Round to unbound",
+    "kicker": "",
     "title": "TẦM NHÌN THƯƠNG HIỆU",
-    "description": "TẦM NHÌN THƯƠNG HIỆU là cuộc thi giải case study đầu tiên về lĩnh vực Truyền thông thương hiệu được đặt nền móng bởi Ban Đối Ngoại – HSV – NEU.",
+    "description": "TẦM NHÌN THƯƠNG HIỆU là cuộc thi giải Case Study đầu tiên trong lĩnh vực Truyền thông Thương hiệu, được đặt nền móng bởi Ban Đối Ngoại – Hội Sinh viên – Đại học Kinh tế Quốc dân.",
     "imageLabel": "BRAND\nVISION",
     "paragraphsHtml": [
-      "Với lĩnh vực sáng tạo, độc đáo, chủ đề <strong>TRUYỀN THÔNG THƯƠNG HIỆU</strong> hứa hẹn sẽ đem lại cho các bạn sinh viên nhiều ý tưởng mới mẻ, đột phá cùng cơ hội phát triển thương hiệu của mình.",
-      "Sau hơn một thập kỷ thành công, chương trình quay trở lại với diện mạo mới, mang đến sân chơi bổ ích và thử thách đột phá."
+      "Với lĩnh vực sáng tạo và giàu tính thực tiễn, chủ đề <strong>TRUYỀN THÔNG THƯƠNG HIỆU</strong> hứa hẹn mang đến cho sinh viên những góc nhìn mới mẻ, tư duy đột phá và cơ hội phát triển năng lực xây dựng thương hiệu.",
+      "Sau hơn một thập kỷ tạo dấu ấn, cuộc thi trở lại với diện mạo mới, tiếp tục mang đến một sân chơi chuyên môn bổ ích, nơi các thí sinh được thử sức với những bài toán thương hiệu thực tế."
     ],
     "statistics": [
       { "value": "2.000+", "label": "Thí sinh tham dự" },
@@ -136,66 +146,70 @@
     ]
   },
   "theme": {
-    "kicker": "Tầm Nhìn Thương Hiệu 2026",
-    "title": "CHỦ ĐỀ: ROUND TO UNBOUND",
+    "kicker": "",
+    "title": "CHỦ ĐỀ TẦM NHÌN THƯƠNG HIỆU 2026",
+    "subtitle": "ROUND TO UNBOUND",
     "cardLabel": "ROUND\nTO\nUNBOUND",
-    "quote": "“La bàn vận mệnh”",
+    "quote": "",
     "paragraphsHtml": [
-      "Thế giới từng kẹt trong những vòng lặp vô hướng khi ngừng quay. Giữa sự bế tắc trên những lối mòn cũ, thương hiệu cần nhìn xa hơn, không chỉ để tiến mà phải để bứt phá.",
-      "<strong>Round To Unbound</strong> là hành trình của những Marketers tiên phong: từ việc thấu hiểu một thành phố đang mắc kẹt trong những lối mòn đến tìm ra những góc nhìn mới, kiến tạo điểm chạm và mở rộng giới hạn của thương hiệu."
+      "Giữa trung tâm đầy hỗn mang của một thế giới công nghệ số, tồn tại một Chiếc la bàn vận mệnh từng định hướng mọi kết nối và duy trì nhịp vận hành của cả thế giới. Thế nhưng, vào khoảnh khắc nó ngừng xoay, mọi tín hiệu bắt đầu rối loạn, mọi chuyển động mắc kẹt trong những vòng lặp vô định, đẩy thành phố vào trạng thái hỗn mang chưa từng có. Muốn phá vỡ thế bế tắc ấy, cần những người đủ bản lĩnh tiến thẳng đến lõi của cỗ máy, chạm tay vào từng bánh răng và khởi động lại nhịp xoay của tương lai.",
+      "Mang trong mình tinh thần ấy, <strong>ROUND TO UNBOUND</strong> chính là hành trình của những Marketers dũng cảm trên con đường thoát khỏi giới hạn do chính kỷ nguyên số vô thức tạo nên. Họ lần theo những giá trị tưởng chừng quen thuộc, giải mã những tín hiệu từng bị bỏ quên và kết nối những khả năng chưa từng giao thoa để xoay chuyển Chiếc la bàn vận mệnh. Nhưng tái khởi động cỗ máy chưa bao giờ là đích đến cuối cùng. Điều thực sự được quyết định nằm ở cách họ tạo nên những điểm chạm mới, mở rộng không gian sáng tạo và kiến tạo những quỹ đạo phát triển mới cho Truyền thông Thương hiệu trong tương lai."
     ]
   },
   "rules": {
     "title": "THỂ LỆ",
     "cards": [
-      { "title": "ĐỐI TƯỢNG THAM GIA", "items": ["Sinh viên hiện đang học tại các trường Đại học, Cao đẳng trên địa bàn toàn quốc.", "Độ tuổi từ 18–24 tuổi hoặc vừa tốt nghiệp trong vòng 06 tháng."] },
-      { "title": "ĐỐI TƯỢNG KHÔNG ĐƯỢC THAM GIA", "items": ["Thành viên Ban Tổ chức, Ban Cố vấn và Ban Giám khảo.", "Thành viên Ban Tổ chức của Tầm Nhìn Thương Hiệu 2025."] },
+      { "title": "ĐỐI TƯỢNG THAM GIA", "items": ["Sinh viên đang theo học tại các trường Đại học, Cao đẳng trên địa bàn toàn quốc.", "Độ tuổi từ 18–24 tuổi; đã tốt nghiệp THPT hoặc vừa tốt nghiệp Đại học, Cao đẳng trong vòng 06 tháng."] },
+      { "title": "ĐỐI TƯỢNG KHÔNG ĐƯỢC THAM GIA", "items": ["Thành viên Ban Giám khảo, Ban Cố vấn và Diễn giả của cuộc thi.", "Thí sinh dự thi Chung kết Tầm Nhìn Thương Hiệu 2025.", "Thành viên Ban Tổ chức Tầm Nhìn Thương Hiệu 2025.", "Thành viên Ban Tổ chức Tầm Nhìn Thương Hiệu 2026."] },
       { "title": "HÌNH THỨC DỰ THI", "items": ["Thí sinh đăng ký dự thi theo đội với số lượng 03 người/đội.", "Mỗi thí sinh chỉ được đăng ký dự thi với 01 đội duy nhất."] }
     ]
   },
   "timeline": {
     "title": "TIMELINE DỰ KIẾN CÁC VÒNG THI",
     "rounds": [
-      { "title": "Vòng Khởi động: Brand Kickstart", "date": "(2/9 – 5/9)", "description": "Vòng thi warm up cho sinh viên tìm hiểu nền tảng và nhận diện cuộc thi, kèm theo đó là các đề án ứng dụng. Thí sinh trình bày đề án dưới dạng 3-Page Proposal, từ đó chọn ra Top 2 đội xuất sắc nhất." },
-      { "title": "Vòng 1: Online Test", "date": "(12/9 – 18/9)", "description": "Thí sinh vận dụng tư duy chiến lược để xử lý bài toán truyền thông thương hiệu theo đề bài từ Ban tổ chức." },
-      { "title": "Vòng 2: IMC Plan", "date": "(24/9 – 10/10)", "description": "Các đội thi phát triển kế hoạch truyền thông tích hợp và bảo vệ ý tưởng với chuyên gia trong ngành." },
-      { "title": "Đêm Chung kết", "date": "(26/10)", "description": "Top đội thi xuất sắc nhất trình bày đề án và chinh phục hội đồng giám khảo trong đêm Chung kết." }
+      { "title": "Vòng Khởi động: Brand Kickstart", "date": "02/09 – 05/09", "description": "Vòng thi warm up cho chương trình nhằm tăng độ nhận diện cho Cuộc thi, kèm theo đó sẽ đáp ứng đề bài NTT Ra Đề. Thí sinh trình bày đề án dưới dạng 3-Page Proposal, từ đó chọn ra Top 2 xuất sắc nhất đi thẳng vào Vòng 2: Brand Campaign." },
+      { "title": "Vòng 1: Brand Insight", "date": "27/09 – 02/10", "description": "Từ đề bài, các đội thi hoàn thành bài đánh giá tổng quan thị trường, tình hình thương hiệu, chân dung khách hàng mục tiêu và mục tiêu tổng quát về chiến dịch truyền thông cho thương hiệu của mình. Thí sinh trình bày đề án dưới dạng 10-Page Proposal." },
+      { "title": "Vòng 2: Brand Campaign", "date": "09/10 – 14/10", "description": "Top 27 xuất sắc nhất sẽ có cơ hội bước vào Vòng 3 và tiếp tục hoàn thiện đề án kế hoạch truyền thông tích hợp của Doanh nghiệp." },
+      { "title": "Chung kết: Grand Finale", "date": "05/11", "description": "HOÀN THIỆN ĐỀ ÁN\nTop 4 đội thi sẽ làm việc với Mentors để hoàn thiện kế hoạch truyền thông tích hợp đã thực hiện trong phạm vi cho phép. Đồng thời thực hiện 1 TVC thể hiện được kế hoạch truyền thông đó.\n\nPHẦN ĐỘI THI ĐƯỢC YÊU THÍCH NHẤT\nBGK chấm script, TVC đăng tải lên Fanpage Tầm Nhìn Thương Hiệu và tính điểm theo lượng tương tác để giành giải đội thi được yêu thích nhất. Điểm phần thi này sẽ nằm trong đề án.\n\nĐÊM CHUNG KẾT\nPhần 1: Top 4 đội thi bước vào Chung kết, trình bày đề án hoàn thiện và trả lời các câu hỏi từ Ban Giám Khảo.\nPhần 2: Top 4 đội thi tiếp tục tham gia giải minicase đã được BTC gửi trong 24h trước đêm Chung kết và phản biện với đội còn lại." }
     ]
   },
   "prizes": {
     "title": "CƠ CẤU GIẢI THƯỞNG",
     "totalLabel": "TỔNG GIÁ TRỊ HIỆN KIM",
-    "totalValue": "50.000.000 triệu đồng",
+    "totalValue": "18.000.000 ĐỒNG",
     "cards": [
-      { "title": "QUÁN QUÂN", "value": "1XX.XXX.XXX VND", "benefits": ["Hiện kim và phần quà từ đối tác", "Certificate và mentoring chuyên sâu", "Cơ hội đồng hành cùng doanh nghiệp"] },
-      { "title": "Á QUÂN", "value": "XX.XXX.XXX VND", "benefits": ["Hiện kim và phần quà từ đối tác", "Certificate và mentoring chuyên sâu", "Cơ hội đồng hành cùng doanh nghiệp"] },
-      { "title": "QUÝ QUÂN", "value": "XX.XXX.XXX VND", "benefits": ["Hiện kim và phần quà từ đối tác", "Certificate và mentoring chuyên sâu", "Cơ hội đồng hành cùng doanh nghiệp"] },
-      { "title": "ĐỘI ĐƯỢC YÊU THÍCH NHẤT", "value": "XX.XXX.XXX VND", "benefits": ["Hiện kim và phần quà từ đối tác", "Certificate và mentoring chuyên sâu", "Cơ hội đồng hành cùng doanh nghiệp"] }
+      { "title": "QUÁN QUÂN", "value": "8.000.000 ĐỒNG", "benefits": ["01 đội Quán quân"] },
+      { "title": "Á QUÂN", "value": "5.000.000 ĐỒNG", "benefits": ["01 đội Á quân"] },
+      { "title": "QUÝ QUÂN", "value": "2.000.000 ĐỒNG/ĐỘI", "benefits": ["02 đội Quý quân"] },
+      { "title": "ĐỘI ĐƯỢC YÊU THÍCH NHẤT", "value": "1.000.000 ĐỒNG", "benefits": ["01 giải thưởng"] }
     ]
   },
   "benefits": {
     "title": "QUY ĐỊNH CHUNG VÀ QUYỀN LỢI THÍ SINH",
     "groups": [
-      { "title": "QUY ĐỊNH CHUNG", "items": ["BTC có quyền điều chỉnh thể lệ, thời gian và nội dung các vòng thi trong trường hợp cần thiết.", "Thí sinh cam kết các thông tin cung cấp là chính xác và tuân thủ pháp luật.", "Quyết định của Ban Tổ chức là quyết định cuối cùng."] },
-      { "title": "QUYỀN LỢI THÍ SINH", "items": ["Có cơ hội vận dụng kiến thức chuyên môn để giải quyết các bài toán thực tế từ thương hiệu.", "Kết nối đa chiều qua chuỗi sự kiện Webinar, Information Day và Training Day.", "Top 27 đội thi nhận đánh giá chi tiết từ đội ngũ Ban giám khảo."] }
+      { "title": "QUY ĐỊNH CHUNG", "items": ["BTC có quyền điều chỉnh thể lệ, thời gian và nội dung các vòng thi cũng như hoạt động bên lề trong trường hợp cần thiết, và sẽ thông báo đến thí sinh ít nhất 24 giờ trước khi áp dụng thay đổi.", "BTC có quyền cung cấp bài thi của thí sinh đến Ban Giám khảo, các đơn vị Bảo trợ Chuyên môn và Nhà tài trợ.", "BTC có quyền sử dụng thông tin và hình ảnh thí sinh nhằm mục đích quảng bá cuộc thi, trong phạm vi phù hợp và không vi phạm pháp luật.", "BTC có quyền hủy bỏ kết quả của đội thi nếu phát hiện hành vi gian lận, chống đối hoặc không hợp tác trong quá trình dự thi.", "BTC có trách nhiệm giải quyết kiến nghị, khiếu nại, đảm bảo quyền lợi chính đáng của thí sinh một cách khách quan, công bằng và minh bạch. Quyết định của BTC là quyết định cuối cùng.", "BTC cam kết trao đầy đủ giải thưởng cho thí sinh theo đúng nội dung trong thể lệ."] },
+      { "title": "QUYỀN LỢI THÍ SINH", "items": ["Có cơ hội vận dụng kiến thức chuyên môn để giải quyết các bài toán thực tế từ thương hiệu.", "Cơ hội mở rộng kiến thức, kết nối đa chiều qua chuỗi sự kiện Webinar, Information Day và Training Day, với sự đồng hành của các doanh nghiệp uy tín, các đơn vị đào tạo chuyên môn và đội ngũ giảng viên NEU.", "Có cơ hội mở rộng tư duy, nâng tầm hiểu biết cùng chuỗi Training Day dành riêng cho các thí sinh.", "Top 27 đội thi tham gia Vòng 2: IMC Plan sẽ nhận được đánh giá chi tiết từ đội ngũ ban giám khảo – những chuyên gia đầu ngành Truyền thông thương hiệu.", "Top 4 chung cuộc sẽ nhận được sự đồng hành hướng dẫn từ các Mentor giàu kinh nghiệm chuyên môn.", "Cơ cấu giải thưởng hấp dẫn cùng nhiều phần quà giá trị từ Ban Tổ chức và các đơn vị doanh nghiệp đồng hành."] }
     ]
   },
   "activities": {
-    "kicker": "Cùng đồng hành",
+    "kicker": "",
     "title": "HOẠT ĐỘNG BÊN LỀ",
     "cards": [
-      { "title": "Webinar: Brand or Blend", "date": "28/08", "description": "Webinar giúp sinh viên có góc nhìn về Brand Distinctiveness – khả năng tạo nên sự khác biệt và dấu ấn riêng từ thương hiệu trong bối cảnh cạnh tranh.", "ctaLabel": "ĐĂNG KÝ NGAY", "ctaHref": "#register" },
-      { "title": "Information Day", "date": "18/09", "description": "Cung cấp thông tin đầy đủ về cuộc thi, dòng thời gian và những chia sẻ hữu ích từ các chuyên gia Marketing.", "ctaLabel": "ĐĂNG KÝ NGAY", "ctaHref": "#register" }
+      { "title": "WEBINAR", "date": "28/08", "description": "Hoạt động chia sẻ kiến thức Marketing chuyên sâu, tạo cơ hội kết nối người tham gia với các diễn giả và góp phần thu hút sự quan tâm của các thí sinh tiềm năng.", "ctaLabel": "RECAP HOẠT ĐỘNG", "ctaHref": "#" },
+      { "title": "INFORMATION DAY", "date": "18/09", "description": "Cung cấp thông tin toàn diện về cuộc thi, đồng thời mang đến những chia sẻ và lời khuyên từ các chuyên gia Marketing, giúp thí sinh chuẩn bị tốt cho Vòng 1.", "ctaLabel": "ĐĂNG KÝ NGAY", "ctaHref": "#register" },
+      { "title": "TRAINING DAY 1", "date": "28/09", "description": "Các đội thi được trau dồi thêm kiến thức và kỹ năng cần thiết cho Vòng 1.", "ctaLabel": "TÌM HIỂU THÊM", "ctaHref": "#" },
+      { "title": "TRAINING DAY 2", "date": "10/10", "description": "TOP 27 đội thi vượt qua Vòng 1 được huấn luyện kỹ năng chuyên sâu, chuẩn bị hành trang cho Vòng 2.", "ctaLabel": "TÌM HIỂU THÊM", "ctaHref": "#" }
     ]
   },
   "faq": [
     { "question": "Thí sinh đăng ký tham gia cuộc thi có cần phải đóng lệ phí không?", "answer": "Không. Thí sinh không cần đóng bất kỳ khoản lệ phí nào khi đăng ký tham gia cuộc thi." },
-    { "question": "BTC có hỗ trợ thí sinh ghép đội không?", "answer": "Có. Ban tổ chức sẽ hỗ trợ kết nối các thí sinh phù hợp trong thời gian mở đơn đăng ký." },
-    { "question": "Khi nào đội thi được xác nhận đăng ký thành công?", "answer": "Đội thi sẽ nhận được email xác nhận sau khi hoàn tất thông tin và được Ban tổ chức kiểm duyệt." },
-    { "question": "Thí sinh lọt top bao nhiêu sẽ nhận được Certificate?", "answer": "Certificate được trao cho Top 25 đội thi của Vòng 1 và Top 2 đội thi của Vòng Khởi động." }
+    { "question": "BTC có hỗ trợ thí sinh ghép đội không?", "answer": "Không. Ban Tổ chức không hỗ trợ ghép đội. Thí sinh cần chủ động tìm kiếm và thành lập đội thi trước khi đăng ký." },
+    { "question": "Khi nào đội thi được xác nhận đăng ký thành công?", "answer": "Đội thi sẽ nhận được email xác nhận đăng ký thành công từ Ban Tổ chức trong vòng 24 giờ kể từ khi hoàn tất đăng ký và thông tin được kiểm tra, xác nhận hợp lệ." },
+    { "question": "Thí sinh lọt top bao nhiêu sẽ nhận được Certificate?", "answer": "Certificate sẽ được trao cho Top 25 đội thi của Vòng 1 và Top 2 đội thi của Vòng Khởi động." },
+    { "question": "Nếu gặp sự cố trong quá trình tham gia thi, đội thi cần làm gì?", "answer": "Trong trường hợp gặp bất kỳ sự cố gì hoặc cần hỗ trợ trong quá trình tham gia cuộc thi, đội thi vui lòng liên hệ Ban Tổ chức qua Fanpage cuộc thi." }
   ],
   "partners": {
-    "kicker": "Kết nối để bứt phá",
+    "kicker": "",
     "title": "ĐỐI TÁC ĐỒNG HÀNH",
     "markers": ["NEU", "HSV", "YOUTH", "BRAND", "NEU"],
     "levels": [
@@ -215,9 +229,9 @@
       "Trưởng Ban Truyền thông: 0822446348 (Nguyễn Trần Lâm Hoàng)"
     ],
     "socials": [
-      { "icon": "/assets/tnth-canva/13-facebook-logo-MAGzNqKrzKM.svg", "label": "Fanpage Tầm Nhìn Thương Hiệu", "href": "#" },
-      { "icon": "/assets/tnth-canva/13-facebook-logo-MAGzNqKrzKM.svg", "label": "Group Tầm Nhìn Thương Hiệu", "href": "#" },
-      { "icon": "/assets/tnth-canva/14-tik-tok-icon-MAGzNtv5p7o.svg", "label": "TikTok Tầm Nhìn Thương Hiệu", "href": "#" }
+      { "icon": "/assets/tnth-canva/13-facebook-logo-MAGzNqKrzKM.svg", "label": "Fanpage Tầm Nhìn Thương Hiệu", "href": "https://www.facebook.com/tamnhinthuonghieu.neu" },
+      { "icon": "/assets/tnth-canva/13-facebook-logo-MAGzNqKrzKM.svg", "label": "Group Tầm Nhìn Thương Hiệu", "href": "https://www.facebook.com/groups/403557561880905/" },
+      { "icon": "/assets/tnth-canva/14-tik-tok-icon-MAGzNtv5p7o.svg", "label": "TikTok Tầm Nhìn Thương Hiệu", "href": "https://www.tiktok.com/@tamnhinthuonghieu_neu" }
     ]
   }
 }
