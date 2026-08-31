@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { ArrowRight, Award, ChevronRight, Trophy } from '@lucide/vue'
+import { ArrowLeft, ArrowRight, Award, ChevronRight, Trophy } from '@lucide/vue'
 import type { IntroSlide, SectionKey, SiteContent } from '../data/site-content'
 import { sectionClass, sectionStyle } from '../utils/site-styles'
 
@@ -10,6 +10,7 @@ const galleryTrack = ref<HTMLElement | null>(null)
 let observer: IntersectionObserver | undefined
 let galleryDragStartX = 0
 let galleryScrollStart = 0
+let galleryAutoplayId: ReturnType<typeof window.setInterval> | undefined
 const animatedStats = ref<string[]>(props.site.about.statistics.map(() => '0'))
 
 const animateStatistic = (index: number, rawValue: string) => {
@@ -63,6 +64,7 @@ const timelineDescriptionHtml = (description: string) => description
 
 const startGalleryDrag = (event: PointerEvent) => {
   if (!galleryTrack.value) return
+  stopGalleryAutoplay()
   galleryDragStartX = event.clientX
   galleryScrollStart = galleryTrack.value.scrollLeft
   galleryTrack.value.classList.add('is-dragging')
@@ -78,6 +80,32 @@ const stopGalleryDrag = (event: PointerEvent) => {
   if (!galleryTrack.value) return
   galleryTrack.value.classList.remove('is-dragging')
   if (galleryTrack.value.hasPointerCapture(event.pointerId)) galleryTrack.value.releasePointerCapture(event.pointerId)
+  startGalleryAutoplay()
+}
+
+const moveGallery = (direction: 1 | -1) => {
+  const track = galleryTrack.value
+  if (!track) return
+  const firstItem = track.querySelector<HTMLElement>('.about-years__item')
+  const gap = Number.parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap) || 18
+  const step = (firstItem?.offsetWidth || track.clientWidth * .75) + gap
+  const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4
+  const atStart = track.scrollLeft <= 4
+
+  track.scrollTo({
+    left: direction > 0 && atEnd ? 0 : direction < 0 && atStart ? track.scrollWidth : track.scrollLeft + step * direction,
+    behavior: 'smooth',
+  })
+}
+
+const startGalleryAutoplay = () => {
+  if (galleryAutoplayId || (props.site.assets.aboutGallery?.length ?? 0) < 2) return
+  galleryAutoplayId = window.setInterval(() => moveGallery(1), 3600)
+}
+
+const stopGalleryAutoplay = () => {
+  if (galleryAutoplayId) window.clearInterval(galleryAutoplayId)
+  galleryAutoplayId = undefined
 }
 
 onMounted(() => {
@@ -85,6 +113,7 @@ onMounted(() => {
   const revealElements = root.value.querySelectorAll<HTMLElement>('.reveal')
   if (!('IntersectionObserver' in window)) {
     revealElements.forEach((element) => element.classList.add('is-visible'))
+    startGalleryAutoplay()
     return
   }
   observer = new IntersectionObserver(
@@ -94,16 +123,21 @@ onMounted(() => {
           entry.target.classList.add('is-visible')
           const statIndex = entry.target.getAttribute('data-stat-index')
           if (statIndex !== null) animateStatistic(Number(statIndex), props.site.about.statistics[Number(statIndex)].value)
-          observer?.unobserve(entry.target)
+        } else {
+          entry.target.classList.remove('is-visible')
         }
       })
     },
     { threshold: 0.12, rootMargin: '0px 0px -7% 0px' },
   )
   revealElements.forEach((element) => observer?.observe(element))
+  startGalleryAutoplay()
 })
 
-onBeforeUnmount(() => observer?.disconnect())
+onBeforeUnmount(() => {
+  observer?.disconnect()
+  stopGalleryAutoplay()
+})
 </script>
 
 <template>
@@ -122,12 +156,12 @@ onBeforeUnmount(() => observer?.disconnect())
           <p>{{ site.intro.subtitle || 'BAN ĐỐI NGOẠI - HỘI SINH VIÊN - NEU' }}</p>
         </div>
         <div class="row align-items-center g-4 g-lg-5 intro-section__row" :class="{ 'flex-lg-row-reverse': isReverse('intro') }">
-          <div class="col-lg-7 reveal slide-left">
+          <div class="col-lg-6 reveal slide-left">
             <div class="about-copy-card">
               <p v-for="(paragraph, index) in site.intro.paragraphsHtml" :key="index" v-html="paragraph"></p>
             </div>
           </div>
-          <div class="col-lg-5 reveal slide-right">
+          <div class="col-lg-6 reveal slide-right">
             <div id="organizerCarousel" class="carousel slide carousel-fade section-carousel" data-bs-ride="carousel" data-bs-interval="4200">
               <div class="carousel-indicators">
                 <button v-for="(_, index) in site.assets.organizerSlides" :key="index" type="button" data-bs-target="#organizerCarousel" :data-bs-slide-to="index" :class="{ active: index === 0 }" :aria-label="`Slide ${index + 1}`"></button>
@@ -163,11 +197,15 @@ onBeforeUnmount(() => observer?.disconnect())
             <div><span class="about-years__eyebrow">HÀNH TRÌNH THƯƠNG HIỆU</span><h3>DẤU ẤN QUA CÁC NĂM</h3></div>
             <span class="about-years__hint">Kéo ngang <ArrowRight :size="15" /></span>
           </div>
-          <div ref="galleryTrack" class="about-years__track" @pointerdown="startGalleryDrag" @pointermove="moveGalleryDrag" @pointerup="stopGalleryDrag" @pointercancel="stopGalleryDrag">
+          <div ref="galleryTrack" class="about-years__track" @pointerdown="startGalleryDrag" @pointermove="moveGalleryDrag" @pointerup="stopGalleryDrag" @pointercancel="stopGalleryDrag" @mouseenter="stopGalleryAutoplay" @mouseleave="startGalleryAutoplay" @focusin="stopGalleryAutoplay" @focusout="startGalleryAutoplay">
             <figure v-for="(image, index) in site.assets.aboutGallery" :key="image" class="about-years__item">
               <img :src="image" :alt="`Tầm Nhìn Thương Hiệu qua các năm - ảnh ${index + 1}`" loading="lazy" draggable="false" />
               <figcaption><small>TẦM NHÌN THƯƠNG HIỆU</small><strong>{{ ['2025', '2024', '2023'][index % 3] }}</strong></figcaption>
             </figure>
+          </div>
+          <div class="about-years__controls" aria-label="Điều khiển thư viện ảnh">
+            <button type="button" aria-label="Ảnh trước" @click="moveGallery(-1)"><ArrowLeft :size="18" /></button>
+            <button type="button" aria-label="Ảnh tiếp theo" @click="moveGallery(1)"><ArrowRight :size="18" /></button>
           </div>
         </div>
       </div>

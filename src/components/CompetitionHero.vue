@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import type { SiteContent } from '../data/site-content'
 import { sectionClass, sectionStyle } from '../utils/site-styles'
 
@@ -10,6 +10,21 @@ const props = defineProps<{
 
 const now = ref(Date.now())
 let intervalId: ReturnType<typeof setInterval> | undefined
+const activeNavigationTarget = ref('top')
+
+const updateActiveNavigation = () => {
+  if (props.preview) return
+  const headerOffset = (headerSettings.value.enabled ? headerSettings.value.height : 0) + 32
+  const targets = ['top', ...props.site.navigation.map((item) => item.target)]
+  let current = 'top'
+
+  targets.forEach((target) => {
+    const section = document.getElementById(target)
+    if (section && section.getBoundingClientRect().top <= headerOffset) current = target
+  })
+
+  activeNavigationTarget.value = current
+}
 
 if (!props.preview) {
   intervalId = window.setInterval(() => {
@@ -69,8 +84,14 @@ const headerContainerStyle = computed(() => ({
   '--header-font-size': `${headerSettings.value.fontSize}px`,
 }))
 
+onMounted(() => {
+  updateActiveNavigation()
+  if (!props.preview) window.addEventListener('scroll', updateActiveNavigation, { passive: true })
+})
+
 onBeforeUnmount(() => {
   if (intervalId) window.clearInterval(intervalId)
+  window.removeEventListener('scroll', updateActiveNavigation)
 })
 </script>
 
@@ -87,7 +108,7 @@ onBeforeUnmount(() => {
           </button>
           <div id="eventNavigation" class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto align-items-lg-center">
-              <li v-for="item in site.navigation" :key="item.target" class="nav-item"><a class="nav-link" :href="`#${item.target}`">{{ item.label }}</a></li>
+              <li v-for="item in site.navigation" :key="item.target" class="nav-item"><a class="nav-link" :class="{ active: activeNavigationTarget === item.target }" :href="`#${item.target}`" :aria-current="activeNavigationTarget === item.target ? 'page' : undefined">{{ item.label }}</a></li>
             </ul>
           </div>
         </div>

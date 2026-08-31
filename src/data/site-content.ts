@@ -446,6 +446,13 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       ...value.hero,
       tagline: value.hero.tagline.trim().toUpperCase() === 'ROUND TO UNBOUND' ? '' : value.hero.tagline,
     },
+    intro: {
+      ...value.intro,
+      paragraphsHtml: value.intro.paragraphsHtml.map((paragraph) => paragraph
+        .replace('<strong>19 năm</strong>', '<strong>20 năm</strong>')
+        .replace('<strong>36.000+ lượt theo dõi</strong>', '<strong>37000+ lượt theo dõi</strong>')
+        .replace('<strong>200+ sự kiện</strong>. Fanpage', '<strong>200+ sự kiện</strong>... Fanpage')),
+    },
     about: {
       ...value.about,
       kicker: value.about.kicker.trim().toUpperCase() === 'ROUND TO UNBOUND' ? '' : value.about.kicker,
