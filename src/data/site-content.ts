@@ -276,7 +276,7 @@ const makeSectionSettings = (overrides: Partial<SectionSettings> = {}): SectionS
 
 export const defaultSiteSettings: SiteSettings = {
   global: {
-    containerWidth: 1280,
+    containerWidth: 1360,
     fontFamily: "'Lexend', 'Montserrat', sans-serif",
     headingFontFamily: "'Oxanium', 'Lexend', sans-serif",
     baseFontSize: 20,
@@ -292,19 +292,19 @@ export const defaultSiteSettings: SiteSettings = {
   header: {
     enabled: true,
     sticky: true,
-    height: 78,
-    logoWidth: 64,
-    containerWidth: 1280,
-    paddingX: 28,
-    navGap: 40,
-    fontSize: 16,
+    height: 76,
+    logoWidth: 68,
+    containerWidth: 1400,
+    paddingX: 32,
+    navGap: 36,
+    fontSize: 15,
     backgroundColor: 'rgba(4, 7, 28, 0.96)',
     textColor: '#ffffff',
     backdropBlur: 16,
   },
   sectionOrder: [...contentSectionOrder],
   sections: {
-    hero: makeSectionSettings({ paddingTop: 0, paddingBottom: 0, minHeight: 650, containerWidth: 1280 }),
+    hero: makeSectionSettings({ paddingTop: 0, paddingBottom: 0, minHeight: 600, containerWidth: 1400 }),
     intro: makeSectionSettings({ paddingTop: 52, paddingBottom: 58 }),
     about: makeSectionSettings(),
     metrics: makeSectionSettings({ paddingTop: 44, paddingBottom: 48 }),
@@ -369,13 +369,19 @@ const normalizeSettings = (settings?: Partial<SiteSettings>): SiteSettings => {
 }
 
 const defaultVoices: SiteContent['voices'] = {
-  title: 'TẦM NHÌN THƯƠNG HIỆU VỚI GIÁM KHẢO, THÍ SINH',
+  title: 'TẦM NHÌN THƯƠNG HIỆU 2026\nVỚI GIÁM KHẢO, THÍ SINH',
   slides: [
     {
       image: '/assets/tnth-canva/07-mahsy0l1pt4-MAHSy0l1pT4.jpg',
       name: 'CHỊ NGUYỄN THỊ A',
       role: 'Giám khảo',
       quote: 'Tầm Nhìn Thương Hiệu là một hành trình để người trẻ thử sức, kết nối và biến góc nhìn thương hiệu thành giải pháp thực tế.',
+    },
+    {
+      image: '/assets/tnth-canva/08-mahsy0vtyai-MAHSy0vtyAI.jpg',
+      name: 'BẠN NGUYỄN MINH AN',
+      role: 'Thí sinh mùa 2026',
+      quote: 'Cuộc thi đã giúp mình nhìn một bài toán thương hiệu bằng tư duy sâu hơn, đồng thời gặp gỡ những người đồng đội đầy cảm hứng.',
     },
   ],
 }
@@ -440,7 +446,11 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     voices: {
       ...defaultVoices,
       ...(legacy.voices ?? {}),
-      slides: legacy.voices?.slides?.length ? legacy.voices.slides : defaultVoices.slides,
+      title: (legacy.voices?.title || defaultVoices.title).replace('2025', '2026'),
+      slides: (legacy.voices?.slides?.length ? legacy.voices.slides : defaultVoices.slides).map((s) => ({
+        ...s,
+        role: s.role.replace('2025', '2026'),
+      })),
     },
     hero: {
       ...value.hero,
@@ -448,14 +458,34 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     },
     intro: {
       ...value.intro,
-      paragraphsHtml: value.intro.paragraphsHtml.map((paragraph) => paragraph
-        .replace('<strong>19 năm</strong>', '<strong>20 năm</strong>')
-        .replace('<strong>36.000+ lượt theo dõi</strong>', '<strong>37000+ lượt theo dõi</strong>')
-        .replace('<strong>200+ sự kiện</strong>. Fanpage', '<strong>200+ sự kiện</strong>... Fanpage')),
+      title: value.intro.title || 'BAN TỔ CHỨC',
+      subtitle: value.intro.subtitle || 'BAN ĐỐI NGOẠI - HỘI SINH VIÊN - NEU',
+      paragraphsHtml: [
+        '<strong>Ban Đối Ngoại</strong> là đơn vị trực thuộc <strong>Hội Sinh viên Đại học Kinh tế Quốc Dân</strong> với vai trò tiêu biểu là phụ trách công tác Đối Ngoại cho các sự kiện của <strong>Hội Sinh viên - Đại học Kinh tế Quốc dân</strong>.',
+        'Trải qua <strong>20 năm</strong> hoạt động, <strong>Ban Đối Ngoại</strong> đã không ngừng khẳng định vị thế của mình với chuyên môn chính gồm Mời tài trợ, Truyền thông báo chí, góp phần tạo nên thành công cho các chương trình bên trong và ngoài khuôn khổ Đại học.',
+        'Với phong thái tự tin chuyên nghiệp, <strong>Ban Đối Ngoại</strong> đã kết nối hàng trăm doanh nghiệp, báo đài với cộng đồng sinh viên, tham gia tổ chức <strong>200+ sự kiện</strong> ... Fanpage của Ban Đối Ngoại đã thu hút được <strong>37000+ lượt theo dõi</strong> từ các bạn sinh viên và các doanh nghiệp, tổ chức, đối tác đồng hành.',
+      ],
+      ctaLabel: 'TÌM HIỂU THÊM',
+      ctaHref: 'https://www.facebook.com/bandoingoai.neu',
     },
     about: {
       ...value.about,
       kicker: value.about.kicker.trim().toUpperCase() === 'ROUND TO UNBOUND' ? '' : value.about.kicker,
+      title: value.about.title || 'TẦM NHÌN THƯƠNG HIỆU',
+      description: '<strong>TẦM NHÌN THƯƠNG HIỆU</strong> là cuộc thi giải case study đầu tiên về lĩnh vực <strong>Truyền thông thương hiệu</strong> được đặt nền móng bởi <strong>Ban Đối Ngoại - HSV - NEU</strong> với mục đích kết nối và khai phá tiềm năng sáng tạo của các bạn sinh viên trên địa bàn toàn quốc có niềm đam mê với lĩnh vực <strong>Truyền thông thương hiệu</strong> nói riêng và <strong>Marketing</strong> nói chung.',
+      imageLabel: '',
+      paragraphsHtml: [
+        'Với lĩnh vực sáng tạo, độc đáo, chủ đề <strong>"TRUYỀN THÔNG THƯƠNG HIỆU"</strong> hứa hẹn sẽ đem lại cho các bạn thí sinh nhiều ý tưởng mới mẻ, đột phá cũng như giúp các Doanh nghiệp tận dụng và khai phá để phát triển thương hiệu của mình.',
+        'Sau bốn mùa tổ chức thành công, <strong>TẦM NHÌN THƯƠNG HIỆU CHÍNH THỨC QUAY TRỞ LẠI</strong> vào tháng 9 này, hứa hẹn mang lại giá trị sâu sắc cùng những thử thách đột phá giúp khơi dậy sức sáng tạo trong mỗi thí sinh đến với cuộc thi.',
+      ],
+      statistics: [
+        { value: '2.000+', label: 'Thí sinh tham dự' },
+        { value: '700+', label: 'Đội thi đăng ký' },
+        { value: '60+', label: 'Trường Đại học, Cao đẳng trên cả nước' },
+        { value: '1.000.000+', label: 'Lượt tiếp cận trên các nền tảng trực tuyến' },
+        { value: '70+', label: 'Doanh nghiệp đối tác tiêu biểu' },
+        { value: '70+', label: 'Bài báo mạng và các đơn vị truyền thông uy tín' },
+      ],
     },
     theme: {
       ...value.theme,
@@ -465,12 +495,10 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
         : value.theme.title,
       subtitle: value.theme.subtitle || 'ROUND TO UNBOUND',
       quote: value.theme.quote.toLocaleLowerCase('vi-VN').includes('la bàn vận mệnh') ? '' : value.theme.quote,
-      paragraphsHtml: value.theme.paragraphsHtml[0]?.startsWith('Thế giới từng kẹt')
-        ? [
-            'Giữa trung tâm đầy hỗn mang của một thế giới công nghệ số, tồn tại một Chiếc la bàn vận mệnh từng định hướng mọi kết nối và duy trì nhịp vận hành của cả thế giới. Thế nhưng, vào khoảnh khắc nó ngừng xoay, mọi tín hiệu bắt đầu rối loạn, mọi chuyển động mắc kẹt trong những vòng lặp vô định, đẩy thành phố vào trạng thái hỗn mang chưa từng có. Muốn phá vỡ thế bế tắc ấy, cần những người đủ bản lĩnh tiến thẳng đến lõi của cỗ máy, chạm tay vào từng bánh răng và khởi động lại nhịp xoay của tương lai.',
-            'Mang trong mình tinh thần ấy, <strong>ROUND TO UNBOUND</strong> chính là hành trình của những Marketers dũng cảm trên con đường thoát khỏi giới hạn do chính kỷ nguyên số vô thức tạo nên. Họ lần theo những giá trị tưởng chừng quen thuộc, giải mã những tín hiệu từng bị bỏ quên và kết nối những khả năng chưa từng giao thoa để xoay chuyển Chiếc la bàn vận mệnh. Nhưng tái khởi động cỗ máy chưa bao giờ là đích đến cuối cùng. Điều thực sự được quyết định nằm ở cách họ tạo nên những điểm chạm mới, mở rộng không gian sáng tạo và kiến tạo những quỹ đạo phát triển mới cho Truyền thông Thương hiệu trong tương lai.',
-          ]
-        : value.theme.paragraphsHtml,
+      paragraphsHtml: [
+        'Giữa trung tâm đầy hỗn mang của một thế giới công nghệ số, tồn tại một <strong>Chiếc la bàn vận mệnh</strong> từng định hướng mọi kết nối và duy trì nhịp vận hành của cả thế giới. Thế nhưng, vào khoảnh khắc nó ngừng xoay, mọi tín hiệu bắt đầu rối loạn, mọi chuyển động mắc kẹt trong những vòng lặp vô định, đẩy thành phố vào trạng thái hỗn mang chưa từng có. Muốn phá vỡ thế bế tắc ấy, cần những người đủ bản lĩnh tiến thẳng đến lõi của cỗ máy, chạm tay vào từng bánh răng và <strong>khởi động lại nhịp xoay của tương lai</strong>.',
+        'Mang trong mình tinh thần ấy, <strong>ROUND TO UNBOUND</strong> chính là hành trình của những <strong>Marketers</strong> dũng cảm trên con đường thoát khỏi giới hạn do chính kỷ nguyên số vô thức tạo nên. Họ lần theo những giá trị tưởng chừng quen thuộc, giải mã những tín hiệu từng bị bỏ quên và kết nối những khả năng chưa từng giao thoa để xoay chuyển <strong>Chiếc la bàn vận mệnh</strong>. Nhưng tái khởi động cỗ máy chưa bao giờ là đích đến cuối cùng. Điều thực sự được quyết định nằm ở cách họ tạo nên những điểm chạm mới, mở rộng không gian sáng tạo và kiến tạo những quỹ đạo phát triển mới cho <strong>Truyền thông Thương hiệu</strong> trong tương lai.',
+      ],
     },
     rules: {
       ...value.rules,
@@ -501,7 +529,7 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
             { title: 'QUÁN QUÂN', value: '8.000.000 ĐỒNG', benefits: ['01 đội Quán quân'] },
             { title: 'Á QUÂN', value: '5.000.000 ĐỒNG', benefits: ['01 đội Á quân'] },
             { title: 'QUÝ QUÂN', value: '2.000.000 ĐỒNG/ĐỘI', benefits: ['02 đội Quý quân'] },
-            { title: 'ĐỘI ĐƯỢC YÊU THÍCH NHẤT', value: '1.000.000 ĐỒNG', benefits: ['01 giải thưởng'] },
+            { title: 'ĐỘI ĐƯỢC YÊU THÍCH NHẤT', value: '1.000.000 ĐỒNG', benefits: ['01 đội'] },
           ],
         }
       : value.prizes,

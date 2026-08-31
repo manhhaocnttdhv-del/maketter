@@ -299,4 +299,16 @@ const applyPreset = (preset: BackgroundPreset) => {
   opacity: 0;
   transform: translateY(12px) scale(0.96);
 }
+
+@media (max-width: 480px) {
+  .theme-switcher-widget {
+    bottom: 16px;
+    right: 16px;
+  }
+  .theme-switcher-panel {
+    width: calc(100vw - 32px);
+    right: 0;
+    max-height: 75vh;
+  }
+}
 </style>

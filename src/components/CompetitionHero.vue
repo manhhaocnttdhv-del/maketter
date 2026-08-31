@@ -100,8 +100,8 @@ onBeforeUnmount(() => {
     <div class="event-frame">
       <header v-if="headerSettings.enabled" data-editor-section="header" class="event-nav navbar navbar-expand-md" :class="{ 'event-nav--inline': !headerSettings.sticky }" :style="headerStyle">
         <div class="event-nav__inner container" :style="headerContainerStyle">
-          <a href="#top" class="event-mark" :style="{ width: `${headerSettings.logoWidth}px`, height: `${headerSettings.logoWidth}px`, flexBasis: `${headerSettings.logoWidth}px` }" :aria-label="site.meta.title">
-            <img :src="site.assets.headerLogo" :style="{ width: `${headerSettings.logoWidth}px`, height: `${headerSettings.logoWidth}px` }" alt="Logo Tầm Nhìn Thương Hiệu" />
+          <a href="#top" class="event-mark" :aria-label="site.meta.title">
+            <img :src="site.assets.headerLogo" alt="Logo Tầm Nhìn Thương Hiệu" />
           </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#eventNavigation" aria-controls="eventNavigation" aria-label="Mở điều hướng">
             <span></span><span></span><span></span>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { ArrowLeft, ArrowRight, Award, ChevronRight, Trophy } from '@lucide/vue'
+import { Carousel } from 'bootstrap'
 import type { IntroSlide, SectionKey, SiteContent } from '../data/site-content'
 import { sectionClass, sectionStyle } from '../utils/site-styles'
 
@@ -88,55 +89,167 @@ const moveGallery = (direction: 1 | -1) => {
   if (!track) return
   const firstItem = track.querySelector<HTMLElement>('.about-years__item')
   const gap = Number.parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap) || 18
-  const step = (firstItem?.offsetWidth || track.clientWidth * .75) + gap
-  const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4
-  const atStart = track.scrollLeft <= 4
+  const step = (firstItem?.offsetWidth || track.clientWidth * 0.75) + gap
+  const maxScroll = track.scrollWidth - track.clientWidth
 
-  track.scrollTo({
-    left: direction > 0 && atEnd ? 0 : direction < 0 && atStart ? track.scrollWidth : track.scrollLeft + step * direction,
-    behavior: 'smooth',
-  })
+  if (direction > 0) {
+    if (track.scrollLeft >= maxScroll - 15) {
+      track.scrollTo({ left: 0, behavior: 'smooth' })
+    } else {
+      track.scrollTo({ left: Math.min(track.scrollLeft + step, maxScroll), behavior: 'smooth' })
+    }
+  } else {
+    if (track.scrollLeft <= 15) {
+      track.scrollTo({ left: maxScroll, behavior: 'smooth' })
+    } else {
+      track.scrollTo({ left: Math.max(track.scrollLeft - step, 0), behavior: 'smooth' })
+    }
+  }
+}
+
+const handleManualGalleryMove = (direction: 1 | -1) => {
+  stopGalleryAutoplay()
+  moveGallery(direction)
+  window.setTimeout(() => startGalleryAutoplay(), 3200)
 }
 
 const startGalleryAutoplay = () => {
-  if (galleryAutoplayId || (props.site.assets.aboutGallery?.length ?? 0) < 2) return
-  galleryAutoplayId = window.setInterval(() => moveGallery(1), 3600)
+  stopGalleryAutoplay()
+  if ((props.site.assets.aboutGallery?.length ?? 0) < 2) return
+  galleryAutoplayId = window.setInterval(() => moveGallery(1), 3500)
 }
 
 const stopGalleryAutoplay = () => {
-  if (galleryAutoplayId) window.clearInterval(galleryAutoplayId)
-  galleryAutoplayId = undefined
+  if (galleryAutoplayId) {
+    window.clearInterval(galleryAutoplayId)
+    galleryAutoplayId = undefined
+  }
+}
+
+let orgCarouselInstance: Carousel | null = null
+let voicesCarouselInstance: Carousel | null = null
+let orgAutoplayId: ReturnType<typeof window.setInterval> | undefined
+let voicesAutoplayId: ReturnType<typeof window.setInterval> | undefined
+const activeRoundIndex = ref(0)
+let timelineAutoplayId: ReturnType<typeof window.setInterval> | undefined
+
+const startTimelineAutoplay = () => {
+  if (timelineAutoplayId) clearInterval(timelineAutoplayId)
+  const totalRounds = props.site.timeline.rounds.length || 1
+  timelineAutoplayId = window.setInterval(() => {
+    activeRoundIndex.value = (activeRoundIndex.value + 1) % totalRounds
+  }, 5000)
+}
+
+const stopTimelineAutoplay = () => {
+  if (timelineAutoplayId) {
+    clearInterval(timelineAutoplayId)
+    timelineAutoplayId = undefined
+  }
+}
+
+const selectRound = (index: number) => {
+  activeRoundIndex.value = index
+  startTimelineAutoplay()
+}
+
+const startVoicesAutoplay = () => {
+  if (voicesAutoplayId) clearInterval(voicesAutoplayId)
+  voicesAutoplayId = window.setInterval(() => {
+    voicesCarouselInstance?.next()
+  }, 4200)
+}
+
+const stopVoicesAutoplay = () => {
+  if (voicesAutoplayId) {
+    clearInterval(voicesAutoplayId)
+    voicesAutoplayId = undefined
+  }
+}
+
+const startOrgAutoplay = () => {
+  if (orgAutoplayId) clearInterval(orgAutoplayId)
+  orgAutoplayId = window.setInterval(() => {
+    orgCarouselInstance?.next()
+  }, 3800)
+}
+
+const stopOrgAutoplay = () => {
+  if (orgAutoplayId) {
+    clearInterval(orgAutoplayId)
+    orgAutoplayId = undefined
+  }
+}
+
+const initCarousels = () => {
+  const orgEl = root.value?.querySelector('#organizerCarousel')
+  if (orgEl) {
+    orgCarouselInstance = Carousel.getOrCreateInstance(orgEl, {
+      interval: 3800,
+      ride: 'carousel',
+      wrap: true,
+      pause: 'hover',
+      touch: true,
+    })
+    orgCarouselInstance.cycle()
+  }
+
+  const voicesEl = root.value?.querySelector('#voicesCarousel')
+  if (voicesEl) {
+    voicesCarouselInstance = Carousel.getOrCreateInstance(voicesEl, {
+      interval: 4200,
+      ride: 'carousel',
+      wrap: true,
+      pause: 'hover',
+      touch: true,
+    })
+    voicesCarouselInstance.cycle()
+  }
 }
 
 onMounted(() => {
   if (!root.value) return
-  const revealElements = root.value.querySelectorAll<HTMLElement>('.reveal')
-  if (!('IntersectionObserver' in window)) {
-    revealElements.forEach((element) => element.classList.add('is-visible'))
+  nextTick(() => {
+    initCarousels()
     startGalleryAutoplay()
-    return
-  }
-  observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible')
-          const statIndex = entry.target.getAttribute('data-stat-index')
-          if (statIndex !== null) animateStatistic(Number(statIndex), props.site.about.statistics[Number(statIndex)].value)
-        } else {
-          entry.target.classList.remove('is-visible')
-        }
-      })
-    },
-    { threshold: 0.12, rootMargin: '0px 0px -7% 0px' },
-  )
-  revealElements.forEach((element) => observer?.observe(element))
-  startGalleryAutoplay()
+    startOrgAutoplay()
+    startVoicesAutoplay()
+    startTimelineAutoplay()
+
+    const revealElements = root.value?.querySelectorAll<HTMLElement>('.reveal') ?? []
+    if (!('IntersectionObserver' in window)) {
+      revealElements.forEach((element) => element.classList.add('is-visible'))
+      return
+    }
+
+    observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            const statIndex = entry.target.getAttribute('data-stat-index')
+            if (statIndex !== null) {
+              animateStatistic(Number(statIndex), props.site.about.statistics[Number(statIndex)].value)
+            }
+          } else {
+            entry.target.classList.remove('is-visible')
+          }
+        })
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' },
+    )
+    revealElements.forEach((element) => observer?.observe(element))
+  })
 })
 
 onBeforeUnmount(() => {
   observer?.disconnect()
   stopGalleryAutoplay()
+  stopOrgAutoplay()
+  stopVoicesAutoplay()
+  stopTimelineAutoplay()
+  orgCarouselInstance?.dispose()
+  voicesCarouselInstance?.dispose()
 })
 </script>
 
@@ -162,7 +275,7 @@ onBeforeUnmount(() => {
             </div>
           </div>
           <div class="col-lg-6 reveal slide-right">
-            <div id="organizerCarousel" class="carousel slide carousel-fade section-carousel" data-bs-ride="carousel" data-bs-interval="4200">
+            <div id="organizerCarousel" class="carousel slide carousel-fade section-carousel" data-bs-ride="carousel" data-bs-interval="3800" @mouseenter="stopOrgAutoplay" @mouseleave="startOrgAutoplay">
               <div class="carousel-indicators">
                 <button v-for="(_, index) in site.assets.organizerSlides" :key="index" type="button" data-bs-target="#organizerCarousel" :data-bs-slide-to="index" :class="{ active: index === 0 }" :aria-label="`Slide ${index + 1}`"></button>
               </div>
@@ -186,16 +299,18 @@ onBeforeUnmount(() => {
         <div class="text-center section-heading reveal">
           <p v-if="site.about.kicker" class="section-kicker justify-content-center">{{ site.about.kicker }}</p>
           <h2>{{ site.about.title }}</h2>
-          <p>{{ site.about.description }}</p>
+          <p v-html="site.about.description"></p>
         </div>
         <div class="row mt-2 mt-lg-4 g-4 align-items-center" :class="{ 'flex-md-row-reverse': isReverse('about') }">
-          <div class="col-md-6 reveal slide-left"><div class="section-image section-image--vision" :style="aboutImageStyle"><span>{{ site.about.imageLabel }}</span></div></div>
+          <div class="col-md-6 reveal slide-left"><div class="section-image section-image--vision" :style="aboutImageStyle"><div class="image-grid"></div></div></div>
           <div class="col-md-6 reveal slide-right"><p v-for="(paragraph, index) in site.about.paragraphsHtml" :key="index" v-html="paragraph"></p></div>
         </div>
         <div v-if="site.assets.aboutGallery?.length" class="about-years reveal">
           <div class="about-years__heading">
-            <div><span class="about-years__eyebrow">HÀNH TRÌNH THƯƠNG HIỆU</span><h3>DẤU ẤN QUA CÁC NĂM</h3></div>
-            <span class="about-years__hint">Kéo ngang <ArrowRight :size="15" /></span>
+            <div>
+              <span class="about-years__eyebrow">HÀNH TRÌNH TẦM NHÌN THƯƠNG HIỆU</span>
+              <h3>DẤU ẤN QUA CÁC NĂM</h3>
+            </div>
           </div>
           <div ref="galleryTrack" class="about-years__track" @pointerdown="startGalleryDrag" @pointermove="moveGalleryDrag" @pointerup="stopGalleryDrag" @pointercancel="stopGalleryDrag" @mouseenter="stopGalleryAutoplay" @mouseleave="startGalleryAutoplay" @focusin="stopGalleryAutoplay" @focusout="startGalleryAutoplay">
             <figure v-for="(image, index) in site.assets.aboutGallery" :key="image" class="about-years__item">
@@ -204,8 +319,8 @@ onBeforeUnmount(() => {
             </figure>
           </div>
           <div class="about-years__controls" aria-label="Điều khiển thư viện ảnh">
-            <button type="button" aria-label="Ảnh trước" @click="moveGallery(-1)"><ArrowLeft :size="18" /></button>
-            <button type="button" aria-label="Ảnh tiếp theo" @click="moveGallery(1)"><ArrowRight :size="18" /></button>
+            <button type="button" aria-label="Ảnh trước" @click="handleManualGalleryMove(-1)"><ArrowLeft :size="18" /></button>
+            <button type="button" aria-label="Ảnh tiếp theo" @click="handleManualGalleryMove(1)"><ArrowRight :size="18" /></button>
           </div>
         </div>
       </div>
@@ -229,7 +344,7 @@ onBeforeUnmount(() => {
       <div class="section-transition" aria-hidden="true"></div>
       <div class="container px-4 px-lg-5">
         <div class="text-center voices-heading reveal"><h2>{{ site.voices.title }}</h2></div>
-        <div id="voicesCarousel" class="carousel slide voices-carousel reveal" data-bs-ride="carousel" data-bs-interval="5600">
+        <div id="voicesCarousel" class="carousel slide carousel-fade voices-carousel reveal" data-bs-ride="carousel" data-bs-interval="4200" @mouseenter="stopVoicesAutoplay" @mouseleave="startVoicesAutoplay">
           <div class="carousel-inner">
             <div v-for="(voice, index) in site.voices.slides" :key="`${voice.name}-${index}`" class="carousel-item" :class="{ active: index === 0 }">
               <article class="voice-card">
@@ -271,9 +386,47 @@ onBeforeUnmount(() => {
       <div class="section-transition" aria-hidden="true"></div>
       <div class="container px-4 px-lg-5 position-relative">
         <div class="text-center section-heading reveal"><h2>{{ site.timeline.title }}</h2></div>
-        <div class="row align-items-center g-4 mt-1" :class="{ 'flex-md-row-reverse': isReverse('timeline') }">
-          <div class="col-md-5 reveal slide-left"><div class="timeline-nav nav nav-pills flex-column" role="tablist"><button v-for="(round, index) in site.timeline.rounds" :key="`${round.title}-${index}`" class="nav-link" :class="{ active: index === 0 }" type="button" data-bs-toggle="pill" :data-bs-target="`#round-${index}`"><span>{{ String(index + 1).padStart(2, '0') }}</span><strong>{{ round.title }}</strong></button></div></div>
-          <div class="col-md-7 reveal slide-right"><div class="tab-content timeline-content"><article v-for="(round, index) in site.timeline.rounds" :id="`round-${index}`" :key="`${round.title}-${index}`" class="tab-pane fade" :class="{ 'show active': index === 0 }"><p class="timeline-stage">{{ round.title }}</p><span class="timeline-date">{{ round.date }}</span><div class="timeline-copy" v-html="timelineDescriptionHtml(round.description)"></div></article></div></div>
+        <div class="row align-items-center g-4 mt-1 timeline-row position-relative" :class="{ 'flex-md-row-reverse': isReverse('timeline') }" @mouseenter="stopTimelineAutoplay" @mouseleave="startTimelineAutoplay">
+          <div class="col-md-5 reveal slide-left">
+            <div class="timeline-nav nav nav-pills flex-column" role="tablist">
+              <button
+                v-for="(round, index) in site.timeline.rounds"
+                :key="`${round.title}-${index}`"
+                class="nav-link"
+                :class="{ active: activeRoundIndex === index }"
+                type="button"
+                @click="selectRound(index)"
+              >
+                <span>{{ String(index + 1).padStart(2, '0') }}</span>
+                <strong>{{ round.title }}</strong>
+              </button>
+            </div>
+            
+            <!-- Futuristic 3D Hologram Compass Emitter -->
+            <div class="timeline-compass-box">
+              <div class="timeline-compass-rings"></div>
+              <img :src="site.assets.compassOverlay" alt="Chiếc la bàn vận mệnh" class="timeline-compass-visual" />
+              <div class="timeline-compass-beam"></div>
+            </div>
+          </div>
+          <div class="col-md-7 reveal slide-right position-relative">
+            <div class="timeline-content-wrapper">
+              <div class="timeline-hologram-glow"></div>
+              <div class="tab-content timeline-content">
+                <transition name="timeline-fade" mode="out-in">
+                  <article
+                    :key="activeRoundIndex"
+                    class="timeline-round-card"
+                  >
+                    <div class="timeline-card-scanline"></div>
+                    <p class="timeline-stage">{{ site.timeline.rounds[activeRoundIndex]?.title }}</p>
+                    <span class="timeline-date">{{ site.timeline.rounds[activeRoundIndex]?.date }}</span>
+                    <div class="timeline-copy" v-html="timelineDescriptionHtml(site.timeline.rounds[activeRoundIndex]?.description || '')"></div>
+                  </article>
+                </transition>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -287,13 +440,32 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
-    <section v-if="isEnabled('benefits')" data-editor-section="benefits" class="content-section section-light-blue" :class="classFor('benefits')" :style="styleFor('benefits')">
-      <div class="section-transition" aria-hidden="true"></div>
-      <div class="container px-4 px-lg-5">
-        <div class="text-center section-heading section-heading--dark reveal"><h2>{{ site.benefits.title }}</h2></div>
-        <div class="row g-4 mt-1" :class="{ 'configured-card-grid': hasColumns('benefits') }" :style="cardGridStyle('benefits')"><div v-for="(group, index) in site.benefits.groups" :key="`${group.title}-${index}`" :class="hasColumns('benefits') ? '' : 'col-lg-6'" class="reveal"><article class="glass-rule h-100"><h3>{{ group.title }}</h3><ul><li v-for="(item, itemIndex) in group.items" :key="itemIndex">{{ item }}</li></ul></article></div></div>
-      </div>
-    </section>
+    <template v-for="(group, gIdx) in site.benefits.groups" :key="`${group.title}-${gIdx}`">
+      <section
+        v-if="isEnabled('benefits')"
+        :id="gIdx === 0 ? 'terms' : 'benefits'"
+        data-editor-section="benefits"
+        class="content-section section-deep-blue benefits-standalone-section"
+        :class="classFor('benefits')"
+        :style="styleFor('benefits')"
+      >
+        <div class="section-transition" aria-hidden="true"></div>
+        <div class="container px-4 px-lg-5">
+          <div class="text-center section-heading reveal">
+            <h2>{{ group.title }}</h2>
+          </div>
+          <div class="row mt-2 mt-lg-3 justify-content-center">
+            <div class="col-lg-11 col-xl-10 reveal">
+              <article class="glass-rule glass-rule--standalone h-100">
+                <ul>
+                  <li v-for="(item, itemIndex) in group.items" :key="itemIndex">{{ item }}</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+    </template>
 
     <section v-if="isEnabled('activities')" id="register" data-editor-section="activities" class="content-section section-cosmic section-activities" :class="classFor('activities')" :style="styleFor('activities', site.assets.activitiesBackground)">
       <div class="section-transition" aria-hidden="true"></div>
@@ -315,14 +487,21 @@ onBeforeUnmount(() => {
       <div class="container px-4 px-lg-5 text-center">
         <div class="section-heading reveal"><h2>{{ site.partners.title }}</h2></div>
         <div class="partner-markers reveal"><span v-for="(marker, index) in site.partners.markers" :key="index">{{ marker }}</span></div>
-        <div class="row row-cols-2 row-cols-md-4 g-3 partner-levels reveal" :class="{ 'configured-card-grid': hasColumns('partners') }" :style="cardGridStyle('partners')"><div v-for="(level, index) in site.partners.levels" :key="`${level.value}-${index}`" :class="hasColumns('partners') ? '' : 'col'"><span>{{ level.label }}</span><strong>{{ level.value }}</strong></div></div>
+        <div class="row row-cols-2 row-cols-md-4 g-3 g-lg-4 partner-levels reveal" :class="{ 'configured-card-grid': hasColumns('partners') }" :style="cardGridStyle('partners')">
+          <div v-for="(level, index) in site.partners.levels" :key="`${level.value}-${index}`" :class="hasColumns('partners') ? '' : 'col'">
+            <div class="partner-level-card">
+              <span class="partner-level-label">{{ level.label }}</span>
+              <strong class="partner-level-value">{{ level.value }}</strong>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
     <footer v-if="isEnabled('footer')" id="footer" data-editor-section="footer" class="event-footer" :class="classFor('footer')" :style="styleFor('footer', site.assets.footerBackground)">
       <div class="section-transition" aria-hidden="true"></div>
       <div class="container px-4 px-lg-5">
-        <div class="footer-contact-card" :class="{ 'footer-contact-card--reverse': isReverse('footer') }">
+        <div class="footer-contact-card reveal" :class="{ 'footer-contact-card--reverse': isReverse('footer') }">
           <div class="footer-contact-card__details"><img class="footer-contact-card__logo" :src="site.assets.footerLogo" alt="Tầm Nhìn Thương Hiệu" /><div><strong>{{ site.footer.contactTitle || site.footer.title }}</strong><p v-for="(line, index) in site.footer.contactLines" :key="index">{{ line }}</p></div></div>
           <div class="footer-contact-card__socials"><a v-for="(social, index) in site.footer.socials" :key="`${social.label}-${index}`" :href="social.href" target="_blank" rel="noopener noreferrer"><img :src="social.icon" :alt="social.label" /><span>{{ social.label }}</span></a></div>
         </div>
