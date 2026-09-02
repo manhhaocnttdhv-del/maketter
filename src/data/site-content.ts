@@ -54,6 +54,16 @@ export interface PartnerLevel {
   value: string
 }
 
+export interface PartnerLogo {
+  image: string
+  name: string
+}
+
+export interface PartnerGroup {
+  title: string
+  logos: PartnerLogo[]
+}
+
 export interface Testimonial {
   image: string
   name: string
@@ -108,6 +118,7 @@ export interface HeaderSettings {
 
 export interface SectionSettings {
   enabled: boolean
+  contentFontSize: number
   paddingTop: number
   paddingBottom: number
   marginTop: number
@@ -145,6 +156,7 @@ export interface SiteContent {
   }
   settings: SiteSettings
   assets: {
+    globalBackground: string
     headerLogo: string
     heroBackground: string
     heroTitleArtwork: string
@@ -228,6 +240,7 @@ export interface SiteContent {
     title: string
     markers: string[]
     levels: PartnerLevel[]
+    supportGroups: PartnerGroup[]
   }
   footer: {
     title: string
@@ -252,6 +265,7 @@ export const contentSectionOrder: SectionKey[] = sectionKeys.filter((key) => key
 
 const makeSectionSettings = (overrides: Partial<SectionSettings> = {}): SectionSettings => ({
   enabled: true,
+  contentFontSize: 16,
   paddingTop: 52,
   paddingBottom: 52,
   marginTop: 0,
@@ -402,6 +416,12 @@ const defaultFooter: SiteContent['footer'] = {
   ],
 }
 
+const defaultPartnerGroups: PartnerGroup[] = [
+  { title: 'BẢO TRỢ CHUYÊN MÔN', logos: Array.from({ length: 7 }, () => ({ image: '', name: 'Logo' })) },
+  { title: 'BẢO TRỢ TRUYỀN THÔNG', logos: Array.from({ length: 9 }, () => ({ image: '', name: 'Logo' })) },
+  { title: 'ĐỐI TÁC TRUYỀN THÔNG', logos: Array.from({ length: 8 }, () => ({ image: '', name: 'Logo' })) },
+]
+
 const officialTimelineDates = ['2/9 – 5/9', '27/9 – 2/10', '9/10 – 14/10', '5/11']
 
 export const normalizeSiteContent = (value: SiteContent): SiteContent => {
@@ -432,6 +452,12 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     },
     assets: {
       ...value.assets,
+      globalBackground: value.assets.globalBackground
+        || value.assets.activitiesBackground
+        || '/assets/tnth-canva/10-mahsd0narra-MAHSd0NArRA.png',
+      heroBackground: !value.assets.globalBackground && value.assets.heroBackground.endsWith('10-mahsd0narra-MAHSd0NArRA.png')
+        ? '/assets/tnth-canva/01-mahscd5rwcc-MAHScd5RwCc.png'
+        : value.assets.heroBackground,
       heroOrganizations: value.assets.heroOrganizations.endsWith('04-magucn8vs0s-MAGucN8vS0s.png')
         ? '/assets/tnth-canva/04-organizations-transparent-v2.png'
         : value.assets.heroOrganizations,
@@ -571,6 +597,9 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     partners: {
       ...value.partners,
       kicker: '',
+      supportGroups: value.partners.supportGroups?.length
+        ? value.partners.supportGroups
+        : defaultPartnerGroups,
       levels: [
         { label: 'NHÀ TÀI TRỢ', value: 'HOÀNG KIM' },
         { label: 'NHÀ TÀI TRỢ', value: 'KIM CƯƠNG' },

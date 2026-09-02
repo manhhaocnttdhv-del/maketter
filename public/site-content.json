@@ -55,6 +55,7 @@
     "customCss": ""
   },
   "assets": {
+    "globalBackground": "/assets/tnth-canva/10-mahsd0narra-MAHSd0NArRA.png",
     "headerLogo": "/assets/tnth-canva/03-mahsv-hibxi-MAHSv-hIBxI.png",
     "heroBackground": "/assets/tnth-canva/01-mahscd5rwcc-MAHScd5RwCc.png",
     "heroTitleArtwork": "/assets/tnth-canva/06-mahstkk4kow-MAHStKK4Kow.png",
@@ -219,6 +220,17 @@
       { "label": "NHÀ TÀI TRỢ", "value": "BẠC" },
       { "label": "NHÀ TÀI TRỢ", "value": "ĐỒNG" },
       { "label": "NHÀ TÀI TRỢ", "value": "ĐỒNG HÀNH" }
+    ],
+    "supportGroups": [
+      { "title": "BẢO TRỢ CHUYÊN MÔN", "logos": [
+        { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }
+      ] },
+      { "title": "BẢO TRỢ TRUYỀN THÔNG", "logos": [
+        { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }
+      ] },
+      { "title": "ĐỐI TÁC TRUYỀN THÔNG", "logos": [
+        { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }
+      ] }
     ]
   },
   "footer": {

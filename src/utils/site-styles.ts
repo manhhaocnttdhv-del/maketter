@@ -17,7 +17,7 @@ const colorWithOpacity = (color: string, opacity: number) => {
 
 export const globalSiteStyle = (site: SiteContent): CSSProperties => {
   const global = site.settings.global
-  const bgImage = site.assets.heroBackground ? `url("${site.assets.heroBackground}")` : undefined
+  const bgImage = site.assets.globalBackground ? `url("${site.assets.globalBackground}")` : undefined
   return {
     '--site-container-width': `${global.containerWidth}px`,
     '--site-font-family': global.fontFamily,
@@ -50,10 +50,13 @@ export const sectionStyle = (
   fallbackImage = '',
 ): CSSProperties => {
   const settings = site.settings.sections[key]
-  const image = settings.backgroundImage || fallbackImage
+  const image = key === 'hero'
+    ? (settings.backgroundImage || fallbackImage || site.assets.heroBackground)
+    : (settings.backgroundImage || site.assets.globalBackground)
   const style: CSSProperties = {
     '--section-container-width': `${settings.containerWidth}px`,
     '--section-columns': String(settings.columns || 0),
+    '--section-content-font-size': `${settings.contentFontSize}px`,
     paddingTop: `${settings.paddingTop}px`,
     paddingBottom: `${settings.paddingBottom}px`,
     marginTop: `${settings.marginTop}px`,
@@ -66,6 +69,7 @@ export const sectionStyle = (
     backgroundPosition: settings.backgroundPosition,
     backgroundSize: settings.backgroundSize,
     backgroundRepeat: settings.backgroundRepeat,
+    backgroundAttachment: image ? 'fixed' : undefined,
   } as CSSProperties
 
   if (image) {

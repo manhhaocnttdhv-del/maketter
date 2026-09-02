@@ -23,6 +23,7 @@ const labels: Record<string, string> = {
   editorPassword: 'Mật khẩu quản trị (/editor)',
   label: 'Nhãn hiển thị',
   target: 'ID section đích',
+  globalBackground: 'Ảnh nền chung từ section 2',
   headerLogo: 'Logo header',
   heroBackground: 'Ảnh nền hero',
   heroTitleArtwork: 'Ảnh title hero (xóa để dùng text động)',
@@ -66,6 +67,9 @@ const labels: Record<string, string> = {
   answer: 'Câu trả lời',
   markers: 'Các dấu mốc',
   levels: 'Các cấp đối tác',
+  supportGroups: 'Các nhóm logo đối tác',
+  logos: 'Danh sách logo',
+  name: 'Tên đơn vị / mô tả ảnh',
   organization: 'Đơn vị tổ chức',
   contact: 'Thông tin liên hệ',
   contactTitle: 'Tiêu đề liên hệ',
@@ -136,6 +140,46 @@ const addArrayValue = () => {
   emit('update:modelValue', [...current, emptyFromTemplate(template)])
 }
 
+const readImageFile = (file: File) => new Promise<string>((resolve, reject) => {
+  const reader = new FileReader()
+  reader.onload = () => resolve(String(reader.result ?? ''))
+  reader.onerror = () => reject(new Error('read-error'))
+  reader.readAsDataURL(file)
+})
+
+const handleMultipleImageUpload = async (event: Event) => {
+  const input = event.target as HTMLInputElement
+  const files = Array.from(input.files ?? [])
+  input.value = ''
+  if (!files.length) return
+
+  const invalid = files.find((file) => !file.type.startsWith('image/'))
+  if (invalid) {
+    emit('upload-error', `“${invalid.name}” không phải là tệp ảnh.`)
+    return
+  }
+  const oversized = files.find((file) => file.size > 8 * 1024 * 1024)
+  if (oversized) {
+    emit('upload-error', `“${oversized.name}” lớn hơn 8 MB. Hãy nén ảnh trước khi tải lên.`)
+    return
+  }
+
+  try {
+    const images = await Promise.all(files.map(async (file) => ({
+      image: await readImageFile(file),
+      name: file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' '),
+    })))
+    const current = props.modelValue as unknown[]
+    const placeholdersOnly = current.length > 0 && current.every((item) => {
+      if (typeof item !== 'object' || item === null) return false
+      return !String((item as Record<string, unknown>).image ?? '')
+    })
+    emit('update:modelValue', placeholdersOnly ? images : [...current, ...images])
+  } catch {
+    emit('upload-error', 'Không thể đọc một hoặc nhiều tệp ảnh đã chọn.')
+  }
+}
+
 const handleImageUpload = (event: Event) => {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
@@ -177,6 +221,11 @@ const handleImageUpload = (event: Event) => {
       <div><strong>{{ label }}</strong><span>{{ (modelValue as unknown[]).length }} mục</span></div>
       <button type="button" @click="addArrayValue"><Plus :size="14" /> Thêm</button>
     </div>
+
+    <label v-if="name === 'logos'" class="config-upload-button config-upload-button--multiple">
+      <ImagePlus :size="15" /> Import nhiều logo
+      <input type="file" accept="image/*" multiple @change="handleMultipleImageUpload" />
+    </label>
 
     <div v-if="!(modelValue as unknown[]).length" class="config-array__empty">Chưa có mục nào. Bấm “Thêm” để tạo mới.</div>
     <article v-for="(item, index) in (modelValue as unknown[])" :key="index" class="config-array-item">

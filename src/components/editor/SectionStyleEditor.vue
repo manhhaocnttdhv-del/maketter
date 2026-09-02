@@ -12,6 +12,7 @@ const emit = defineEmits<{
 }>()
 
 const numberFields: Array<{ key: keyof SectionSettings; label: string; min: number; max: number; step?: number }> = [
+  { key: 'contentFontSize', label: 'Cỡ chữ nội dung', min: 10, max: 32, step: 0.5 },
   { key: 'paddingTop', label: 'Padding trên', min: 0, max: 300 },
   { key: 'paddingBottom', label: 'Padding dưới', min: 0, max: 300 },
   { key: 'marginTop', label: 'Margin trên', min: -200, max: 300 },

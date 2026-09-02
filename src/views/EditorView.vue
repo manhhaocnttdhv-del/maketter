@@ -42,7 +42,7 @@ import {
 } from '../data/site-content'
 import { globalSiteStyle } from '../utils/site-styles'
 
-type EditorSectionId = 'global' | 'header' | SectionKey
+type EditorSectionId = 'global' | 'header' | 'partnerLogos' | SectionKey
 type EditorMode = 'visual' | 'json'
 type InspectorTab = 'content' | 'design'
 type DeviceMode = 'desktop' | 'tablet' | 'mobile'
@@ -69,6 +69,7 @@ const sections: EditorSection[] = [
   { id: 'activities', label: 'Hoạt động', hint: 'Các hoạt động đăng ký' },
   { id: 'faq', label: 'FAQ', hint: 'Câu hỏi thường gặp' },
   { id: 'partners', label: 'Đối tác', hint: 'Mốc và cấp tài trợ' },
+  { id: 'partnerLogos', label: 'Logo bảo trợ', hint: 'Chỉ sửa logo bảo trợ và truyền thông' },
   { id: 'footer', label: 'Footer', hint: 'Liên hệ và mạng xã hội' },
 ]
 
@@ -131,13 +132,19 @@ const deviceWidth = computed(() => deviceWidths[deviceMode.value])
 const lineCount = computed(() => jsonText.value ? jsonText.value.split('\n').length : 0)
 const activeDefinition = computed(() => sections.find((section) => section.id === activeSection.value) ?? sections[0])
 const activeIsSection = computed(() => activeSection.value !== 'global' && activeSection.value !== 'header')
+const activeStyleSection = computed<SectionKey>(() => activeSection.value === 'partnerLogos' ? 'partners' : activeSection.value as SectionKey)
 const orderedSections = computed(() => {
   if (!site.value) return sections
   const fixedIds: EditorSectionId[] = ['global', 'header', 'hero']
   const fixed = fixedIds.map((id) => sections.find((section) => section.id === id)).filter(Boolean) as EditorSection[]
   const ordered = site.value.settings.sectionOrder
-    .map((id) => sections.find((section) => section.id === id))
-    .filter(Boolean) as EditorSection[]
+    .flatMap((id) => {
+      const section = sections.find((item) => item.id === id)
+      if (!section) return []
+      return id === 'partners'
+        ? [section, sections.find((item) => item.id === 'partnerLogos')!]
+        : [section]
+    })
   return [...fixed, ...ordered]
 })
 
@@ -158,7 +165,7 @@ const selectedModel = computed<unknown>({
     if (!site.value) return {}
     const value = site.value
     switch (activeSection.value) {
-      case 'global': return { meta: value.meta, heroBackground: value.assets.heroBackground }
+      case 'global': return { meta: value.meta, globalBackground: value.assets.globalBackground }
       case 'header': return { navigation: value.navigation, headerLogo: value.assets.headerLogo }
       case 'hero': return { ...value.hero, heroBackground: value.assets.heroBackground, heroTitleArtwork: value.assets.heroTitleArtwork, heroOrganizations: value.assets.heroOrganizations }
       case 'intro': return { ...value.intro, organizerSlides: value.assets.organizerSlides }
@@ -175,7 +182,11 @@ const selectedModel = computed<unknown>({
       case 'benefits': return value.benefits
       case 'activities': return { ...value.activities, activitiesBackground: value.assets.activitiesBackground }
       case 'faq': return { faq: value.faq }
-      case 'partners': return value.partners
+      case 'partners': {
+        const { supportGroups: _supportGroups, ...partners } = value.partners
+        return partners
+      }
+      case 'partnerLogos': return { supportGroups: value.partners.supportGroups }
       case 'footer': return { ...value.footer, footerLogo: value.assets.footerLogo, footerBackground: value.assets.footerBackground }
       default: return {}
     }
@@ -185,9 +196,9 @@ const selectedModel = computed<unknown>({
     const value = model as Record<string, unknown>
     switch (activeSection.value) {
       case 'global': {
-        const { heroBackground, meta } = value as { meta: SiteContent['meta']; heroBackground?: string }
+        const { globalBackground, meta } = value as { meta: SiteContent['meta']; globalBackground?: string }
         if (meta) site.value.meta = meta
-        if (heroBackground !== undefined) site.value.assets.heroBackground = String(heroBackground)
+        if (globalBackground !== undefined) site.value.assets.globalBackground = String(globalBackground)
         break
       }
       case 'header':
@@ -242,7 +253,8 @@ const selectedModel = computed<unknown>({
         break
       }
       case 'faq': site.value.faq = value.faq as SiteContent['faq']; break
-      case 'partners': site.value.partners = value as unknown as SiteContent['partners']; break
+      case 'partners': site.value.partners = { ...site.value.partners, ...value } as SiteContent['partners']; break
+      case 'partnerLogos': site.value.partners.supportGroups = value.supportGroups as SiteContent['partners']['supportGroups']; break
       case 'footer': {
         const { footerLogo, footerBackground, ...footer } = value
         site.value.footer = footer as SiteContent['footer']
@@ -257,11 +269,11 @@ const selectedModel = computed<unknown>({
 const selectedSectionStyle = computed<SectionSettings>({
   get: () => {
     if (!site.value || !activeIsSection.value) throw new Error('Không có section đang chọn')
-    return site.value.settings.sections[activeSection.value as SectionKey]
+    return site.value.settings.sections[activeStyleSection.value]
   },
   set: (value) => {
     if (!site.value || !activeIsSection.value) return
-    site.value.settings.sections[activeSection.value as SectionKey] = value
+    site.value.settings.sections[activeStyleSection.value] = value
   },
 })
 
@@ -290,7 +302,8 @@ const setupPreviewObservers = async () => {
 const scrollPreviewToActiveSection = async () => {
   await nextTick()
   if (!previewViewport.value || !previewDocument.value) return
-  const target = previewDocument.value.querySelector<HTMLElement>(`[data-editor-section="${activeSection.value}"]`)
+  const previewSection = activeSection.value === 'partnerLogos' ? 'partners' : activeSection.value
+  const target = previewDocument.value.querySelector<HTMLElement>(`[data-editor-section="${previewSection}"]`)
   if (!target) return
   previewViewport.value.scrollTo({ top: Math.max(0, target.offsetTop * previewScale.value - 22), behavior: 'smooth' })
 }
@@ -312,20 +325,20 @@ const saveDraft = (showMessage = false) => {
 const applyBackgroundToAllSections = (image: string) => {
   if (!site.value) return
   const currentSite = site.value
-  currentSite.assets.heroBackground = image
+  currentSite.assets.globalBackground = image
   sectionKeys.forEach((key) => {
-    if (currentSite.settings.sections[key]) {
+    if (key !== 'hero' && currentSite.settings.sections[key]) {
       currentSite.settings.sections[key].backgroundImage = image
     }
   })
-  statusMessage.value = 'Đã áp dụng ảnh nền cho tất cả các section!'
+  statusMessage.value = 'Đã áp dụng ảnh nền từ section 2 trở đi!'
   saveDraft(true)
 }
 
 const setAsGlobalBackground = (image: string) => {
   if (!site.value) return
-  site.value.assets.heroBackground = image
-  statusMessage.value = 'Đã đặt làm ảnh nền cố định toàn website!'
+  site.value.assets.globalBackground = image
+  statusMessage.value = 'Đã đặt làm nền chung từ section 2; Hero không đổi!'
   saveDraft(true)
 }
 
@@ -432,7 +445,7 @@ const sectionOrderIndex = (id: EditorSectionId) => site.value?.settings.sectionO
 const sectionEnabled = (id: EditorSectionId) => {
   if (!site.value || id === 'global') return true
   if (id === 'header') return site.value.settings.header.enabled
-  return site.value.settings.sections[id].enabled
+  return site.value.settings.sections[id === 'partnerLogos' ? 'partners' : id].enabled
 }
 
 watch(site, scheduleSave, { deep: true })
@@ -534,7 +547,7 @@ onBeforeUnmount(() => {
           >
             <span class="section-status-dot"></span>
             <span><strong>{{ section.label }}</strong><small>{{ section.hint }}</small></span>
-            <span v-if="section.id !== 'global' && section.id !== 'header' && section.id !== 'hero'" class="section-order-buttons">
+            <span v-if="section.id !== 'global' && section.id !== 'header' && section.id !== 'hero' && section.id !== 'partnerLogos'" class="section-order-buttons">
               <i role="button" :class="{ muted: sectionOrderIndex(section.id) <= 0 }" @click.stop="moveSection(section.id as SectionKey, -1)"><ArrowUp :size="11" /></i>
               <i role="button" :class="{ muted: sectionOrderIndex(section.id) >= site.settings.sectionOrder.length - 1 }" @click.stop="moveSection(section.id as SectionKey, 1)"><ArrowDown :size="11" /></i>
             </span>
@@ -578,9 +591,9 @@ onBeforeUnmount(() => {
           <GlobalStyleEditor
             v-else-if="activeSection === 'global' || activeSection === 'header'"
             v-model="site.settings"
-            :hero-background="site.assets.heroBackground"
+            :global-background="site.assets.globalBackground"
             :mode="activeSection"
-            @update:hero-background="site.assets.heroBackground = $event"
+            @update:global-background="site.assets.globalBackground = $event"
             @apply-to-all-sections="applyBackgroundToAllSections"
           />
           <SectionStyleEditor

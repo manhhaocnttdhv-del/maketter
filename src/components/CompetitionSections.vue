@@ -517,13 +517,14 @@ onBeforeUnmount(() => {
           </div>
         </div>
         <div class="partner-support-groups reveal">
-          <section v-for="group in [
-            { title: 'BẢO TRỢ CHUYÊN MÔN', count: 7 },
-            { title: 'BẢO TRỢ TRUYỀN THÔNG', count: 9 },
-            { title: 'ĐỐI TÁC TRUYỀN THÔNG', count: 8 },
-          ]" :key="group.title" class="partner-support-group">
+          <section v-for="(group, groupIndex) in site.partners.supportGroups" :key="`${group.title}-${groupIndex}`" class="partner-support-group">
             <h3>{{ group.title }}</h3>
-            <div class="partner-logo-grid"><span v-for="index in group.count" :key="index">LOGO</span></div>
+            <div class="partner-logo-grid">
+              <span v-for="(logo, logoIndex) in group.logos" :key="`${logo.name}-${logoIndex}`">
+                <img v-if="logo.image" :src="logo.image" :alt="logo.name || group.title" />
+                <template v-else>{{ logo.name || 'LOGO' }}</template>
+              </span>
+            </div>
           </section>
         </div>
       </div>

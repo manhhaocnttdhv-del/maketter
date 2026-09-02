@@ -268,6 +268,30 @@ a { color: inherit; }
 .competition-sections img, .competition-sections video, .competition-sections iframe { max-width: 100%; height: auto; }
 .competition-sections section { overflow-x: clip; max-width: 100%; }
 
+/* Cỡ chữ nội dung có thể chỉnh riêng cho từng section trong Page Builder. */
+.configurable-section p:not(.section-kicker):not(.timeline-stage),
+.configurable-section li,
+.configurable-section blockquote,
+.configurable-section .timeline-copy,
+.configurable-section .timeline-copy-line,
+.configurable-section .accordion-button,
+.configurable-section .accordion-body {
+  font-size: var(--section-content-font-size, 16px) !important;
+  line-height: 1.7;
+}
+
+/* Dùng duy nhất ảnh nền toàn website, thay các mảng nền xanh riêng của section. */
+.competition-sections > .configurable-section {
+  background-color: transparent !important;
+  background-image:
+    linear-gradient(rgba(7, 20, 56, .45), rgba(7, 20, 56, .45)),
+    var(--site-global-bg-image) !important;
+  background-position: center center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+
 .edit-hint { display: none; }
 
 /* Landing page sections: Bootstrap grid is used in the markup, the layer below gives it the TNTH visual language. */
@@ -280,21 +304,10 @@ a { color: inherit; }
   align-items: center;
   justify-content: center;
   padding: clamp(18px, 2.5vh, 32px) 0;
-  background:
-    radial-gradient(circle at 19% 24%, rgba(54, 214, 237, .34), transparent 17%),
-    radial-gradient(circle at 86% 68%, rgba(117, 42, 255, .32), transparent 19%),
-    linear-gradient(180deg, rgba(8, 12, 71, .19), rgba(3, 3, 46, .46)),
-    #061142;
+  background-color: transparent;
 }
 .intro-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  opacity: .78;
-  background-image: radial-gradient(circle, rgba(191, 242, 255, .92) 0 1px, transparent 1.6px), radial-gradient(circle, rgba(67, 201, 255, .75) 0 1px, transparent 1.8px);
-  background-position: 0 0, 23px 31px;
-  background-size: 67px 67px, 109px 109px;
-  mask-image: linear-gradient(90deg, transparent, black 11%, black 89%, transparent);
+  display: none;
 }
 .intro-section::after {
   content: '';
@@ -626,6 +639,7 @@ a { color: inherit; }
 .partner-support-group { padding-top: 25px; border-top: 1px solid rgba(145, 226, 255, .22); }
 .partner-logo-grid { max-width: 760px; margin-inline: auto; display: grid; grid-template-columns: repeat(3, minmax(90px, 1fr)); justify-content: center; gap: 15px 22px; }
 .partner-logo-grid span { min-height: 72px; display: grid; place-items: center; color: rgba(220, 242, 255, .66); background: rgba(19, 55, 124, .5); border: 1px dashed rgba(159, 224, 255, .44); border-radius: 14px; font-size: 11px; font-weight: 800; }
+.partner-logo-grid img { display: block; width: 100%; height: 68px; padding: 10px 16px; object-fit: contain; }
 .partner-support-group:first-child .partner-logo-grid span:nth-child(n+5),
 .partner-support-group:last-child .partner-logo-grid span:nth-child(n+7) { transform: translateX(50%); }
 .event-footer { padding: clamp(32px, 4vh, 52px) 0; color: #d6e8ff; background: linear-gradient(100deg, rgba(13, 45, 112, 0.85), rgba(34, 75, 152, 0.85)); border-top: 1px solid rgba(127, 238, 255, 0.2); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
@@ -1013,6 +1027,7 @@ a { color: inherit; }
 .config-image-preview { height: 108px; margin-bottom: 7px; overflow: hidden; background: repeating-conic-gradient(#edf0f4 0 25%, #fff 0 50%) 50% / 16px 16px; border: 1px solid #dce1e8; border-radius: 7px; }
 .config-image-preview img { width: 100%; height: 100%; display: block; object-fit: contain; }
 .config-upload-button, .config-reset-image { height: 31px; margin-top: 6px; padding: 0 9px; display: inline-flex; align-items: center; justify-content: center; gap: 5px; color: #3e58ab; background: #e9edff; border-radius: 6px; font-size: 8px; font-weight: 900; cursor: pointer; }
+.config-upload-button--multiple { width: 100%; margin: 8px 0 10px; color: #fff; background: linear-gradient(100deg, #365cc7, #7045dd); box-shadow: 0 6px 14px rgba(57, 70, 171, .18); }
 .config-upload-button input { display: none; }
 .config-image-actions { display: flex; gap: 6px; }
 .config-reset-image { color: #68758d; background: #f0f2f5; }
