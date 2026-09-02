@@ -121,7 +121,6 @@ onBeforeUnmount(() => {
 
         <div class="hero-content container">
           <div class="hero-copy">
-            <img class="hero-organizations" :src="site.assets.heroOrganizations" alt="Các đơn vị tổ chức" />
             <img v-if="site.assets.heroTitleArtwork" class="hero-title-artwork" :src="site.assets.heroTitleArtwork" alt="Tầm Nhìn Thương Hiệu 2026" />
             <h1 v-else>
               <span>{{ site.hero.titleLineOne }}</span>

@@ -369,7 +369,7 @@ const normalizeSettings = (settings?: Partial<SiteSettings>): SiteSettings => {
 }
 
 const defaultVoices: SiteContent['voices'] = {
-  title: 'TẦM NHÌN THƯƠNG HIỆU 2026\nVỚI GIÁM KHẢO, THÍ SINH',
+  title: 'TẦM NHÌN THƯƠNG HIỆU 2025\nVỚI GIÁM KHẢO, THÍ SINH',
   slides: [
     {
       image: '/assets/tnth-canva/07-mahsy0l1pt4-MAHSy0l1pT4.jpg',
@@ -380,7 +380,7 @@ const defaultVoices: SiteContent['voices'] = {
     {
       image: '/assets/tnth-canva/08-mahsy0vtyai-MAHSy0vtyAI.jpg',
       name: 'BẠN NGUYỄN MINH AN',
-      role: 'Thí sinh mùa 2026',
+      role: 'Thí sinh mùa 2025',
       quote: 'Cuộc thi đã giúp mình nhìn một bài toán thương hiệu bằng tư duy sâu hơn, đồng thời gặp gỡ những người đồng đội đầy cảm hứng.',
     },
   ],
@@ -401,6 +401,8 @@ const defaultFooter: SiteContent['footer'] = {
     { icon: '/assets/tnth-canva/14-tik-tok-icon-MAGzNtv5p7o.svg', label: 'TikTok Tầm Nhìn Thương Hiệu', href: '#' },
   ],
 }
+
+const officialTimelineDates = ['2/9 – 5/9', '27/9 – 2/10', '9/10 – 14/10', '5/11']
 
 export const normalizeSiteContent = (value: SiteContent): SiteContent => {
   const legacy = value as Partial<SiteContent>
@@ -446,10 +448,10 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     voices: {
       ...defaultVoices,
       ...(legacy.voices ?? {}),
-      title: (legacy.voices?.title || defaultVoices.title).replace('2025', '2026'),
+      title: (legacy.voices?.title || defaultVoices.title).replace('2026', '2025'),
       slides: (legacy.voices?.slides?.length ? legacy.voices.slides : defaultVoices.slides).map((s) => ({
         ...s,
-        role: s.role.replace('2025', '2026'),
+        role: s.role.replace('2026', '2025'),
       })),
     },
     hero: {
@@ -491,7 +493,7 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       ...value.theme,
       kicker: value.theme.kicker.trim().toUpperCase() === 'TẦM NHÌN THƯƠNG HIỆU 2026' ? '' : value.theme.kicker,
       title: value.theme.title.trim().toUpperCase() === 'CHỦ ĐỀ: ROUND TO UNBOUND'
-        ? 'CHỦ ĐỀ TẦM NHÌN THƯƠNG HIỆU 2026'
+        ? 'CHỦ ĐỀ\nTẦM NHÌN THƯƠNG HIỆU 2026'
         : value.theme.title,
       subtitle: value.theme.subtitle || 'ROUND TO UNBOUND',
       quote: value.theme.quote.toLocaleLowerCase('vi-VN').includes('la bàn vận mệnh') ? '' : value.theme.quote,
@@ -512,14 +514,17 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     },
     timeline: {
       ...value.timeline,
-      rounds: value.timeline.rounds.some((round) => round.title === 'Vòng 1: Online Test' || round.description.startsWith('Top 27 đội thi xuất sắc nhất'))
+      rounds: (value.timeline.rounds.some((round) => round.title === 'Vòng 1: Online Test' || round.description.startsWith('Top 27 đội thi xuất sắc nhất'))
         ? [
             { title: 'Vòng Khởi động: Brand Kickstart', date: '02/09 – 05/09', description: 'Vòng thi warm up cho chương trình nhằm tăng độ nhận diện cho Cuộc thi, kèm theo đó sẽ đáp ứng đề bài NTT Ra Đề. Thí sinh trình bày đề án dưới dạng 3-Page Proposal, từ đó chọn ra Top 2 xuất sắc nhất đi thẳng vào Vòng 2: Brand Campaign.' },
             { title: 'Vòng 1: Brand Insight', date: '27/09 – 02/10', description: 'Từ đề bài, các đội thi hoàn thành bài đánh giá tổng quan thị trường, tình hình thương hiệu, chân dung khách hàng mục tiêu và mục tiêu tổng quát về chiến dịch truyền thông cho thương hiệu của mình. Thí sinh trình bày đề án dưới dạng 10-Page Proposal.' },
             { title: 'Vòng 2: Brand Campaign', date: '09/10 – 14/10', description: 'Top 27 xuất sắc nhất sẽ có cơ hội bước vào Vòng 3 và tiếp tục hoàn thiện đề án kế hoạch truyền thông tích hợp của Doanh nghiệp.' },
             { title: 'Chung kết: Grand Finale', date: '05/11', description: 'HOÀN THIỆN ĐỀ ÁN\nTop 4 đội thi sẽ làm việc với Mentors để hoàn thiện kế hoạch truyền thông tích hợp đã thực hiện trong phạm vi cho phép. Đồng thời thực hiện 1 TVC thể hiện được kế hoạch truyền thông đó.\n\nPHẦN ĐỘI THI ĐƯỢC YÊU THÍCH NHẤT\nBGK chấm script, TVC đăng tải lên Fanpage Tầm Nhìn Thương Hiệu và tính điểm theo lượng tương tác để giành giải đội thi được yêu thích nhất. Điểm phần thi này sẽ nằm trong đề án.\n\nĐÊM CHUNG KẾT\nPhần 1: Top 4 đội thi bước vào Chung kết, trình bày đề án hoàn thiện và trả lời các câu hỏi từ Ban Giám Khảo.\nPhần 2: Top 4 đội thi tiếp tục tham gia giải minicase đã được BTC gửi trong 24h trước đêm Chung kết và phản biện với đội còn lại.' },
           ]
-        : value.timeline.rounds,
+        : value.timeline.rounds).map((round, index) => ({
+          ...round,
+          date: officialTimelineDates[index] ?? round.date,
+        })),
     },
     prizes: /^50\.000\.000|^1XX|^XX/.test(`${value.prizes.totalValue}${value.prizes.cards[0]?.value ?? ''}`)
       ? {
@@ -542,7 +547,7 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
           ],
         }
       : value.benefits,
-    activities: value.activities.cards.length < 4
+    activities: (value.activities.cards.length < 4
       ? {
           ...value.activities,
           kicker: '',
@@ -553,7 +558,7 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
             { title: 'TRAINING DAY 2', date: '10/10', description: 'TOP 27 đội thi vượt qua Vòng 1 được huấn luyện kỹ năng chuyên sâu, chuẩn bị hành trang cho Vòng 2.', ctaLabel: 'TÌM HIỂU THÊM', ctaHref: '#' },
           ],
         }
-      : value.activities,
+      : value.activities),
     faq: value.faq.length < 5 || value.faq.some((item) => item.question === 'BTC có hỗ trợ thí sinh ghép đội không?' && item.answer.startsWith('Có.'))
       ? [
           { question: 'Thí sinh đăng ký tham gia cuộc thi có cần phải đóng lệ phí không?', answer: 'Không. Thí sinh không cần đóng bất kỳ khoản lệ phí nào khi đăng ký tham gia cuộc thi.' },
@@ -566,6 +571,14 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     partners: {
       ...value.partners,
       kicker: '',
+      levels: [
+        { label: 'NHÀ TÀI TRỢ', value: 'HOÀNG KIM' },
+        { label: 'NHÀ TÀI TRỢ', value: 'KIM CƯƠNG' },
+        { label: 'NHÀ TÀI TRỢ', value: 'VÀNG' },
+        { label: 'NHÀ TÀI TRỢ', value: 'BẠC' },
+        { label: 'NHÀ TÀI TRỢ', value: 'ĐỒNG' },
+        { label: 'NHÀ TÀI TRỢ', value: 'ĐỒNG HÀNH' },
+      ],
     },
     footer: {
       ...defaultFooter,

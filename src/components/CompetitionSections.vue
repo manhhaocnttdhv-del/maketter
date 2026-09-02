@@ -31,7 +31,8 @@ const animateStatistic = (index: number, rawValue: string) => {
 const slideStyle = (slide: IntroSlide) => ({
   backgroundImage: `linear-gradient(155deg, rgba(24, 91, 166, .08), rgba(8, 23, 76, .16)), url("${slide.image}")`,
   backgroundPosition: `center, ${slide.position ?? 'center'}`,
-  backgroundSize: 'auto, cover',
+  backgroundSize: '100% 100%, contain',
+  backgroundRepeat: 'no-repeat, no-repeat',
 })
 
 const aboutImageStyle = computed(() => ({
@@ -110,13 +111,13 @@ const moveGallery = (direction: 1 | -1) => {
 const handleManualGalleryMove = (direction: 1 | -1) => {
   stopGalleryAutoplay()
   moveGallery(direction)
-  window.setTimeout(() => startGalleryAutoplay(), 3200)
+  window.setTimeout(() => startGalleryAutoplay(), 1800)
 }
 
 const startGalleryAutoplay = () => {
   stopGalleryAutoplay()
   if ((props.site.assets.aboutGallery?.length ?? 0) < 2) return
-  galleryAutoplayId = window.setInterval(() => moveGallery(1), 3500)
+  galleryAutoplayId = window.setInterval(() => moveGallery(1), 1500)
 }
 
 const stopGalleryAutoplay = () => {
@@ -153,11 +154,26 @@ const selectRound = (index: number) => {
   startTimelineAutoplay()
 }
 
+const timelineNavLabel = (title: string) => {
+  if (title.startsWith('Vòng Khởi động')) return 'Vòng Khởi động'
+  if (title.startsWith('Vòng 1')) return 'Vòng 1'
+  if (title.startsWith('Vòng 2')) return 'Vòng 2'
+  if (title.startsWith('Chung kết')) return 'Đêm Chung kết'
+  return title
+}
+
+const timelineStageParts = (title = '') => {
+  const separator = title.indexOf(':')
+  if (separator < 0) return [title, '']
+  const label = title.slice(0, separator).trim()
+  return [label.startsWith('Chung kết') ? 'Đêm Chung kết' : label, title.slice(separator + 1).trim()]
+}
+
 const startVoicesAutoplay = () => {
   if (voicesAutoplayId) clearInterval(voicesAutoplayId)
   voicesAutoplayId = window.setInterval(() => {
     voicesCarouselInstance?.next()
-  }, 4200)
+  }, 2200)
 }
 
 const stopVoicesAutoplay = () => {
@@ -197,7 +213,7 @@ const initCarousels = () => {
   const voicesEl = root.value?.querySelector('#voicesCarousel')
   if (voicesEl) {
     voicesCarouselInstance = Carousel.getOrCreateInstance(voicesEl, {
-      interval: 4200,
+      interval: 2200,
       ride: 'carousel',
       wrap: true,
       pause: 'hover',
@@ -330,6 +346,9 @@ onBeforeUnmount(() => {
       <div class="section-transition" aria-hidden="true"></div>
       <div class="metrics-section__stars"></div>
       <div class="container px-4 px-lg-5 position-relative">
+        <div class="metrics-heading text-center reveal">
+          <h2><span>DẤU ẤN</span><span>TẦM NHÌN THƯƠNG HIỆU 2025</span></h2>
+        </div>
         <div class="metrics-grid" :style="cardGridStyle('metrics')">
           <article v-for="(stat, index) in site.about.statistics" :key="`${stat.label}-${index}`" class="metric-item reveal" :data-stat-index="index" :style="{ transitionDelay: `${index * 85}ms` }">
             <img class="metric-item__icon" :src="site.assets.statisticIcon" alt="" />
@@ -344,7 +363,7 @@ onBeforeUnmount(() => {
       <div class="section-transition" aria-hidden="true"></div>
       <div class="container px-4 px-lg-5">
         <div class="text-center voices-heading reveal"><h2>{{ site.voices.title }}</h2></div>
-        <div id="voicesCarousel" class="carousel slide carousel-fade voices-carousel reveal" data-bs-ride="carousel" data-bs-interval="4200" @mouseenter="stopVoicesAutoplay" @mouseleave="startVoicesAutoplay">
+        <div id="voicesCarousel" class="carousel slide carousel-fade voices-carousel reveal" data-bs-ride="carousel" data-bs-interval="2200" @mouseenter="stopVoicesAutoplay" @mouseleave="startVoicesAutoplay">
           <div class="carousel-inner">
             <div v-for="(voice, index) in site.voices.slides" :key="`${voice.name}-${index}`" class="carousel-item" :class="{ active: index === 0 }">
               <article class="voice-card">
@@ -398,15 +417,8 @@ onBeforeUnmount(() => {
                 @click="selectRound(index)"
               >
                 <span>{{ String(index + 1).padStart(2, '0') }}</span>
-                <strong>{{ round.title }}</strong>
+                <strong>{{ timelineNavLabel(round.title) }}</strong>
               </button>
-            </div>
-            
-            <!-- Futuristic 3D Hologram Compass Emitter -->
-            <div class="timeline-compass-box">
-              <div class="timeline-compass-rings"></div>
-              <img :src="site.assets.compassOverlay" alt="Chiếc la bàn vận mệnh" class="timeline-compass-visual" />
-              <div class="timeline-compass-beam"></div>
             </div>
           </div>
           <div class="col-md-7 reveal slide-right position-relative">
@@ -419,12 +431,18 @@ onBeforeUnmount(() => {
                     class="timeline-round-card"
                   >
                     <div class="timeline-card-scanline"></div>
-                    <p class="timeline-stage">{{ site.timeline.rounds[activeRoundIndex]?.title }}</p>
+                    <p class="timeline-stage">
+                      <span>{{ timelineStageParts(site.timeline.rounds[activeRoundIndex]?.title)[0] }}</span>
+                      <span class="timeline-stage__brand">{{ timelineStageParts(site.timeline.rounds[activeRoundIndex]?.title)[1] }}</span>
+                    </p>
                     <span class="timeline-date">{{ site.timeline.rounds[activeRoundIndex]?.date }}</span>
                     <div class="timeline-copy" v-html="timelineDescriptionHtml(site.timeline.rounds[activeRoundIndex]?.description || '')"></div>
                   </article>
                 </transition>
               </div>
+            </div>
+            <div class="timeline-compass-box" aria-hidden="true">
+              <img :src="site.assets.compassOverlay" alt="" class="timeline-compass-visual" />
             </div>
           </div>
         </div>
@@ -486,7 +504,10 @@ onBeforeUnmount(() => {
       <div class="section-transition" aria-hidden="true"></div>
       <div class="container px-4 px-lg-5 text-center">
         <div class="section-heading reveal"><h2>{{ site.partners.title }}</h2></div>
-        <div class="partner-markers reveal"><span v-for="(marker, index) in site.partners.markers" :key="index">{{ marker }}</span></div>
+        <div class="partner-organizers reveal">
+          <h3>ĐƠN VỊ TỔ CHỨC</h3>
+          <div class="partner-markers"><span v-for="(marker, index) in site.partners.markers.slice(0, 5)" :key="index">{{ marker }}</span></div>
+        </div>
         <div class="row row-cols-2 row-cols-md-4 g-3 g-lg-4 partner-levels reveal" :class="{ 'configured-card-grid': hasColumns('partners') }" :style="cardGridStyle('partners')">
           <div v-for="(level, index) in site.partners.levels" :key="`${level.value}-${index}`" :class="hasColumns('partners') ? '' : 'col'">
             <div class="partner-level-card">
@@ -494,6 +515,16 @@ onBeforeUnmount(() => {
               <strong class="partner-level-value">{{ level.value }}</strong>
             </div>
           </div>
+        </div>
+        <div class="partner-support-groups reveal">
+          <section v-for="group in [
+            { title: 'BẢO TRỢ CHUYÊN MÔN', count: 7 },
+            { title: 'BẢO TRỢ TRUYỀN THÔNG', count: 9 },
+            { title: 'ĐỐI TÁC TRUYỀN THÔNG', count: 8 },
+          ]" :key="group.title" class="partner-support-group">
+            <h3>{{ group.title }}</h3>
+            <div class="partner-logo-grid"><span v-for="index in group.count" :key="index">LOGO</span></div>
+          </section>
         </div>
       </div>
     </section>
