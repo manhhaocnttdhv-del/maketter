@@ -508,7 +508,6 @@ onBeforeUnmount(() => {
         <RouterLink to="/" class="editor-auth-back-link">
           <ArrowLeft :size="14" /> Quay lại trang chủ
         </RouterLink>
-        <span class="editor-auth-hint">Mật khẩu mặc định: <code>111111</code></span>
       </div>
     </div>
   </div>

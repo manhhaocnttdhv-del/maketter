@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { ArrowDown, ArrowUp, ImagePlus, Plus, Trash2 } from '@lucide/vue'
+import { computed, ref } from 'vue'
+import { ArrowDown, ArrowUp, GripVertical, ImagePlus, Plus, Trash2 } from '@lucide/vue'
 import BackgroundPresetPicker from './BackgroundPresetPicker.vue'
 
 const props = withDefaults(defineProps<{
@@ -98,6 +98,7 @@ const isImage = computed(() => {
     || /^data:image\//.test(props.modelValue)
     || /\.(png|jpe?g|webp|gif|svg)(\?.*)?$/i.test(props.modelValue)
 })
+const draggedLogoIndex = ref<number | null>(null)
 
 const updateObjectValue = (key: string, value: unknown) => {
   emit('update:modelValue', { ...(props.modelValue as Record<string, unknown>), [key]: value })
@@ -118,6 +119,16 @@ const moveArrayValue = (index: number, direction: -1 | 1) => {
   const next = [...(props.modelValue as unknown[])]
   if (target < 0 || target >= next.length) return
   ;[next[index], next[target]] = [next[target], next[index]]
+  emit('update:modelValue', next)
+}
+
+const dropLogoAt = (targetIndex: number) => {
+  const sourceIndex = draggedLogoIndex.value
+  draggedLogoIndex.value = null
+  if (sourceIndex === null || sourceIndex === targetIndex) return
+  const next = [...(props.modelValue as unknown[])]
+  const [moved] = next.splice(sourceIndex, 1)
+  next.splice(targetIndex, 0, moved)
   emit('update:modelValue', next)
 }
 
@@ -216,16 +227,48 @@ const handleImageUpload = (event: Event) => {
     />
   </div>
 
+  <div v-else-if="isArray && name === 'logos'" class="config-array logo-manager">
+    <div class="config-array__heading logo-manager__heading">
+      <div><strong>{{ label }}</strong><span>{{ (modelValue as unknown[]).length }} logo · kéo thả để sắp xếp</span></div>
+      <button type="button" @click="addArrayValue"><Plus :size="14" /> Thêm ô</button>
+    </div>
+    <label class="config-upload-button config-upload-button--multiple">
+      <ImagePlus :size="16" /> Chọn và import nhiều logo
+      <input type="file" accept="image/*" multiple @change="handleMultipleImageUpload" />
+    </label>
+    <div v-if="!(modelValue as unknown[]).length" class="config-array__empty">Chưa có logo. Hãy chọn nhiều ảnh để import.</div>
+    <div v-else class="logo-manager__grid">
+      <article
+        v-for="(item, index) in (modelValue as Array<Record<string, unknown>>)"
+        :key="index"
+        class="logo-manager__item"
+        :class="{ 'is-dragging': draggedLogoIndex === index }"
+        draggable="true"
+        @dragstart="draggedLogoIndex = index"
+        @dragend="draggedLogoIndex = null"
+        @dragover.prevent
+        @drop.prevent="dropLogoAt(index)"
+      >
+        <div class="logo-manager__preview">
+          <img v-if="item.image" :src="String(item.image)" :alt="String(item.name || '')" />
+          <ImagePlus v-else :size="25" />
+          <span><GripVertical :size="14" /> {{ index + 1 }}</span>
+        </div>
+        <input type="text" :value="String(item.name || '')" placeholder="Tên đơn vị" @input="updateArrayValue(index, { ...item, name: ($event.target as HTMLInputElement).value })" />
+        <div class="logo-manager__actions">
+          <button type="button" :disabled="index === 0" title="Đưa lên" @click="moveArrayValue(index, -1)"><ArrowUp :size="13" /></button>
+          <button type="button" :disabled="index === (modelValue as unknown[]).length - 1" title="Đưa xuống" @click="moveArrayValue(index, 1)"><ArrowDown :size="13" /></button>
+          <button type="button" class="is-danger" title="Xóa logo" @click="removeArrayValue(index)"><Trash2 :size="13" /></button>
+        </div>
+      </article>
+    </div>
+  </div>
+
   <div v-else-if="isArray" class="config-array">
     <div class="config-array__heading">
       <div><strong>{{ label }}</strong><span>{{ (modelValue as unknown[]).length }} mục</span></div>
       <button type="button" @click="addArrayValue"><Plus :size="14" /> Thêm</button>
     </div>
-
-    <label v-if="name === 'logos'" class="config-upload-button config-upload-button--multiple">
-      <ImagePlus :size="15" /> Import nhiều logo
-      <input type="file" accept="image/*" multiple @change="handleMultipleImageUpload" />
-    </label>
 
     <div v-if="!(modelValue as unknown[]).length" class="config-array__empty">Chưa có mục nào. Bấm “Thêm” để tạo mới.</div>
     <article v-for="(item, index) in (modelValue as unknown[])" :key="index" class="config-array-item">
