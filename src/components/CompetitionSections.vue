@@ -515,7 +515,16 @@ onBeforeUnmount(() => {
           </div>
         </div>
         <div class="partner-support-groups reveal">
-          <section v-for="(group, groupIndex) in site.partners.supportGroups" :key="`${group.title}-${groupIndex}`" class="partner-support-group" :class="{ 'partner-support-group--compact': group.logos.length <= 2 }">
+          <section
+            v-for="(group, groupIndex) in site.partners.supportGroups"
+            :key="`${group.title}-${groupIndex}`"
+            class="partner-support-group"
+            :class="{
+              'partner-support-group--compact': group.logos.length <= 2,
+              'partner-support-group--single': group.logos.length === 1,
+              'partner-support-group--bronze': group.title.trim().toLocaleUpperCase('vi-VN') === 'NHÀ TÀI TRỢ ĐỒNG',
+            }"
+          >
             <h3>{{ group.title }}</h3>
             <div class="partner-logo-grid">
               <span v-for="(logo, logoIndex) in group.logos" :key="`${logo.name}-${logoIndex}`">

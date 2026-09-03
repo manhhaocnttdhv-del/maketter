@@ -428,12 +428,17 @@ const defaultSponsorGroups: PartnerGroup[] = [
   { title: 'NHÀ TÀI TRỢ ĐỒNG HÀNH', logos: [{ image: '', name: 'Logo' }] },
 ]
 
-const defaultPartnerGroups: PartnerGroup[] = [
-  ...defaultSponsorGroups,
+const defaultStandalonePartnerGroups: PartnerGroup[] = [
   { title: 'NHÀ TÀI TRỢ ĐỒNG', logos: [{ image: '', name: 'Logo' }] },
   { title: 'BẢO TRỢ CHUYÊN MÔN', logos: Array.from({ length: 7 }, () => ({ image: '', name: 'Logo' })) },
-  { title: 'BẢO TRỢ TRUYỀN THÔNG', logos: Array.from({ length: 9 }, () => ({ image: '', name: 'Logo' })) },
+  { title: 'BẢO TRỢ TRUYỀN THÔNG', logos: Array.from({ length: 10 }, () => ({ image: '', name: 'Logo' })) },
+  { title: 'ĐỐI TÁC HÌNH ẢNH ĐỘC QUYỀN', logos: [{ image: '', name: 'Logo' }] },
   { title: 'ĐỐI TÁC TRUYỀN THÔNG', logos: Array.from({ length: 8 }, () => ({ image: '', name: 'Logo' })) },
+]
+
+const defaultPartnerGroups: PartnerGroup[] = [
+  ...defaultSponsorGroups,
+  ...defaultStandalonePartnerGroups,
 ]
 
 type LegacyPartnerLevel = PartnerLevel & { logos?: unknown[] }
@@ -671,7 +676,33 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
         })
         const sponsorTitles = new Set(defaultSponsorGroups.map((group) => group.title))
         const otherGroups = groups.filter((group) => !sponsorTitles.has(group.title.trim().toLocaleUpperCase('vi-VN')))
-        return [...sponsorGroups, ...otherGroups]
+        const standaloneGroups = defaultStandalonePartnerGroups.map((defaultGroup) => {
+          const matchingGroup = otherGroups.find((group) => (
+            group.title.trim().toLocaleUpperCase('vi-VN') === defaultGroup.title
+          ))
+          if (!matchingGroup) return normalizePartnerGroup(defaultGroup, defaultGroup.title)
+
+          const minimumLogoCount = defaultGroup.title === 'BẢO TRỢ TRUYỀN THÔNG'
+            ? defaultGroup.logos.length
+            : 1
+          return {
+            ...matchingGroup,
+            logos: matchingGroup.logos.length >= minimumLogoCount
+              ? matchingGroup.logos
+              : [
+                  ...matchingGroup.logos,
+                  ...Array.from(
+                    { length: minimumLogoCount - matchingGroup.logos.length },
+                    () => ({ image: '', name: 'Logo' }),
+                  ),
+                ],
+          }
+        })
+        const standaloneTitles = new Set(defaultStandalonePartnerGroups.map((group) => group.title))
+        const customGroups = otherGroups.filter((group) => (
+          !standaloneTitles.has(group.title.trim().toLocaleUpperCase('vi-VN'))
+        ))
+        return [...sponsorGroups, ...standaloneGroups, ...customGroups]
       })(),
     },
     footer: {
