@@ -215,7 +215,11 @@
     "organizers": {
       "title": "ĐƠN VỊ TỔ CHỨC",
       "logos": [
-        { "image": "/assets/tnth-canva/04-organizations-transparent-v2.png", "name": "Cụm logo đơn vị tổ chức Tầm Nhìn Thương Hiệu 2026" }
+        { "image": "", "name": "Logo 1" },
+        { "image": "", "name": "Logo 2" },
+        { "image": "", "name": "Logo 3" },
+        { "image": "", "name": "Logo 4" },
+        { "image": "", "name": "Logo 5" }
       ]
     },
     "supportGroups": [

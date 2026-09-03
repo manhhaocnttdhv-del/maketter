@@ -601,12 +601,9 @@ a { color: inherit; }
 .accordion-button { align-items: flex-start; line-height: 1.5; text-align: left; }
 .accordion-body { padding: 5px 16px 15px; color: rgba(233,246,255,.82); background: rgba(19,65,145,.42); font-size: 12px; line-height: 1.7; }
 .partners-section { padding: clamp(36px, 4.5vh, 60px) 0; }
-.partner-markers { margin: 20px 0 28px; display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
-.partner-markers span { width: 72px; height: 72px; display: grid; place-items: center; color: #ffe966; background: rgba(14, 34, 85, 0.6); border: 2px solid rgba(255,230,95,.55); border-radius: 50%; font-family: 'Oxanium', sans-serif; font-size: 13px; font-weight: 800; box-shadow: 0 0 20px rgba(253,221,79,.2); backdrop-filter: blur(8px); }
+.partner-markers { max-width: 920px; margin: 20px auto 28px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; }
+.partner-markers span { width: 100%; max-width: 140px; aspect-ratio: 1; min-width: 0; justify-self: center; display: grid; place-items: center; overflow: hidden; color: rgba(220, 242, 255, .68); background: transparent; border: 1px dashed rgba(159, 224, 255, .48); border-radius: 50%; font-family: 'Oxanium', sans-serif; font-size: 11px; font-weight: 800; }
 .partner-markers img { width: 100%; height: 100%; padding: 8px; display: block; object-fit: contain; }
-.partner-markers.partner-markers--cluster { width: 100%; margin-top: 26px; }
-.partner-markers.partner-markers--cluster span { width: min(100%, 820px); height: auto; min-height: 150px; padding: 18px 24px; background: rgba(255, 255, 255, .96); border: 0; border-radius: 20px; box-shadow: 0 16px 34px rgba(2, 12, 42, .28); backdrop-filter: none; }
-.partner-markers.partner-markers--cluster img { width: 100%; height: auto; padding: 0; object-fit: contain; }
 .partner-levels { max-width: 1100px; margin: 0 auto; }
 .partner-level-card { min-height: 84px; padding: 16px 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(145deg, rgba(30, 66, 139, 0.45), rgba(16, 43, 100, 0.55)); border: 1.5px solid rgba(190, 229, 255, 0.4); border-radius: 16px; box-shadow: 0 10px 24px rgba(2, 10, 36, 0.25); backdrop-filter: blur(8px); transition: transform 0.25s ease, border-color 0.25s ease; }
 .partner-level-card:hover { transform: translateY(-4px); border-color: rgba(127, 238, 255, 0.7); box-shadow: 0 14px 30px rgba(2, 10, 36, 0.35), 0 0 20px rgba(127, 238, 255, 0.2); }
@@ -1133,9 +1130,8 @@ a { color: inherit; }
 .editor-device-frame.is-mobile .activity-card h3 { font-size: 20px; }
 .editor-device-frame.is-mobile .activity-card p { font-size: 15px; line-height: 1.7; }
 .editor-device-frame.is-mobile .activity-card a { font-size: 13px; }
-.editor-device-frame.is-mobile .partner-markers { gap: 12px; }
-.editor-device-frame.is-mobile .partner-markers span { width: 58px; height: 58px; font-size: 9px; }
-.editor-device-frame.is-mobile .partner-markers.partner-markers--cluster span { width: 100%; height: auto; min-height: 92px; padding: 12px; border-radius: 14px; }
+.editor-device-frame.is-mobile .partner-markers { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.editor-device-frame.is-mobile .partner-markers span { width: 88px; height: auto; font-size: 9px; }
 .editor-device-frame.is-mobile .partner-levels { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 .editor-device-frame.is-mobile .partner-levels span { font-size: 10px; }
 .editor-device-frame.is-mobile .partner-levels strong { font-size: 13px; }
@@ -1257,9 +1253,8 @@ a { color: inherit; }
   .about-years__heading { align-items: flex-start; flex-direction: column; gap: 12px; }
   .about-years__hint { align-self: flex-start; }
   .partner-levels { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-  .partner-markers { gap: 12px; }
-  .partner-markers span { width: 58px; height: 58px; }
-  .partner-markers.partner-markers--cluster span { width: 100%; height: auto; min-height: 92px; padding: 12px; border-radius: 14px; }
+  .partner-markers { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .partner-markers span { width: 88px; height: auto; }
   .accordion-button, .accordion-body { font-size: 14px; line-height: 1.6; }
   .event-index .timeline-section .section-heading h2 { white-space: normal; }
   .timeline-nav { padding-right: 0; }

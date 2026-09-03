@@ -417,10 +417,10 @@ const defaultFooter: SiteContent['footer'] = {
 
 const defaultOrganizerGroup: PartnerGroup = {
   title: 'ĐƠN VỊ TỔ CHỨC',
-  logos: [{
-    image: '/assets/tnth-canva/04-organizations-transparent-v2.png',
-    name: 'Cụm logo đơn vị tổ chức Tầm Nhìn Thương Hiệu 2026',
-  }],
+  logos: Array.from({ length: 5 }, (_, index) => ({
+    image: '',
+    name: `Logo ${index + 1}`,
+  })),
 }
 
 const defaultBronzePartnerGroup: PartnerGroup = {
@@ -641,9 +641,11 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
                 ? legacyOrganizerMarkers.map(normalizePartnerLogo)
                 : defaultOrganizerGroup.logos.map(normalizePartnerLogo),
             }
-        return organizerGroup.logos.length === 1 && Boolean(organizerGroup.logos[0]?.image)
-          ? organizerGroup
-          : { ...defaultOrganizerGroup, logos: defaultOrganizerGroup.logos.map(normalizePartnerLogo) }
+        const isLegacyLogoBanner = organizerGroup.logos.length === 1
+          && organizerGroup.logos[0]?.image.endsWith('/04-organizations-transparent-v2.png')
+        return isLegacyLogoBanner
+          ? { ...defaultOrganizerGroup, logos: defaultOrganizerGroup.logos.map(normalizePartnerLogo) }
+          : organizerGroup
       })(),
       supportGroups: (() => {
         const groups = (legacyPartners.supportGroups ?? [])

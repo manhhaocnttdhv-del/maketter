@@ -503,10 +503,7 @@ onBeforeUnmount(() => {
         <div class="section-heading reveal"><h2>{{ site.partners.title }}</h2></div>
         <div class="partner-organizers reveal">
           <h3>{{ site.partners.organizers.title }}</h3>
-          <div
-            class="partner-markers"
-            :class="{ 'partner-markers--cluster': site.partners.organizers.logos.length === 1 && Boolean(site.partners.organizers.logos[0]?.image) }"
-          >
+          <div class="partner-markers">
             <span v-for="(logo, index) in site.partners.organizers.logos" :key="`${logo.name}-${index}`">
               <img v-if="logo.image" :src="logo.image" :alt="logo.name || site.partners.organizers.title" />
               <template v-else>{{ logo.name || 'LOGO' }}</template>
