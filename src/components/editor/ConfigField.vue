@@ -65,9 +65,9 @@ const labels: Record<string, string> = {
   groups: 'Các nhóm',
   question: 'Câu hỏi',
   answer: 'Câu trả lời',
-  markers: 'Các dấu mốc',
+  organizers: 'Logo đơn vị tổ chức',
   levels: 'Các cấp đối tác',
-  supportGroups: 'Các nhóm logo đối tác',
+  supportGroups: 'Logo nhà tài trợ / bảo trợ',
   logos: 'Danh sách logo',
   name: 'Tên đơn vị / mô tả ảnh',
   organization: 'Đơn vị tổ chức',
@@ -191,6 +191,36 @@ const handleMultipleImageUpload = async (event: Event) => {
   }
 }
 
+const handleLogoItemUpload = async (event: Event, index: number) => {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  input.value = ''
+  if (!file) return
+  if (!file.type.startsWith('image/')) {
+    emit('upload-error', `“${file.name}” không phải là tệp ảnh.`)
+    return
+  }
+  if (file.size > 8 * 1024 * 1024) {
+    emit('upload-error', `“${file.name}” lớn hơn 8 MB. Hãy nén ảnh trước khi tải lên.`)
+    return
+  }
+
+  try {
+    const items = props.modelValue as Array<Record<string, unknown>>
+    const item = items[index] ?? {}
+    const currentName = String(item.name ?? '').trim()
+    updateArrayValue(index, {
+      ...item,
+      image: await readImageFile(file),
+      name: currentName && currentName !== 'Logo'
+        ? currentName
+        : file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' '),
+    })
+  } catch {
+    emit('upload-error', 'Không thể đọc tệp ảnh này.')
+  }
+}
+
 const handleImageUpload = (event: Event) => {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
@@ -253,6 +283,10 @@ const handleImageUpload = (event: Event) => {
           <img v-if="item.image" :src="String(item.image)" :alt="String(item.name || '')" />
           <ImagePlus v-else :size="25" />
           <span><GripVertical :size="14" /> {{ index + 1 }}</span>
+          <label class="logo-manager__replace" title="Chọn ảnh cho ô này">
+            <ImagePlus :size="15" />
+            <input type="file" accept="image/*" @change="handleLogoItemUpload($event, index)" />
+          </label>
         </div>
         <input type="text" :value="String(item.name || '')" placeholder="Tên đơn vị" @input="updateArrayValue(index, { ...item, name: ($event.target as HTMLInputElement).value })" />
         <div class="logo-manager__actions">

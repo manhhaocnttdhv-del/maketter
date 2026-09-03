@@ -75,7 +75,7 @@
     ],
     "statisticIcon": "/assets/tnth-canva/03-mahsv-hibxi-MAHSv-hIBxI.png",
     "themePoster": "/assets/tnth-canva/09-mahswgghvnk-MAHSwGghVnk.png",
-    "compassOverlay": "/assets/tnth-canva/11-mahsv9hppfa-MAHSv9HpPfA.png",
+    "compassOverlay": "/assets/tnth-compass-blue-silver.png",
     "timelineBackground": "/assets/tnth-canva/10-mahsd0narra-MAHSd0NArRA.png",
     "activitiesBackground": "/assets/tnth-canva/10-mahsd0narra-MAHSd0NArRA.png",
     "facebookIcon": "/assets/tnth-canva/13-facebook-logo-MAGzNqKrzKM.svg",
@@ -212,16 +212,35 @@
   "partners": {
     "kicker": "",
     "title": "ĐỐI TÁC ĐỒNG HÀNH",
-    "markers": ["NEU", "HSV", "YOUTH", "BRAND", "NEU"],
-    "levels": [
-      { "label": "NHÀ TÀI TRỢ", "value": "HOÀNG KIM" },
-      { "label": "NHÀ TÀI TRỢ", "value": "KIM CƯƠNG" },
-      { "label": "NHÀ TÀI TRỢ", "value": "VÀNG" },
-      { "label": "NHÀ TÀI TRỢ", "value": "BẠC" },
-      { "label": "NHÀ TÀI TRỢ", "value": "ĐỒNG" },
-      { "label": "NHÀ TÀI TRỢ", "value": "ĐỒNG HÀNH" }
-    ],
+    "organizers": {
+      "title": "ĐƠN VỊ TỔ CHỨC",
+      "logos": [
+        { "image": "", "name": "NEU" },
+        { "image": "", "name": "HSV" },
+        { "image": "", "name": "YOUTH" },
+        { "image": "", "name": "BRAND" },
+        { "image": "", "name": "NEU" }
+      ]
+    },
     "supportGroups": [
+      { "title": "NHÀ TÀI TRỢ HOÀNG KIM", "logos": [
+        { "image": "", "name": "Logo" }
+      ] },
+      { "title": "NHÀ TÀI TRỢ KIM CƯƠNG", "logos": [
+        { "image": "", "name": "Logo" }
+      ] },
+      { "title": "NHÀ TÀI TRỢ VÀNG", "logos": [
+        { "image": "", "name": "Logo" }
+      ] },
+      { "title": "NHÀ TÀI TRỢ BẠC", "logos": [
+        { "image": "", "name": "Logo" }
+      ] },
+      { "title": "NHÀ TÀI TRỢ ĐỒNG HÀNH", "logos": [
+        { "image": "", "name": "Logo" }
+      ] },
+      { "title": "NHÀ TÀI TRỢ ĐỒNG", "logos": [
+        { "image": "", "name": "Logo" }
+      ] },
       { "title": "BẢO TRỢ CHUYÊN MÔN", "logos": [
         { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }, { "image": "", "name": "Logo" }
       ] },

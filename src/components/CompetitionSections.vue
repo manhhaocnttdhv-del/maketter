@@ -442,6 +442,7 @@ onBeforeUnmount(() => {
               </div>
             </div>
             <div class="timeline-compass-box" aria-hidden="true">
+              <span class="timeline-compass-projection"></span>
               <img :src="site.assets.compassOverlay" alt="" class="timeline-compass-visual" />
             </div>
           </div>
@@ -505,19 +506,16 @@ onBeforeUnmount(() => {
       <div class="container px-4 px-lg-5 text-center">
         <div class="section-heading reveal"><h2>{{ site.partners.title }}</h2></div>
         <div class="partner-organizers reveal">
-          <h3>ĐƠN VỊ TỔ CHỨC</h3>
-          <div class="partner-markers"><span v-for="(marker, index) in site.partners.markers.slice(0, 5)" :key="index">{{ marker }}</span></div>
-        </div>
-        <div class="row row-cols-2 row-cols-md-4 g-3 g-lg-4 partner-levels reveal" :class="{ 'configured-card-grid': hasColumns('partners') }" :style="cardGridStyle('partners')">
-          <div v-for="(level, index) in site.partners.levels" :key="`${level.value}-${index}`" :class="hasColumns('partners') ? '' : 'col'">
-            <div class="partner-level-card">
-              <span class="partner-level-label">{{ level.label }}</span>
-              <strong class="partner-level-value">{{ level.value }}</strong>
-            </div>
+          <h3>{{ site.partners.organizers.title }}</h3>
+          <div class="partner-markers">
+            <span v-for="(logo, index) in site.partners.organizers.logos" :key="`${logo.name}-${index}`">
+              <img v-if="logo.image" :src="logo.image" :alt="logo.name || site.partners.organizers.title" />
+              <template v-else>{{ logo.name || 'LOGO' }}</template>
+            </span>
           </div>
         </div>
         <div class="partner-support-groups reveal">
-          <section v-for="(group, groupIndex) in site.partners.supportGroups" :key="`${group.title}-${groupIndex}`" class="partner-support-group">
+          <section v-for="(group, groupIndex) in site.partners.supportGroups" :key="`${group.title}-${groupIndex}`" class="partner-support-group" :class="{ 'partner-support-group--compact': group.logos.length <= 2 }">
             <h3>{{ group.title }}</h3>
             <div class="partner-logo-grid">
               <span v-for="(logo, logoIndex) in group.logos" :key="`${logo.name}-${logoIndex}`">

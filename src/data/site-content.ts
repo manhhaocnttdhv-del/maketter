@@ -238,8 +238,7 @@ export interface SiteContent {
   partners: {
     kicker: string
     title: string
-    markers: string[]
-    levels: PartnerLevel[]
+    organizers: PartnerGroup
     supportGroups: PartnerGroup[]
   }
   footer: {
@@ -416,17 +415,58 @@ const defaultFooter: SiteContent['footer'] = {
   ],
 }
 
+const defaultOrganizerGroup: PartnerGroup = {
+  title: 'ĐƠN VỊ TỔ CHỨC',
+  logos: ['NEU', 'HSV', 'YOUTH', 'BRAND', 'NEU'].map((name) => ({ image: '', name })),
+}
+
+const defaultSponsorGroups: PartnerGroup[] = [
+  { title: 'NHÀ TÀI TRỢ HOÀNG KIM', logos: [{ image: '', name: 'Logo' }] },
+  { title: 'NHÀ TÀI TRỢ KIM CƯƠNG', logos: [{ image: '', name: 'Logo' }] },
+  { title: 'NHÀ TÀI TRỢ VÀNG', logos: [{ image: '', name: 'Logo' }] },
+  { title: 'NHÀ TÀI TRỢ BẠC', logos: [{ image: '', name: 'Logo' }] },
+  { title: 'NHÀ TÀI TRỢ ĐỒNG HÀNH', logos: [{ image: '', name: 'Logo' }] },
+]
+
 const defaultPartnerGroups: PartnerGroup[] = [
+  ...defaultSponsorGroups,
+  { title: 'NHÀ TÀI TRỢ ĐỒNG', logos: [{ image: '', name: 'Logo' }] },
   { title: 'BẢO TRỢ CHUYÊN MÔN', logos: Array.from({ length: 7 }, () => ({ image: '', name: 'Logo' })) },
   { title: 'BẢO TRỢ TRUYỀN THÔNG', logos: Array.from({ length: 9 }, () => ({ image: '', name: 'Logo' })) },
   { title: 'ĐỐI TÁC TRUYỀN THÔNG', logos: Array.from({ length: 8 }, () => ({ image: '', name: 'Logo' })) },
 ]
+
+type LegacyPartnerLevel = PartnerLevel & { logos?: unknown[] }
+type LegacyPartners = SiteContent['partners'] & {
+  organizers?: PartnerGroup
+  markers?: unknown[]
+  levels?: LegacyPartnerLevel[]
+}
+
+const normalizePartnerLogo = (value: unknown): PartnerLogo => {
+  if (typeof value === 'string') return { image: '', name: value }
+  if (typeof value !== 'object' || value === null) return { image: '', name: 'Logo' }
+  const logo = value as Record<string, unknown>
+  return {
+    image: String(logo.image ?? logo.logo ?? ''),
+    name: String(logo.name ?? logo.label ?? 'Logo'),
+  }
+}
+
+const normalizePartnerGroup = (group: PartnerGroup, fallbackTitle: string): PartnerGroup => ({
+  title: group.title || fallbackTitle,
+  logos: Array.isArray(group.logos) && group.logos.length
+    ? group.logos.map(normalizePartnerLogo)
+    : [{ image: '', name: 'Logo' }],
+})
 
 const officialTimelineDates = ['2/9 – 5/9', '27/9 – 2/10', '9/10 – 14/10', '5/11']
 
 export const normalizeSiteContent = (value: SiteContent): SiteContent => {
   const legacy = value as Partial<SiteContent>
   const legacySettings = value.settings as Partial<SiteSettings>
+  const legacyPartners = value.partners as unknown as LegacyPartners
+  const { markers: legacyOrganizerMarkers, levels: _legacyLevels, ...partnerContent } = legacyPartners
   const settingsWithRefinedSpacing: Partial<SiteSettings> = legacy.voices
     ? legacySettings
     : {
@@ -464,6 +504,9 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       statisticIcon: value.assets.statisticIcon.endsWith('02-magto6-z-j8-MAGto6_z-j8.png')
         ? '/assets/tnth-canva/03-mahsv-hibxi-MAHSv-hIBxI.png'
         : value.assets.statisticIcon,
+      compassOverlay: value.assets.compassOverlay.endsWith('11-mahsv9hppfa-MAHSv9HpPfA.png')
+        ? '/assets/tnth-compass-blue-silver.png'
+        : value.assets.compassOverlay,
       heroTitleArtwork: value.assets.heroTitleArtwork || '/assets/tnth-canva/06-mahstkk4kow-MAHStKK4Kow.png',
       footerLogo: value.assets.footerLogo || '/assets/tnth-canva/02-magto6-z-j8-MAGto6_z-j8.png',
       footerBackground: value.assets.footerBackground || '/assets/tnth-canva/10-mahsd0narra-MAHSd0NArRA.png',
@@ -595,19 +638,41 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
         ]
       : value.faq,
     partners: {
-      ...value.partners,
+      ...partnerContent,
       kicker: '',
-      supportGroups: value.partners.supportGroups?.length
-        ? value.partners.supportGroups
-        : defaultPartnerGroups,
-      levels: [
-        { label: 'NHÀ TÀI TRỢ', value: 'HOÀNG KIM' },
-        { label: 'NHÀ TÀI TRỢ', value: 'KIM CƯƠNG' },
-        { label: 'NHÀ TÀI TRỢ', value: 'VÀNG' },
-        { label: 'NHÀ TÀI TRỢ', value: 'BẠC' },
-        { label: 'NHÀ TÀI TRỢ', value: 'ĐỒNG' },
-        { label: 'NHÀ TÀI TRỢ', value: 'ĐỒNG HÀNH' },
-      ],
+      organizers: legacyPartners.organizers
+        ? normalizePartnerGroup(legacyPartners.organizers, defaultOrganizerGroup.title)
+        : {
+            ...defaultOrganizerGroup,
+            logos: Array.isArray(legacyOrganizerMarkers) && legacyOrganizerMarkers.length
+              ? legacyOrganizerMarkers.map(normalizePartnerLogo)
+              : defaultOrganizerGroup.logos.map(normalizePartnerLogo),
+          },
+      supportGroups: (() => {
+        const groups = (legacyPartners.supportGroups?.length
+          ? legacyPartners.supportGroups
+          : defaultPartnerGroups).map((group) => normalizePartnerGroup(group, 'NHÓM ĐỐI TÁC'))
+        const legacyLevels = legacyPartners.levels ?? []
+        const sponsorGroups = defaultSponsorGroups.map((defaultGroup) => {
+          const matchingGroup = groups.find((group) => group.title.trim().toLocaleUpperCase('vi-VN') === defaultGroup.title)
+          if (matchingGroup) return matchingGroup
+
+          const titleParts = defaultGroup.title.replace('NHÀ TÀI TRỢ ', '').trim()
+          const legacyLevel = legacyLevels.find((level) => (
+            level.label.trim().toLocaleUpperCase('vi-VN') === 'NHÀ TÀI TRỢ'
+            && level.value.trim().toLocaleUpperCase('vi-VN') === titleParts
+          ))
+          return {
+            ...normalizePartnerGroup(defaultGroup, defaultGroup.title),
+            logos: legacyLevel?.logos?.length
+              ? legacyLevel.logos.map(normalizePartnerLogo)
+              : normalizePartnerGroup(defaultGroup, defaultGroup.title).logos,
+          }
+        })
+        const sponsorTitles = new Set(defaultSponsorGroups.map((group) => group.title))
+        const otherGroups = groups.filter((group) => !sponsorTitles.has(group.title.trim().toLocaleUpperCase('vi-VN')))
+        return [...sponsorGroups, ...otherGroups]
+      })(),
     },
     footer: {
       ...defaultFooter,

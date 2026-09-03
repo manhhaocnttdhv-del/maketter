@@ -68,8 +68,8 @@ const sections: EditorSection[] = [
   { id: 'benefits', label: 'Quyền lợi', hint: 'Các nhóm quyền lợi' },
   { id: 'activities', label: 'Hoạt động', hint: 'Các hoạt động đăng ký' },
   { id: 'faq', label: 'FAQ', hint: 'Câu hỏi thường gặp' },
-  { id: 'partners', label: 'Đối tác', hint: 'Mốc và cấp tài trợ' },
-  { id: 'partnerLogos', label: 'Logo bảo trợ', hint: 'Chỉ sửa logo bảo trợ và truyền thông' },
+  { id: 'partners', label: 'Đối tác', hint: 'Tiêu đề section đối tác' },
+  { id: 'partnerLogos', label: 'Logo đối tác', hint: 'Đơn vị tổ chức, tài trợ và bảo trợ' },
   { id: 'footer', label: 'Footer', hint: 'Liên hệ và mạng xã hội' },
 ]
 
@@ -183,10 +183,10 @@ const selectedModel = computed<unknown>({
       case 'activities': return { ...value.activities, activitiesBackground: value.assets.activitiesBackground }
       case 'faq': return { faq: value.faq }
       case 'partners': {
-        const { supportGroups: _supportGroups, ...partners } = value.partners
+        const { organizers: _organizers, supportGroups: _supportGroups, ...partners } = value.partners
         return partners
       }
-      case 'partnerLogos': return { supportGroups: value.partners.supportGroups }
+      case 'partnerLogos': return { organizers: value.partners.organizers, supportGroups: value.partners.supportGroups }
       case 'footer': return { ...value.footer, footerLogo: value.assets.footerLogo, footerBackground: value.assets.footerBackground }
       default: return {}
     }
@@ -254,7 +254,10 @@ const selectedModel = computed<unknown>({
       }
       case 'faq': site.value.faq = value.faq as SiteContent['faq']; break
       case 'partners': site.value.partners = { ...site.value.partners, ...value } as SiteContent['partners']; break
-      case 'partnerLogos': site.value.partners.supportGroups = value.supportGroups as SiteContent['partners']['supportGroups']; break
+      case 'partnerLogos':
+        site.value.partners.organizers = value.organizers as SiteContent['partners']['organizers']
+        site.value.partners.supportGroups = value.supportGroups as SiteContent['partners']['supportGroups']
+        break
       case 'footer': {
         const { footerLogo, footerBackground, ...footer } = value
         site.value.footer = footer as SiteContent['footer']
