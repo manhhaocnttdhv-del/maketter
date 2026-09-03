@@ -215,11 +215,7 @@
     "organizers": {
       "title": "ĐƠN VỊ TỔ CHỨC",
       "logos": [
-        { "image": "", "name": "Logo 1" },
-        { "image": "", "name": "Logo 2" },
-        { "image": "", "name": "Logo 3" },
-        { "image": "", "name": "Logo 4" },
-        { "image": "", "name": "Logo 5" }
+        { "image": "/assets/tnth-canva/organizer-logos-2026.webp", "name": "Các đơn vị tổ chức" }
       ]
     },
     "supportGroups": [

@@ -58,6 +58,9 @@ const labels: Record<string, string> = {
   cardLabel: 'Nhãn thẻ',
   quote: 'Trích dẫn nổi bật',
   rounds: 'Các vòng thi',
+  blocks: 'Các khối nội dung',
+  heading: 'Tiêu đề khối',
+  contentHtml: 'Nội dung nhiều dòng (hỗ trợ in đậm và màu)',
   date: 'Ngày / thời gian',
   totalLabel: 'Nhãn tổng giải thưởng',
   totalValue: 'Tổng giá trị',
@@ -241,6 +244,28 @@ const handleImageUpload = (event: Event) => {
   reader.readAsDataURL(file)
   input.value = ''
 }
+
+const handleFormattingShortcut = (event: KeyboardEvent) => {
+  if (!(event.ctrlKey || event.metaKey)) return
+  const key = event.key.toLowerCase()
+  const isBold = key === 'b' && !event.shiftKey
+  const isCyan = key === 'c' && event.shiftKey
+  if (!isBold && !isCyan) return
+  const textarea = event.currentTarget as HTMLTextAreaElement
+  const start = textarea.selectionStart
+  const end = textarea.selectionEnd
+  if (start === end) return
+  event.preventDefault()
+  const selected = textarea.value.slice(start, end)
+  const open = isBold ? '<strong style="color: #7feeff">' : '<span style="color: #7feeff">'
+  const close = isBold ? '</strong>' : '</span>'
+  const nextValue = `${textarea.value.slice(0, start)}${open}${selected}${close}${textarea.value.slice(end)}`
+  emit('update:modelValue', nextValue)
+  requestAnimationFrame(() => {
+    textarea.focus()
+    textarea.setSelectionRange(start + open.length, end + open.length)
+  })
+}
 </script>
 
 <template>
@@ -349,8 +374,8 @@ const handleImageUpload = (event: Event) => {
 
   <label v-else class="config-field">
     <span>{{ label }}</span>
-    <textarea v-if="isLongText" :value="String(modelValue ?? '')" rows="4" @input="emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"></textarea>
+    <textarea v-if="isLongText" :value="String(modelValue ?? '')" rows="4" @keydown="handleFormattingShortcut" @input="emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"></textarea>
     <input v-else type="text" :value="String(modelValue ?? '')" @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
-    <small v-if="/paragraphsHtml/i.test(name)">Có thể dùng thẻ HTML như &lt;strong&gt;, &lt;br&gt;.</small>
+    <small v-if="isLongText">Bôi đen chữ: Ctrl+B để in đậm + tự đổi màu cyan · Ctrl+Shift+C để chỉ đổi màu.</small>
   </label>
 </template>

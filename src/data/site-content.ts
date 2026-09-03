@@ -25,6 +25,11 @@ export interface TimelineRound {
   description: string
 }
 
+export interface CustomContentBlock {
+  heading: string
+  contentHtml: string
+}
+
 export interface Prize {
   title: string
   value: string
@@ -80,6 +85,7 @@ export type SectionKey =
   | 'theme'
   | 'rules'
   | 'timeline'
+  | 'customContent'
   | 'prizes'
   | 'benefits'
   | 'activities'
@@ -219,6 +225,10 @@ export interface SiteContent {
     title: string
     rounds: TimelineRound[]
   }
+  customContent: {
+    title: string
+    blocks: CustomContentBlock[]
+  }
   prizes: {
     title: string
     totalLabel: string
@@ -256,7 +266,7 @@ export interface SiteContent {
 }
 
 export const sectionKeys: SectionKey[] = [
-  'hero', 'intro', 'about', 'metrics', 'voices', 'theme', 'rules', 'timeline',
+  'hero', 'intro', 'about', 'metrics', 'voices', 'theme', 'rules', 'timeline', 'customContent',
   'prizes', 'benefits', 'activities', 'partners', 'faq', 'footer',
 ]
 
@@ -325,6 +335,7 @@ export const defaultSiteSettings: SiteSettings = {
     theme: makeSectionSettings(),
     rules: makeSectionSettings(),
     timeline: makeSectionSettings(),
+    customContent: makeSectionSettings({ enabled: false, containerWidth: 1040, contentAlign: 'left' }),
     prizes: makeSectionSettings(),
     benefits: makeSectionSettings(),
     activities: makeSectionSettings(),
@@ -417,10 +428,10 @@ const defaultFooter: SiteContent['footer'] = {
 
 const defaultOrganizerGroup: PartnerGroup = {
   title: 'ĐƠN VỊ TỔ CHỨC',
-  logos: Array.from({ length: 5 }, (_, index) => ({
-    image: '',
-    name: `Logo ${index + 1}`,
-  })),
+  logos: [{
+    image: '/assets/tnth-canva/organizer-logos-2026.webp',
+    name: 'Các đơn vị tổ chức',
+  }],
 }
 
 const defaultBronzePartnerGroup: PartnerGroup = {
@@ -594,6 +605,19 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
           date: officialTimelineDates[index] ?? round.date,
         })),
     },
+    customContent: legacy.customContent ?? {
+      title: 'NỘI DUNG CHƯƠNG TRÌNH',
+      blocks: [
+        {
+          heading: 'VIRAL CLIP',
+          contentHtml: 'Các đội hoàn thiện Viral Clip với nội dung bám sát đề án và chiến dịch truyền thông của đội.',
+        },
+        {
+          heading: 'ĐÊM CHUNG KẾT',
+          contentHtml: '<strong>Phần 1:</strong> Top 4 đội thi thuyết trình IMC Plan và trả lời câu hỏi phản biện.\n<strong style="color: #7feeff">Phần 2:</strong> Các đội xử lý minicase và tiến tới phần phản biện trực tiếp.',
+        },
+      ],
+    },
     prizes: /^50\.000\.000|^1XX|^XX/.test(`${value.prizes.totalValue}${value.prizes.cards[0]?.value ?? ''}`)
       ? {
           ...value.prizes,
@@ -650,7 +674,9 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
             }
         const isLegacyLogoBanner = organizerGroup.logos.length === 1
           && organizerGroup.logos[0]?.image.endsWith('/04-organizations-transparent-v2.png')
-        return isLegacyLogoBanner
+        const isEmptyOrganizerPlaceholders = organizerGroup.logos.length === 5
+          && organizerGroup.logos.every((logo) => !logo.image)
+        return isLegacyLogoBanner || isEmptyOrganizerPlaceholders
           ? { ...defaultOrganizerGroup, logos: defaultOrganizerGroup.logos.map(normalizePartnerLogo) }
           : organizerGroup
       })(),

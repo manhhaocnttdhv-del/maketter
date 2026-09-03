@@ -64,6 +64,7 @@ const sections: EditorSection[] = [
   { id: 'theme', label: 'Chủ đề', hint: 'Poster và diễn giải' },
   { id: 'rules', label: 'Thể lệ', hint: 'Các thẻ quy định' },
   { id: 'timeline', label: 'Timeline', hint: 'Các vòng và thời gian' },
+  { id: 'customContent', label: 'Nội dung tùy chỉnh', hint: 'Văn bản nhiều dòng, in đậm và màu' },
   { id: 'prizes', label: 'Giải thưởng', hint: 'Tổng giải và từng hạng' },
   { id: 'benefits', label: 'Quyền lợi', hint: 'Các nhóm quyền lợi' },
   { id: 'activities', label: 'Hoạt động', hint: 'Các hoạt động đăng ký' },
@@ -178,6 +179,7 @@ const selectedModel = computed<unknown>({
       case 'theme': return { ...value.theme, themePoster: value.assets.themePoster }
       case 'rules': return value.rules
       case 'timeline': return { ...value.timeline, timelineBackground: value.assets.timelineBackground, compassOverlay: value.assets.compassOverlay }
+      case 'customContent': return value.customContent
       case 'prizes': return value.prizes
       case 'benefits': return value.benefits
       case 'activities': return { ...value.activities, activitiesBackground: value.assets.activitiesBackground }
@@ -244,6 +246,7 @@ const selectedModel = computed<unknown>({
         site.value.assets.compassOverlay = String(compassOverlay ?? '')
         break
       }
+      case 'customContent': site.value.customContent = value as unknown as SiteContent['customContent']; break
       case 'prizes': site.value.prizes = value as unknown as SiteContent['prizes']; break
       case 'benefits': site.value.benefits = value as unknown as SiteContent['benefits']; break
       case 'activities': {

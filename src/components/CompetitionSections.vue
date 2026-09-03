@@ -64,6 +64,8 @@ const timelineDescriptionHtml = (description: string) => description
   })
   .join('')
 
+const multilineHtml = (content: string) => content.replace(/\r?\n/g, '<br>')
+
 const startGalleryDrag = (event: PointerEvent) => {
   if (!galleryTrack.value) return
   stopGalleryAutoplay()
@@ -369,7 +371,7 @@ onBeforeUnmount(() => {
             <div v-for="(voice, index) in site.voices.slides" :key="`${voice.name}-${index}`" class="carousel-item" :class="{ active: index === 0 }">
               <article class="voice-card">
                 <div class="voice-card__portrait"><img v-if="voice.image" :src="voice.image" :alt="voice.name" /></div>
-                <div class="voice-card__copy"><h3>{{ voice.name }}</h3><p>{{ voice.role }}</p><blockquote>“{{ voice.quote }}”</blockquote></div>
+                <div class="voice-card__copy"><h3>{{ voice.name }}</h3><p>{{ voice.role }}</p><blockquote>“<span v-html="voice.quote"></span>”</blockquote></div>
               </article>
             </div>
           </div>
@@ -397,7 +399,7 @@ onBeforeUnmount(() => {
       <div class="container px-4 px-lg-5">
         <div class="text-center section-heading reveal"><h2>{{ site.rules.title }}</h2></div>
         <div class="row g-3 g-lg-4 mt-2" :class="{ 'configured-card-grid': hasColumns('rules') }" :style="cardGridStyle('rules')">
-          <div v-for="(rule, index) in site.rules.cards" :key="`${rule.title}-${index}`" :class="hasColumns('rules') ? '' : 'col-md-4'" class="reveal" :style="{ transitionDelay: `${index * 90}ms` }"><article class="rule-card h-100"><span class="rule-card__number">{{ String(index + 1).padStart(2, '0') }}</span><h3>{{ rule.title }}</h3><ul><li v-for="(item, itemIndex) in rule.items" :key="itemIndex">{{ item }}</li></ul></article></div>
+          <div v-for="(rule, index) in site.rules.cards" :key="`${rule.title}-${index}`" :class="hasColumns('rules') ? '' : 'col-md-4'" class="reveal" :style="{ transitionDelay: `${index * 90}ms` }"><article class="rule-card h-100"><span class="rule-card__number">{{ String(index + 1).padStart(2, '0') }}</span><h3>{{ rule.title }}</h3><ul><li v-for="(item, itemIndex) in rule.items" :key="itemIndex" v-html="item"></li></ul></article></div>
         </div>
       </div>
     </section>
@@ -446,12 +448,25 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
+    <section v-if="isEnabled('customContent')" data-editor-section="customContent" class="content-section custom-content-section section-deep-blue" :class="classFor('customContent')" :style="styleFor('customContent')">
+      <div class="section-transition" aria-hidden="true"></div>
+      <div class="container px-4 px-lg-5 position-relative">
+        <div v-if="site.customContent.title" class="text-center section-heading reveal"><h2>{{ site.customContent.title }}</h2></div>
+        <div class="custom-content-layout reveal">
+          <article v-for="(block, index) in site.customContent.blocks" :key="`${block.heading}-${index}`" class="custom-content-block">
+            <h3 v-if="block.heading">{{ block.heading }}</h3>
+            <div class="custom-content-block__copy" v-html="multilineHtml(block.contentHtml)"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section v-if="isEnabled('prizes')" id="prizes" data-editor-section="prizes" class="content-section section-deep-blue" :class="classFor('prizes')" :style="styleFor('prizes')">
       <div class="section-transition" aria-hidden="true"></div>
       <div class="container px-4 px-lg-5">
         <div class="text-center section-heading reveal"><h2>{{ site.prizes.title }}</h2></div>
         <div class="total-prize reveal"><span>{{ site.prizes.totalLabel }}</span><strong>{{ site.prizes.totalValue }}</strong></div>
-        <div class="row g-3 g-lg-4 mt-3" :class="{ 'configured-card-grid': hasColumns('prizes') }" :style="cardGridStyle('prizes')"><div v-for="(prize, index) in site.prizes.cards" :key="`${prize.title}-${index}`" :class="hasColumns('prizes') ? '' : 'col-md-6'" class="reveal" :style="{ transitionDelay: `${index * 75}ms` }"><article class="prize-card h-100"><Award :size="22" /><h3>{{ prize.title }}</h3><strong>{{ prize.value }}</strong><ul><li v-for="(benefit, benefitIndex) in prize.benefits" :key="benefitIndex">{{ benefit }}</li></ul></article></div></div>
+        <div class="row g-3 g-lg-4 mt-3" :class="{ 'configured-card-grid': hasColumns('prizes') }" :style="cardGridStyle('prizes')"><div v-for="(prize, index) in site.prizes.cards" :key="`${prize.title}-${index}`" :class="hasColumns('prizes') ? '' : 'col-md-6'" class="reveal" :style="{ transitionDelay: `${index * 75}ms` }"><article class="prize-card h-100"><Award :size="22" /><h3>{{ prize.title }}</h3><strong>{{ prize.value }}</strong><ul><li v-for="(benefit, benefitIndex) in prize.benefits" :key="benefitIndex" v-html="benefit"></li></ul></article></div></div>
       </div>
     </section>
 
@@ -473,7 +488,7 @@ onBeforeUnmount(() => {
             <div class="col-lg-11 col-xl-10 reveal">
               <article class="glass-rule glass-rule--standalone h-100">
                 <ul>
-                  <li v-for="(item, itemIndex) in group.items" :key="itemIndex">{{ item }}</li>
+                  <li v-for="(item, itemIndex) in group.items" :key="itemIndex" v-html="item"></li>
                 </ul>
               </article>
             </div>
@@ -486,14 +501,14 @@ onBeforeUnmount(() => {
       <div class="section-transition" aria-hidden="true"></div>
       <div class="container px-4 px-lg-5 position-relative">
         <div class="text-center section-heading reveal"><h2>{{ site.activities.title }}</h2></div>
-        <div class="row g-3 mt-1" :class="{ 'configured-card-grid': hasColumns('activities') }" :style="cardGridStyle('activities')"><div v-for="(activity, index) in site.activities.cards" :key="`${activity.title}-${index}`" class="reveal" :class="hasColumns('activities') ? '' : [index % 2 === 0 ? 'slide-left' : 'slide-right']"><article class="activity-card h-100"><h3>{{ activity.title }} <em>{{ activity.date }}</em></h3><p>{{ activity.description }}</p><a :class="{ 'activity-cta--bubble': index < 2 }" :href="activity.ctaHref">{{ activity.ctaLabel }} <ChevronRight :size="16" /></a></article></div></div>
+        <div class="row g-3 mt-1" :class="{ 'configured-card-grid': hasColumns('activities') }" :style="cardGridStyle('activities')"><div v-for="(activity, index) in site.activities.cards" :key="`${activity.title}-${index}`" class="reveal" :class="hasColumns('activities') ? '' : [index % 2 === 0 ? 'slide-left' : 'slide-right']"><article class="activity-card h-100"><h3>{{ activity.title }} <em>{{ activity.date }}</em></h3><p v-html="activity.description"></p><a :class="{ 'activity-cta--bubble': index < 2 }" :href="activity.ctaHref">{{ activity.ctaLabel }} <ChevronRight :size="16" /></a></article></div></div>
       </div>
     </section>
 
     <section v-if="isEnabled('faq')" data-editor-section="faq" class="content-section faq-section section-cosmic" :class="classFor('faq')" :style="styleFor('faq', site.assets.activitiesBackground)">
       <div class="section-transition" aria-hidden="true"></div>
       <div class="container px-4 px-lg-5">
-        <div class="faq-wrap reveal"><div class="text-center section-heading"><h2>FAQ</h2></div><div id="faqAccordion" class="accordion accordion-flush"><div v-for="(item, index) in site.faq" :key="`${item.question}-${index}`" class="accordion-item"><h3 class="accordion-header"><button class="accordion-button" :class="{ collapsed: index !== 0 }" type="button" data-bs-toggle="collapse" :data-bs-target="`#faq-${index}`">{{ index + 1 }}. {{ item.question }}</button></h3><div :id="`faq-${index}`" class="accordion-collapse collapse" :class="{ show: index === 0 }" data-bs-parent="#faqAccordion"><div class="accordion-body">{{ item.answer }}</div></div></div></div></div>
+        <div class="faq-wrap reveal"><div class="text-center section-heading"><h2>FAQ</h2></div><div id="faqAccordion" class="accordion accordion-flush"><div v-for="(item, index) in site.faq" :key="`${item.question}-${index}`" class="accordion-item"><h3 class="accordion-header"><button class="accordion-button" :class="{ collapsed: index !== 0 }" type="button" data-bs-toggle="collapse" :data-bs-target="`#faq-${index}`">{{ index + 1 }}. {{ item.question }}</button></h3><div :id="`faq-${index}`" class="accordion-collapse collapse" :class="{ show: index === 0 }" data-bs-parent="#faqAccordion"><div class="accordion-body" v-html="item.answer"></div></div></div></div></div>
       </div>
     </section>
 
@@ -503,7 +518,7 @@ onBeforeUnmount(() => {
         <div class="section-heading reveal"><h2>{{ site.partners.title }}</h2></div>
         <div class="partner-organizers reveal">
           <h3>{{ site.partners.organizers.title }}</h3>
-          <div class="partner-markers">
+          <div class="partner-markers" :class="{ 'partner-markers--banner': site.partners.organizers.logos.length === 1 }">
             <span v-for="(logo, index) in site.partners.organizers.logos" :key="`${logo.name}-${index}`">
               <img v-if="logo.image" :src="logo.image" :alt="logo.name || site.partners.organizers.title" />
               <template v-else>{{ logo.name || 'LOGO' }}</template>
