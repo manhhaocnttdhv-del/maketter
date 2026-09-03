@@ -344,17 +344,18 @@ onBeforeUnmount(() => {
 
     <section v-if="isEnabled('metrics')" data-editor-section="metrics" class="metrics-section" :class="classFor('metrics')" :style="styleFor('metrics')">
       <div class="section-transition" aria-hidden="true"></div>
-      <div class="metrics-section__stars"></div>
       <div class="container px-4 px-lg-5 position-relative">
         <div class="metrics-heading text-center reveal">
           <h2><span>DẤU ẤN</span><span>TẦM NHÌN THƯƠNG HIỆU 2025</span></h2>
         </div>
-        <div class="metrics-grid" :style="cardGridStyle('metrics')">
-          <article v-for="(stat, index) in site.about.statistics" :key="`${stat.label}-${index}`" class="metric-item reveal" :data-stat-index="index" :style="{ transitionDelay: `${index * 85}ms` }">
-            <img class="metric-item__icon" :src="site.assets.statisticIcon" alt="" />
-            <strong>{{ animatedStats[index] }}</strong>
-            <span>{{ stat.label }}</span>
-          </article>
+        <div class="metrics-panel">
+          <div class="metrics-grid" :style="cardGridStyle('metrics')">
+            <article v-for="(stat, index) in site.about.statistics" :key="`${stat.label}-${index}`" class="metric-item reveal" :data-stat-index="index" :style="{ transitionDelay: `${index * 85}ms` }">
+              <img class="metric-item__icon" :src="site.assets.statisticIcon" alt="" />
+              <strong>{{ animatedStats[index] }}</strong>
+              <span>{{ stat.label }}</span>
+            </article>
+          </div>
         </div>
       </div>
     </section>
@@ -423,7 +424,6 @@ onBeforeUnmount(() => {
           </div>
           <div class="col-md-7 reveal slide-right position-relative">
             <div class="timeline-content-wrapper">
-              <div class="timeline-hologram-glow"></div>
               <div class="tab-content timeline-content">
                 <transition name="timeline-fade" mode="out-in">
                   <article
@@ -440,10 +440,6 @@ onBeforeUnmount(() => {
                   </article>
                 </transition>
               </div>
-            </div>
-            <div class="timeline-compass-box" aria-hidden="true">
-              <span class="timeline-compass-projection"></span>
-              <img :src="site.assets.compassOverlay" alt="" class="timeline-compass-visual" />
             </div>
           </div>
         </div>
@@ -507,7 +503,10 @@ onBeforeUnmount(() => {
         <div class="section-heading reveal"><h2>{{ site.partners.title }}</h2></div>
         <div class="partner-organizers reveal">
           <h3>{{ site.partners.organizers.title }}</h3>
-          <div class="partner-markers">
+          <div
+            class="partner-markers"
+            :class="{ 'partner-markers--cluster': site.partners.organizers.logos.length === 1 && Boolean(site.partners.organizers.logos[0]?.image) }"
+          >
             <span v-for="(logo, index) in site.partners.organizers.logos" :key="`${logo.name}-${index}`">
               <img v-if="logo.image" :src="logo.image" :alt="logo.name || site.partners.organizers.title" />
               <template v-else>{{ logo.name || 'LOGO' }}</template>

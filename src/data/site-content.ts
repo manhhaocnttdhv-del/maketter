@@ -417,29 +417,16 @@ const defaultFooter: SiteContent['footer'] = {
 
 const defaultOrganizerGroup: PartnerGroup = {
   title: 'ĐƠN VỊ TỔ CHỨC',
-  logos: ['NEU', 'HSV', 'YOUTH', 'BRAND', 'NEU'].map((name) => ({ image: '', name })),
+  logos: [{
+    image: '/assets/tnth-canva/04-organizations-transparent-v2.png',
+    name: 'Cụm logo đơn vị tổ chức Tầm Nhìn Thương Hiệu 2026',
+  }],
 }
 
-const defaultSponsorGroups: PartnerGroup[] = [
-  { title: 'NHÀ TÀI TRỢ HOÀNG KIM', logos: [{ image: '', name: 'Logo' }] },
-  { title: 'NHÀ TÀI TRỢ KIM CƯƠNG', logos: [{ image: '', name: 'Logo' }] },
-  { title: 'NHÀ TÀI TRỢ VÀNG', logos: [{ image: '', name: 'Logo' }] },
-  { title: 'NHÀ TÀI TRỢ BẠC', logos: [{ image: '', name: 'Logo' }] },
-  { title: 'NHÀ TÀI TRỢ ĐỒNG HÀNH', logos: [{ image: '', name: 'Logo' }] },
-]
-
-const defaultStandalonePartnerGroups: PartnerGroup[] = [
-  { title: 'NHÀ TÀI TRỢ ĐỒNG', logos: [{ image: '', name: 'Logo' }] },
-  { title: 'BẢO TRỢ CHUYÊN MÔN', logos: Array.from({ length: 7 }, () => ({ image: '', name: 'Logo' })) },
-  { title: 'BẢO TRỢ TRUYỀN THÔNG', logos: Array.from({ length: 10 }, () => ({ image: '', name: 'Logo' })) },
-  { title: 'ĐỐI TÁC HÌNH ẢNH ĐỘC QUYỀN', logos: [{ image: '', name: 'Logo' }] },
-  { title: 'ĐỐI TÁC TRUYỀN THÔNG', logos: Array.from({ length: 8 }, () => ({ image: '', name: 'Logo' })) },
-]
-
-const defaultPartnerGroups: PartnerGroup[] = [
-  ...defaultSponsorGroups,
-  ...defaultStandalonePartnerGroups,
-]
+const defaultBronzePartnerGroup: PartnerGroup = {
+  title: 'NHÀ TÀI TRỢ ĐỒNG',
+  logos: [{ image: '', name: 'Logo' }],
+}
 
 type LegacyPartnerLevel = PartnerLevel & { logos?: unknown[] }
 type LegacyPartners = SiteContent['partners'] & {
@@ -572,8 +559,8 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       subtitle: value.theme.subtitle || 'ROUND TO UNBOUND',
       quote: value.theme.quote.toLocaleLowerCase('vi-VN').includes('la bàn vận mệnh') ? '' : value.theme.quote,
       paragraphsHtml: [
-        'Giữa trung tâm đầy hỗn mang của một thế giới công nghệ số, tồn tại một <strong>Chiếc la bàn vận mệnh</strong> từng định hướng mọi kết nối và duy trì nhịp vận hành của cả thế giới. Thế nhưng, vào khoảnh khắc nó ngừng xoay, mọi tín hiệu bắt đầu rối loạn, mọi chuyển động mắc kẹt trong những vòng lặp vô định, đẩy thành phố vào trạng thái hỗn mang chưa từng có. Muốn phá vỡ thế bế tắc ấy, cần những người đủ bản lĩnh tiến thẳng đến lõi của cỗ máy, chạm tay vào từng bánh răng và <strong>khởi động lại nhịp xoay của tương lai</strong>.',
-        'Mang trong mình tinh thần ấy, <strong>ROUND TO UNBOUND</strong> chính là hành trình của những <strong>Marketers</strong> dũng cảm trên con đường thoát khỏi giới hạn do chính kỷ nguyên số vô thức tạo nên. Họ lần theo những giá trị tưởng chừng quen thuộc, giải mã những tín hiệu từng bị bỏ quên và kết nối những khả năng chưa từng giao thoa để xoay chuyển <strong>Chiếc la bàn vận mệnh</strong>. Nhưng tái khởi động cỗ máy chưa bao giờ là đích đến cuối cùng. Điều thực sự được quyết định nằm ở cách họ tạo nên những điểm chạm mới, mở rộng không gian sáng tạo và kiến tạo những quỹ đạo phát triển mới cho <strong>Truyền thông Thương hiệu</strong> trong tương lai.',
+        'Giữa trung tâm đầy hỗn mang của thế giới công nghệ số, tồn tại một <strong>Chiếc la bàn vận mệnh</strong> định hướng mọi kết nối và duy trì nhịp vận hành của cả thế giới. Thế nhưng, vào khoảnh khắc nó ngừng xoay, mọi tín hiệu dần biến mất, mọi chuyển động mắc kẹt trong những vòng lặp vô định, đẩy thành phố vào trạng thái rối loạn chưa từng có. Muốn phá vỡ thế bế tắc ấy, cần những người đủ bản lĩnh tiến thẳng đến lõi của cỗ máy, chạm tay vào từng bánh răng và <strong>khởi động lại nhịp xoay của tương lai</strong>.',
+        'Mang trong mình tinh thần của các chiến binh, <strong>ROUND TO UNBOUND</strong> chính là hành trình của những <strong>Marketers</strong> dũng cảm trên con đường thoát khỏi giới hạn do chính kỷ nguyên số vô thức tạo nên. Họ lần theo những giá trị tưởng chừng quen thuộc, giải mã những tín hiệu từng bị bỏ quên và kết nối những khả năng vốn rời rạc để xoay chuyển <strong>Chiếc la bàn vận mệnh</strong>. Nhưng tái khởi động cỗ máy chưa bao giờ là đích đến cuối cùng. Bởi phía trước không chỉ là những giới hạn cần được phá vỡ, mà còn là những không gian mới đang chờ được mở ra. Tại <strong>Tầm Nhìn Thương Hiệu 2026</strong>, mỗi thí sinh được trao cơ hội mở ra một góc nhìn mới, tạo nên những điểm chạm khác biệt và kiến tạo những quỹ đạo mới cho <strong>Truyền thông Thương hiệu</strong>. Nếu đã sẵn sàng, đây chính là lúc để bạn cất lên tiếng nói và tạo ra những con đường mới cho hành trình của chính mình.',
       ],
     },
     rules: {
@@ -645,64 +632,26 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     partners: {
       ...partnerContent,
       kicker: '',
-      organizers: legacyPartners.organizers
-        ? normalizePartnerGroup(legacyPartners.organizers, defaultOrganizerGroup.title)
-        : {
-            ...defaultOrganizerGroup,
-            logos: Array.isArray(legacyOrganizerMarkers) && legacyOrganizerMarkers.length
-              ? legacyOrganizerMarkers.map(normalizePartnerLogo)
-              : defaultOrganizerGroup.logos.map(normalizePartnerLogo),
-          },
+      organizers: (() => {
+        const organizerGroup = legacyPartners.organizers
+          ? normalizePartnerGroup(legacyPartners.organizers, defaultOrganizerGroup.title)
+          : {
+              ...defaultOrganizerGroup,
+              logos: Array.isArray(legacyOrganizerMarkers) && legacyOrganizerMarkers.length
+                ? legacyOrganizerMarkers.map(normalizePartnerLogo)
+                : defaultOrganizerGroup.logos.map(normalizePartnerLogo),
+            }
+        return organizerGroup.logos.length === 1 && Boolean(organizerGroup.logos[0]?.image)
+          ? organizerGroup
+          : { ...defaultOrganizerGroup, logos: defaultOrganizerGroup.logos.map(normalizePartnerLogo) }
+      })(),
       supportGroups: (() => {
-        const groups = (legacyPartners.supportGroups?.length
-          ? legacyPartners.supportGroups
-          : defaultPartnerGroups).map((group) => normalizePartnerGroup(group, 'NHÓM ĐỐI TÁC'))
-        const legacyLevels = legacyPartners.levels ?? []
-        const sponsorGroups = defaultSponsorGroups.map((defaultGroup) => {
-          const matchingGroup = groups.find((group) => group.title.trim().toLocaleUpperCase('vi-VN') === defaultGroup.title)
-          if (matchingGroup) return matchingGroup
-
-          const titleParts = defaultGroup.title.replace('NHÀ TÀI TRỢ ', '').trim()
-          const legacyLevel = legacyLevels.find((level) => (
-            level.label.trim().toLocaleUpperCase('vi-VN') === 'NHÀ TÀI TRỢ'
-            && level.value.trim().toLocaleUpperCase('vi-VN') === titleParts
-          ))
-          return {
-            ...normalizePartnerGroup(defaultGroup, defaultGroup.title),
-            logos: legacyLevel?.logos?.length
-              ? legacyLevel.logos.map(normalizePartnerLogo)
-              : normalizePartnerGroup(defaultGroup, defaultGroup.title).logos,
-          }
-        })
-        const sponsorTitles = new Set(defaultSponsorGroups.map((group) => group.title))
-        const otherGroups = groups.filter((group) => !sponsorTitles.has(group.title.trim().toLocaleUpperCase('vi-VN')))
-        const standaloneGroups = defaultStandalonePartnerGroups.map((defaultGroup) => {
-          const matchingGroup = otherGroups.find((group) => (
-            group.title.trim().toLocaleUpperCase('vi-VN') === defaultGroup.title
-          ))
-          if (!matchingGroup) return normalizePartnerGroup(defaultGroup, defaultGroup.title)
-
-          const minimumLogoCount = defaultGroup.title === 'BẢO TRỢ TRUYỀN THÔNG'
-            ? defaultGroup.logos.length
-            : 1
-          return {
-            ...matchingGroup,
-            logos: matchingGroup.logos.length >= minimumLogoCount
-              ? matchingGroup.logos
-              : [
-                  ...matchingGroup.logos,
-                  ...Array.from(
-                    { length: minimumLogoCount - matchingGroup.logos.length },
-                    () => ({ image: '', name: 'Logo' }),
-                  ),
-                ],
-          }
-        })
-        const standaloneTitles = new Set(defaultStandalonePartnerGroups.map((group) => group.title))
-        const customGroups = otherGroups.filter((group) => (
-          !standaloneTitles.has(group.title.trim().toLocaleUpperCase('vi-VN'))
+        const groups = (legacyPartners.supportGroups ?? [])
+          .map((group) => normalizePartnerGroup(group, 'NHÓM ĐỐI TÁC'))
+        const bronzeGroup = groups.find((group) => (
+          group.title.trim().toLocaleUpperCase('vi-VN') === defaultBronzePartnerGroup.title
         ))
-        return [...sponsorGroups, ...standaloneGroups, ...customGroups]
+        return [bronzeGroup ?? normalizePartnerGroup(defaultBronzePartnerGroup, defaultBronzePartnerGroup.title)]
       })(),
     },
     footer: {
