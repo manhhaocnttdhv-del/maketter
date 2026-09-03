@@ -428,6 +428,13 @@ const defaultBronzePartnerGroup: PartnerGroup = {
   logos: [{ image: '', name: 'Logo' }],
 }
 
+const defaultStandalonePartnerGroups: PartnerGroup[] = [
+  { title: 'BẢO TRỢ CHUYÊN MÔN', logos: Array.from({ length: 7 }, () => ({ image: '', name: 'Logo' })) },
+  { title: 'BẢO TRỢ TRUYỀN THÔNG', logos: Array.from({ length: 10 }, () => ({ image: '', name: 'Logo' })) },
+  { title: 'ĐỐI TÁC HÌNH ẢNH ĐỘC QUYỀN', logos: [{ image: '', name: 'Logo' }] },
+  { title: 'ĐỐI TÁC TRUYỀN THÔNG', logos: Array.from({ length: 8 }, () => ({ image: '', name: 'Logo' })) },
+]
+
 type LegacyPartnerLevel = PartnerLevel & { logos?: unknown[] }
 type LegacyPartners = SiteContent['partners'] & {
   organizers?: PartnerGroup
@@ -653,7 +660,16 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
         const bronzeGroup = groups.find((group) => (
           group.title.trim().toLocaleUpperCase('vi-VN') === defaultBronzePartnerGroup.title
         ))
-        return [bronzeGroup ?? normalizePartnerGroup(defaultBronzePartnerGroup, defaultBronzePartnerGroup.title)]
+        const standaloneGroups = defaultStandalonePartnerGroups.map((defaultGroup) => {
+          const matchingGroup = groups.find((group) => (
+            group.title.trim().toLocaleUpperCase('vi-VN') === defaultGroup.title
+          ))
+          return matchingGroup ?? normalizePartnerGroup(defaultGroup, defaultGroup.title)
+        })
+        return [
+          bronzeGroup ?? normalizePartnerGroup(defaultBronzePartnerGroup, defaultBronzePartnerGroup.title),
+          ...standaloneGroups,
+        ]
       })(),
     },
     footer: {
