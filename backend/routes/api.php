@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Api\ContentController;
+use App\Http\Controllers\Api\ImageUploadController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,8 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-use App\Http\Controllers\Api\ImageUploadController;
-use App\Http\Controllers\Api\ContentController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/health', function () {
     return response()->json([
@@ -26,10 +25,10 @@ Route::get('/health', function () {
 });
 
 Route::post('/upload-image', [ImageUploadController::class, 'upload']);
+Route::get('/images', [ImageUploadController::class, 'index']);
 Route::get('/site-content', [ContentController::class, 'get']);
 Route::post('/site-content', [ContentController::class, 'save']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-

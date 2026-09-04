@@ -2,6 +2,14 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { Check, Images, Search, X } from '@lucide/vue'
 import sourceImages from 'virtual:source-images'
+import { fetchUploadedImages } from '../../utils/editor-api'
+
+interface LibraryImage {
+  path: string
+  url: string
+  name: string
+  source: 'public' | 'src' | 'uploads'
+}
 
 const props = withDefaults(defineProps<{
   modelValue: string
@@ -18,21 +26,42 @@ const emit = defineEmits<{
 
 const isOpen = ref(false)
 const search = ref('')
-const sourceFilter = ref<'all' | 'public' | 'src'>('all')
+const sourceFilter = ref<'all' | 'public' | 'src' | 'uploads'>('all')
+const uploadedImages = ref<LibraryImage[]>([])
+const isLoadingUploads = ref(false)
+const uploadLoadError = ref('')
+
+const allImages = computed<LibraryImage[]>(() => [
+  ...sourceImages,
+  ...uploadedImages.value,
+])
 
 const filteredImages = computed(() => {
   const query = search.value.trim().toLocaleLowerCase('vi-VN')
-  return sourceImages.filter((image) => {
+  return allImages.value.filter((image) => {
     const matchesSource = sourceFilter.value === 'all' || image.source === sourceFilter.value
     const matchesSearch = !query || `${image.name} ${image.path}`.toLocaleLowerCase('vi-VN').includes(query)
     return matchesSource && matchesSearch
   })
 })
 
+const loadUploadedImages = async () => {
+  isLoadingUploads.value = true
+  uploadLoadError.value = ''
+  try {
+    uploadedImages.value = await fetchUploadedImages()
+  } catch (error) {
+    uploadLoadError.value = error instanceof Error ? error.message : 'Không tải được ảnh đã upload.'
+  } finally {
+    isLoadingUploads.value = false
+  }
+}
+
 const open = () => {
   search.value = ''
   sourceFilter.value = 'all'
   isOpen.value = true
+  void loadUploadedImages()
 }
 
 const close = () => {
@@ -64,7 +93,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleEscape))
           <div>
             <span>THƯ VIỆN SOURCE</span>
             <h2>Chọn ảnh có sẵn</h2>
-            <p>{{ sourceImages.length }} ảnh trong public/ và src/assets/</p>
+            <p>{{ allImages.length }} ảnh trong source và Laravel uploads</p>
           </div>
           <button type="button" aria-label="Đóng thư viện ảnh" @click="close"><X :size="20" /></button>
         </header>
@@ -78,10 +107,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleEscape))
             <button type="button" :class="{ active: sourceFilter === 'all' }" @click="sourceFilter = 'all'">Tất cả</button>
             <button type="button" :class="{ active: sourceFilter === 'public' }" @click="sourceFilter = 'public'">public/</button>
             <button type="button" :class="{ active: sourceFilter === 'src' }" @click="sourceFilter = 'src'">src/assets/</button>
+            <button type="button" :class="{ active: sourceFilter === 'uploads' }" @click="sourceFilter = 'uploads'">uploads/</button>
           </div>
         </div>
 
         <div class="source-library-results">
+          <p v-if="isLoadingUploads" class="source-library-status">Đang tải ảnh đã upload...</p>
+          <button v-else-if="uploadLoadError" type="button" class="source-library-status source-library-status--error" @click="loadUploadedImages">{{ uploadLoadError }} Bấm để thử lại.</button>
           <button
             v-for="image in filteredImages"
             :key="image.path"
@@ -184,11 +216,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleEscape))
 .source-library-card strong { margin-top: 8px; overflow: hidden; color: #2b3d66; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
 .source-library-card small { margin-top: 3px; overflow: hidden; color: #8893a6; font: 7px/1.4 Consolas, monospace; text-overflow: ellipsis; white-space: nowrap; }
 .source-library-empty { grid-column: 1 / -1; margin: 50px 0; color: #8792a5; text-align: center; font-size: 12px; }
+.source-library-status { grid-column: 1 / -1; margin: 0; padding: 10px 12px; color: #63708a; background: #edf2fa; border-radius: 8px; font-size: 10px; text-align: center; }
+.source-library-status--error { color: #a93f51; background: #fff0f2; cursor: pointer; }
 @media (max-width: 680px) {
   .source-library-backdrop { padding: 8px; }
   .source-library-modal { height: 96vh; border-radius: 12px; }
   .source-library-toolbar { align-items: stretch; flex-direction: column; }
-  .source-library-filters { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .source-library-filters { display: grid; grid-template-columns: repeat(4, 1fr); }
   .source-library-results { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 10px; }
   .source-library-thumbnail { height: 88px; }
 }

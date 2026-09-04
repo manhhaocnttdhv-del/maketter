@@ -68,7 +68,7 @@ const timelineDescriptionHtml = (description = '') => String(description || '')
   .map((line) => {
     const trimmed = String(line || '').trim()
     if (!trimmed) return '<span class="timeline-copy-spacer"></span>'
-    if (/^(HOÀN THIỆN ĐỀ ÁN|PHẦN ĐỘI THI ĐƯỢC YÊU THÍCH NHẤT|ĐÊM CHUNG KẾT)$/.test(trimmed)) {
+    if (/^(VIRAL CLIP|HOÀN THIỆN ĐỀ ÁN|PHẦN ĐỘI THI ĐƯỢC YÊU THÍCH NHẤT|ĐÊM CHUNG KẾT)$/.test(trimmed)) {
       return `<strong class="timeline-copy-heading">${trimmed}</strong>`
     }
     if (/^Phần \d+:/.test(trimmed)) {
@@ -176,7 +176,7 @@ const timelineNavLabel = (title: string) => {
   if (safeTitle.startsWith('Vòng Khởi động')) return 'Vòng Khởi động'
   if (safeTitle.startsWith('Vòng 1')) return 'Vòng 1'
   if (safeTitle.startsWith('Vòng 2')) return 'Vòng 2'
-  if (safeTitle.startsWith('Chung kết')) return 'Đêm Chung kết'
+  if (safeTitle.startsWith('Vòng Chung kết') || safeTitle.startsWith('Chung kết')) return 'Vòng Chung kết'
   return safeTitle
 }
 
@@ -185,7 +185,7 @@ const timelineStageParts = (title = '') => {
   const separator = safeTitle.indexOf(':')
   if (separator < 0) return [safeTitle, '']
   const label = safeTitle.slice(0, separator).trim()
-  return [label.startsWith('Chung kết') ? 'Đêm Chung kết' : label, safeTitle.slice(separator + 1).trim()]
+  return [label.startsWith('Chung kết') ? 'Vòng Chung kết' : label, safeTitle.slice(separator + 1).trim()]
 }
 
 const startVoicesAutoplay = () => {

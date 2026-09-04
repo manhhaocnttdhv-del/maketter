@@ -9,6 +9,14 @@ interface UploadResponse {
   url: string
 }
 
+export interface UploadedImage {
+  path: string
+  url: string
+  name: string
+  source: 'uploads'
+  updatedAt: number
+}
+
 const parseResponse = async <T>(response: Response): Promise<T> => {
   const data = await response.json().catch(() => null) as (T & { message?: string }) | null
   if (!response.ok || !data) {
@@ -69,6 +77,14 @@ export const uploadEditorImage = async (file: File): Promise<string> => {
   return data.url
 }
 
+export const fetchUploadedImages = async (): Promise<UploadedImage[]> => {
+  const response = await fetch(`/api/images?v=${Date.now()}`, {
+    headers: { Accept: 'application/json' },
+  })
+  const data = await parseResponse<{ images: UploadedImage[] }>(response)
+  return Array.isArray(data.images) ? data.images : []
+}
+
 export const saveSiteContentApi = async (content: unknown): Promise<void> => {
   const response = await fetch('/api/site-content', {
     method: 'POST',
@@ -89,5 +105,4 @@ export const fetchSiteContentApi = async (): Promise<unknown> => {
   })
   return parseResponse<unknown>(response)
 }
-
 
