@@ -1,23 +1,24 @@
+# ========================================================
+# CẤU HÌNH NGINX CHO: tamnhinthuonghieu2026.io.vn
+# ========================================================
+
+# 1. FRONTEND CHÍNH (KÈM PROXY API & STORAGE)
 server {
     listen 80;
-    server_name your-domain.com; # Thay bằng IP VPS hoặc tên miền của bạn
+    server_name tamnhinthuonghieu2026.io.vn www.tamnhinthuonghieu2026.io.vn;
 
-    # Cho phép tải file ảnh lên tới 20MB (mặc định của Nginx chỉ có 1MB)
+    # Cho phép tải file ảnh lên tới 20MB (mặc định Nginx chỉ có 1MB)
     client_max_body_size 20M;
 
-    # ========================================================
-    # 1. FRONTEND: Phục vụ bản build tĩnh của Vue 3
-    # ========================================================
+    # Thư mục chứa mã nguồn Vue 3 build
     root /var/www/maketter/frontend/dist;
     index index.html;
 
-    # Gzip nén file giúp tải trang siêu nhanh
+    # Gzip nén file
     gzip on;
     gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript image/svg+xml;
 
-    # ========================================================
-    # 2. XỬ LÝ ẢNH UPLOAD TỪ LARAVEL STORAGE
-    # ========================================================
+    # Phục vụ ảnh upload từ Laravel Storage
     location /storage {
         alias /var/www/maketter/backend/public/storage;
         access_log off;
@@ -26,30 +27,51 @@ server {
         try_files $uri $uri/ =404;
     }
 
-    # ========================================================
-    # 3. BACKEND: Chuyển các request /api sang Laravel
-    # ========================================================
+    # Chuyển tiếp các request /api sang Backend Laravel
     location ^~ /api {
         root /var/www/maketter/backend/public;
         try_files $uri $uri/ /index.php?$query_string;
 
-        # Xử lý PHP cho API
         location ~ \.php$ {
             include snippets/fastcgi-php.conf;
-            fastcgi_pass unix:/var/run/php/php8.1-fpm.sock; # Chỉnh lại phiên bản PHP trên VPS (8.1, 8.2 hoặc 8.3)
+            fastcgi_pass unix:/var/run/php/php8.1-fpm.sock; # Kiểm tra 'php -v' trên VPS (8.1, 8.2 hoặc 8.3)
             fastcgi_param SCRIPT_FILENAME /var/www/maketter/backend/public/index.php;
             include fastcgi_params;
         }
     }
 
-    # ========================================================
-    # 4. ROUTER VUE (SPA): Giữ trang khi F5 (Reload)
-    # ========================================================
+    # Vue Router SPA
     location / {
         try_files $uri $uri/ /index.html;
     }
 
-    # Chặn truy cập các file ẩn (.env, .git...)
+    # Chặn file ẩn
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
+
+# 2. SUBDOMAIN API: api.tamnhinthuonghieu2026.io.vn
+server {
+    listen 80;
+    server_name api.tamnhinthuonghieu2026.io.vn;
+
+    client_max_body_size 20M;
+    root /var/www/maketter/backend/public;
+    index index.php;
+
+    location / {
+        
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock; # Kiểm tra 'php -v' trên VPS (8.1, 8.2 hoặc 8.3)
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
     location ~ /\.(?!well-known).* {
         deny all;
     }
