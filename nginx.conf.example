@@ -27,18 +27,12 @@ server {
         try_files $uri $uri/ =404;
     }
 
-    # Chuyển tiếp các request /api sang Backend Laravel
-    location /api {
-        try_files $uri $uri/ @backend;
-    }
-
-    location @backend {
-        include snippets/fastcgi-php.conf;
+    # Chuyển tiếp thẳng các request /api sang Backend Laravel (KHÔNG dùng snippets fastcgi-php để tránh lỗi 404)
+    location ~ ^/api {
         fastcgi_pass unix:/var/run/php/php8.1-fpm.sock; # Kiểm tra 'php -v' trên VPS (8.1, 8.2 hoặc 8.3)
+        include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME /var/www/maketter/backend/public/index.php;
         fastcgi_param SCRIPT_NAME /index.php;
-        fastcgi_param REQUEST_URI $request_uri;
-        include fastcgi_params;
     }
 
     # Vue Router SPA
@@ -66,10 +60,9 @@ server {
     }
 
     location ~ \.php$ {
-        include snippets/fastcgi-php.conf;
         fastcgi_pass unix:/var/run/php/php8.1-fpm.sock; # Kiểm tra 'php -v' trên VPS (8.1, 8.2 hoặc 8.3)
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
     }
 
     location ~ /\.(?!well-known).* {
