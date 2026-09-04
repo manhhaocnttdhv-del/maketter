@@ -53,6 +53,16 @@ const footerCardStyle = computed(() => ({
   '--footer-card-scale': `${Math.min(100, Math.max(20, Number(props.site.footer.footerCardScale) || 85))}%`,
 }))
 
+const footerContacts = computed(() => props.site.footer.contactLines.map((line) => {
+  const value = String(line ?? '').trim()
+  const match = value.match(/^(.*?)\s*\(([^()]+)\)\s*$/)
+
+  return {
+    detail: match?.[1]?.trim() || value,
+    name: match?.[2]?.trim() || '',
+  }
+}))
+
 const timelineDescriptionHtml = (description = '') => String(description || '')
   .split('\n')
   .map((line) => {
@@ -563,7 +573,7 @@ onBeforeUnmount(() => {
       <div class="section-transition" aria-hidden="true"></div>
       <div class="container px-4 px-lg-5">
         <div class="footer-contact-card reveal" :class="{ 'footer-contact-card--reverse': isReverse('footer') }" :style="footerCardStyle">
-          <div class="footer-contact-card__details"><img class="footer-contact-card__logo" :src="site.assets.footerLogo" alt="Tầm Nhìn Thương Hiệu" /><div><strong>{{ site.footer.contactTitle || site.footer.title }}</strong><p v-for="(line, index) in site.footer.contactLines" :key="index">{{ line }}</p></div></div>
+          <div class="footer-contact-card__details"><img class="footer-contact-card__logo" :src="site.assets.footerLogo" alt="Tầm Nhìn Thương Hiệu" /><div><strong>{{ site.footer.contactTitle || site.footer.title }}</strong><p v-for="(contact, index) in footerContacts" :key="index"><span class="footer-contact-card__contact-line">{{ contact.detail }}</span><span v-if="contact.name" class="footer-contact-card__contact-name">{{ contact.name }}</span></p></div></div>
           <div class="footer-contact-card__socials"><a v-for="(social, index) in site.footer.socials" :key="`${social.label}-${index}`" :href="social.href" target="_blank" rel="noopener noreferrer"><img :src="social.icon" :alt="social.label" /><span>{{ social.label }}</span></a></div>
         </div>
       </div>

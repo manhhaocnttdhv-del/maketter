@@ -364,6 +364,7 @@ a {
 
 .countdown-item {
   min-width: 0;
+  width: 100%;
   text-align: center;
 }
 
@@ -2098,7 +2099,7 @@ a {
 
 .partner-support-groups {
   max-width: 1000px;
-  margin: 16px auto 0;
+  margin: 0 auto;
   display: grid;
   gap: 32px;
 }
@@ -2109,7 +2110,7 @@ a {
 }
 
 .partner-support-group:first-child {
-  padding-top: 12px;
+  padding-top: 6px;
 }
 
 .partner-logo-grid {
@@ -5344,7 +5345,7 @@ a {
   margin-inline: auto;
   padding: clamp(22px, 2.2vw, 32px) clamp(24px, 2.8vw, 38px);
   display: grid;
-  grid-template-columns: minmax(0, 1.65fr) minmax(230px, .8fr);
+  grid-template-columns: minmax(0, 1.4fr) minmax(260px, 1fr);
   align-items: center;
   gap: clamp(18px, 2vw, 28px);
   background: linear-gradient(90deg, rgba(17, 41, 103, .72), rgba(49, 84, 154, .6));
@@ -5369,8 +5370,8 @@ a {
 }
 
 .footer-contact-card__logo {
-  width: clamp(110px, 9vw, 145px);
-  height: clamp(110px, 9vw, 145px);
+  width: clamp(92px, 7.5vw, 120px);
+  height: clamp(92px, 7.5vw, 120px);
   object-fit: contain;
   flex: 0 0 auto;
   filter: drop-shadow(0 6px 14px rgba(4, 10, 36, .5));
@@ -5393,6 +5394,23 @@ a {
   line-height: 1.5;
   white-space: normal;
   overflow-wrap: anywhere;
+}
+
+.footer-contact-card__contact-line,
+.footer-contact-card__contact-name {
+  display: block;
+}
+
+.footer-contact-card__contact-line {
+  margin-top: 0 !important;
+  opacity: 1 !important;
+}
+
+.footer-contact-card__contact-name {
+  margin-top: 1px !important;
+  color: #9cefff;
+  font-weight: 700;
+  opacity: 1 !important;
 }
 
 .footer-contact-card__socials {
@@ -6127,7 +6145,7 @@ a {
 
   .countdown-item {
     min-width: 0;
-    width: calc((100% - 18px) / 4);
+    width: 100%;
   }
 
   .timeline-nav .nav-link>strong,

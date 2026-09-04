@@ -725,21 +725,31 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
 }
 
 export const loadSiteContent = async (): Promise<SiteContent> => {
-  // SQLite qua API là nguồn dữ liệu chính, dùng chung cho mọi trình duyệt.
-  try {
-    const apiResponse = await fetch(`/api/site-content?v=${Date.now()}`)
-    if (apiResponse.ok) {
-      const serverData = await apiResponse.json() as unknown
-      if (isSiteContent(serverData)) {
-        return normalizeSiteContent(serverData)
+  let lastError = new Error('Không thể kết nối API SQLite.')
+
+  // Thử lại ngắn khi backend vừa khởi động hoặc đang reload trong môi trường dev.
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      const apiResponse = await fetch(`/api/site-content?v=${Date.now()}`)
+      if (apiResponse.ok) {
+        const serverData = await apiResponse.json() as unknown
+        if (isSiteContent(serverData)) {
+          return normalizeSiteContent(serverData)
+        }
+
+        throw new Error('Dữ liệu SQLite không đúng cấu trúc website.')
       }
 
-      throw new Error('Dữ liệu SQLite không đúng cấu trúc website.')
+      const errorResponse = await apiResponse.json().catch(() => null) as { message?: string } | null
+      lastError = new Error(errorResponse?.message || 'Không thể tải cấu hình từ SQLite.')
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error('Không thể kết nối API SQLite.')
     }
 
-    const errorResponse = await apiResponse.json().catch(() => null) as { message?: string } | null
-    throw new Error(errorResponse?.message || 'Không thể tải cấu hình từ SQLite.')
-  } catch (error) {
-    throw error instanceof Error ? error : new Error('Không thể kết nối API SQLite.')
+    if (attempt < 2) {
+      await new Promise((resolve) => window.setTimeout(resolve, 350 * (attempt + 1)))
+    }
   }
+
+  throw lastError
 }
