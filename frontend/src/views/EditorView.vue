@@ -41,6 +41,7 @@ import {
   type SiteContent,
 } from '../data/site-content'
 import { globalSiteStyle } from '../utils/site-styles'
+import { saveSiteContentApi } from '../utils/editor-api'
 
 type EditorSectionId = 'global' | 'header' | 'partnerLogos' | SectionKey
 type EditorMode = 'visual' | 'json'
@@ -319,17 +320,21 @@ const scrollPreviewToActiveSection = async () => {
   previewViewport.value.scrollTo({ top: Math.max(0, target.offsetTop * previewScale.value - 22), behavior: 'smooth' })
 }
 
-const saveDraft = (showMessage = false) => {
+const saveDraft = async (showMessage = false) => {
   if (!site.value) return
   try {
     localStorage.setItem(contentStorageKey, JSON.stringify(site.value))
     jsonText.value = prettyJson(site.value)
+    savedState.value = 'saving'
+    await saveSiteContentApi(site.value)
     savedState.value = 'saved'
-    if (showMessage) statusMessage.value = 'Đã lưu bản nháp trong trình duyệt'
+    if (showMessage) statusMessage.value = 'Đã lưu lên máy chủ thành công (áp dụng cho mọi trình duyệt)'
     errorMessage.value = ''
-  } catch {
+  } catch (err: unknown) {
     savedState.value = 'error'
-    errorMessage.value = 'Bản nháp quá lớn để lưu trong trình duyệt. Preview vẫn hoạt động; hãy bấm “Tải JSON” để lưu ra máy.'
+    const detail = err instanceof Error ? err.message : 'Không kết nối được máy chủ'
+    statusMessage.value = 'Đang lưu tạm trên trình duyệt'
+    errorMessage.value = `Chưa đồng bộ lên server: ${detail}. Thay đổi chỉ mới lưu tạm trên trình duyệt này.`
   }
 }
 
@@ -532,7 +537,7 @@ onBeforeUnmount(() => {
         <button type="button" :class="{ active: editorMode === 'json' }" @click="editorMode = 'json'"><FileJson2 :size="15" /> JSON nâng cao</button>
       </div>
       <div class="editor-topbar-actions">
-        <span class="editor-save-status" :class="`is-${savedState}`"><Check v-if="savedState === 'saved'" :size="13" />{{ savedState === 'saving' ? 'Đang lưu...' : savedState === 'error' ? 'Chưa lưu được' : 'Đã tự lưu' }}</span>
+        <span class="editor-save-status" :class="`is-${savedState}`"><Check v-if="savedState === 'saved'" :size="13" />{{ savedState === 'saving' ? 'Đang lưu lên máy chủ...' : savedState === 'error' ? 'Chưa lưu máy chủ' : 'Đã lưu máy chủ' }}</span>
         <button type="button" @click="chooseFile"><Upload :size="15" /> Nhập JSON</button>
         <button type="button" @click="downloadJson"><Download :size="15" /> Tải JSON</button>
         <RouterLink to="/" target="_blank"><ExternalLink :size="15" /> Mở website</RouterLink>
@@ -615,7 +620,7 @@ onBeforeUnmount(() => {
           />
         </div>
         <div class="inspector-actions">
-          <button type="button" class="inspector-save-button" @click="saveDraft(true)"><Save :size="15" /> Lưu bản nháp</button>
+          <button type="button" class="inspector-save-button" @click="saveDraft(true)"><Save :size="15" /> Lưu lên máy chủ</button>
           <button type="button" title="Tải site-content.json" @click="downloadJson"><Download :size="15" /></button>
         </div>
       </aside>

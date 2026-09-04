@@ -69,3 +69,25 @@ export const uploadEditorImage = async (file: File): Promise<string> => {
   return data.url
 }
 
+export const saveSiteContentApi = async (content: unknown): Promise<void> => {
+  const response = await fetch('/api/site-content', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(content),
+  })
+  await parseResponse<{ success: boolean }>(response)
+}
+
+export const fetchSiteContentApi = async (): Promise<unknown> => {
+  const response = await fetch(`/api/site-content?v=${Date.now()}`, {
+    headers: {
+      Accept: 'application/json',
+    },
+  })
+  return parseResponse<unknown>(response)
+}
+
+

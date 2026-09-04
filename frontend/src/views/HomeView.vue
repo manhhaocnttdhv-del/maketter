@@ -12,11 +12,14 @@ let customStyleElement: HTMLStyleElement | null = null
 onMounted(async () => {
   try {
     content.value = await loadSiteContent()
-    document.title = content.value.meta.title
-    if (content.value.settings.customCss.trim()) {
+    if (content.value?.meta?.title) {
+      document.title = content.value.meta.title
+    }
+    const customCss = content.value?.settings?.customCss
+    if (typeof customCss === 'string' && customCss.trim()) {
       customStyleElement = document.createElement('style')
       customStyleElement.dataset.tnthCustomCss = 'true'
-      customStyleElement.textContent = content.value.settings.customCss
+      customStyleElement.textContent = customCss
       document.head.appendChild(customStyleElement)
     }
   } catch (error) {

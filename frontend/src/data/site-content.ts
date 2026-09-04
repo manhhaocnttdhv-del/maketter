@@ -508,22 +508,22 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       globalBackground: value.assets.globalBackground
         || value.assets.activitiesBackground
         || '/assets/tnth-canva/10-mahsd0narra-MAHSd0NArRA.png',
-      heroBackground: !value.assets.globalBackground && value.assets.heroBackground.endsWith('10-mahsd0narra-MAHSd0NArRA.png')
+      heroBackground: !value.assets.globalBackground && String(value.assets?.heroBackground ?? '').endsWith('10-mahsd0narra-MAHSd0NArRA.png')
         ? '/assets/tnth-canva/01-mahscd5rwcc-MAHScd5RwCc.png'
-        : value.assets.heroBackground,
-      heroOrganizations: value.assets.heroOrganizations.endsWith('04-magucn8vs0s-MAGucN8vS0s.png')
+        : (value.assets?.heroBackground || ''),
+      heroOrganizations: String(value.assets?.heroOrganizations ?? '').endsWith('04-magucn8vs0s-MAGucN8vS0s.png')
         ? '/assets/tnth-canva/04-organizations-transparent-v2.png'
-        : value.assets.heroOrganizations,
-      statisticIcon: value.assets.statisticIcon.endsWith('02-magto6-z-j8-MAGto6_z-j8.png')
+        : (value.assets?.heroOrganizations || ''),
+      statisticIcon: String(value.assets?.statisticIcon ?? '').endsWith('02-magto6-z-j8-MAGto6_z-j8.png')
         ? '/assets/tnth-canva/03-mahsv-hibxi-MAHSv-hIBxI.png'
-        : value.assets.statisticIcon,
-      compassOverlay: value.assets.compassOverlay.endsWith('11-mahsv9hppfa-MAHSv9HpPfA.png')
+        : (value.assets?.statisticIcon || ''),
+      compassOverlay: String(value.assets?.compassOverlay ?? '').endsWith('11-mahsv9hppfa-MAHSv9HpPfA.png')
         ? '/assets/tnth-compass-blue-silver.png'
-        : value.assets.compassOverlay,
-      heroTitleArtwork: value.assets.heroTitleArtwork || '/assets/tnth-canva/06-mahstkk4kow-MAHStKK4Kow.png',
-      footerLogo: value.assets.footerLogo || '/assets/tnth-canva/02-magto6-z-j8-MAGto6_z-j8.png',
-      footerBackground: value.assets.footerBackground || '/assets/tnth-canva/10-mahsd0narra-MAHSd0NArRA.png',
-      aboutGallery: value.assets.aboutGallery?.length
+        : (value.assets?.compassOverlay || ''),
+      heroTitleArtwork: value.assets?.heroTitleArtwork || '/assets/tnth-canva/06-mahstkk4kow-MAHStKK4Kow.png',
+      footerLogo: value.assets?.footerLogo || '/assets/tnth-canva/02-magto6-z-j8-MAGto6_z-j8.png',
+      footerBackground: value.assets?.footerBackground || '/assets/tnth-canva/10-mahsd0narra-MAHSd0NArRA.png',
+      aboutGallery: value.assets?.aboutGallery?.length
         ? value.assets.aboutGallery
         : Array.from({ length: 6 }, (_, index) => `/assets/tnth-years/${String(index + 1).padStart(2, '0')}.jpg`),
     },
@@ -533,17 +533,17 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       title: (legacy.voices?.title || defaultVoices.title).replace('2026', '2025'),
       slides: (legacy.voices?.slides?.length ? legacy.voices.slides : defaultVoices.slides).map((s) => ({
         ...s,
-        role: s.role.replace('2026', '2025'),
+        role: String(s.role || '').replace('2026', '2025'),
       })),
     },
     hero: {
       ...value.hero,
-      tagline: value.hero.tagline.trim().toUpperCase() === 'ROUND TO UNBOUND' ? '' : value.hero.tagline,
+      tagline: String(value.hero?.tagline ?? '').trim().toUpperCase() === 'ROUND TO UNBOUND' ? '' : (value.hero?.tagline || ''),
     },
     intro: {
       ...value.intro,
-      title: value.intro.title || 'BAN TỔ CHỨC',
-      subtitle: value.intro.subtitle || 'BAN ĐỐI NGOẠI - HỘI SINH VIÊN - NEU',
+      title: value.intro?.title || 'BAN TỔ CHỨC',
+      subtitle: value.intro?.subtitle || 'BAN ĐỐI NGOẠI - HỘI SINH VIÊN - NEU',
       paragraphsHtml: [
         '<strong>Ban Đối Ngoại</strong> là đơn vị trực thuộc <strong>Hội Sinh viên Đại học Kinh tế Quốc Dân</strong> với vai trò tiêu biểu là phụ trách công tác Đối Ngoại cho các sự kiện của <strong>Hội Sinh viên - Đại học Kinh tế Quốc dân</strong>.',
         'Trải qua <strong>20 năm</strong> hoạt động, <strong>Ban Đối Ngoại</strong> đã không ngừng khẳng định vị thế của mình với chuyên môn chính gồm Mời tài trợ, Truyền thông báo chí, góp phần tạo nên thành công cho các chương trình bên trong và ngoài khuôn khổ Đại học.',
@@ -554,8 +554,8 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     },
     about: {
       ...value.about,
-      kicker: value.about.kicker.trim().toUpperCase() === 'ROUND TO UNBOUND' ? '' : value.about.kicker,
-      title: value.about.title || 'TẦM NHÌN THƯƠNG HIỆU',
+      kicker: String(value.about?.kicker ?? '').trim().toUpperCase() === 'ROUND TO UNBOUND' ? '' : (value.about?.kicker || ''),
+      title: value.about?.title || 'TẦM NHÌN THƯƠNG HIỆU',
       description: '<strong>TẦM NHÌN THƯƠNG HIỆU</strong> là cuộc thi giải case study đầu tiên về lĩnh vực <strong>Truyền thông thương hiệu</strong> được đặt nền móng bởi <strong>Ban Đối Ngoại - HSV - NEU</strong> với mục đích kết nối và khai phá tiềm năng sáng tạo của các bạn sinh viên trên địa bàn toàn quốc có niềm đam mê với lĩnh vực <strong>Truyền thông thương hiệu</strong> nói riêng và <strong>Marketing</strong> nói chung.',
       imageLabel: '',
       paragraphsHtml: [
@@ -573,12 +573,12 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     },
     theme: {
       ...value.theme,
-      kicker: value.theme.kicker.trim().toUpperCase() === 'TẦM NHÌN THƯƠNG HIỆU 2026' ? '' : value.theme.kicker,
-      title: value.theme.title.trim().toUpperCase() === 'CHỦ ĐỀ: ROUND TO UNBOUND'
+      kicker: String(value.theme?.kicker ?? '').trim().toUpperCase() === 'TẦM NHÌN THƯƠNG HIỆU 2026' ? '' : (value.theme?.kicker || ''),
+      title: String(value.theme?.title ?? '').trim().toUpperCase() === 'CHỦ ĐỀ: ROUND TO UNBOUND'
         ? 'CHỦ ĐỀ\nTẦM NHÌN THƯƠNG HIỆU 2026'
-        : value.theme.title,
-      subtitle: value.theme.subtitle || 'ROUND TO UNBOUND',
-      quote: value.theme.quote.toLocaleLowerCase('vi-VN').includes('la bàn vận mệnh') ? '' : value.theme.quote,
+        : (value.theme?.title || ''),
+      subtitle: value.theme?.subtitle || 'ROUND TO UNBOUND',
+      quote: String(value.theme?.quote ?? '').toLocaleLowerCase('vi-VN').includes('la bàn vận mệnh') ? '' : (value.theme?.quote || ''),
       paragraphsHtml: [
         'Giữa trung tâm đầy hỗn mang của thế giới công nghệ số, tồn tại một <strong>Chiếc la bàn vận mệnh</strong> định hướng mọi kết nối và duy trì nhịp vận hành của cả thế giới. Thế nhưng, vào khoảnh khắc nó ngừng xoay, mọi tín hiệu dần biến mất, mọi chuyển động mắc kẹt trong những vòng lặp vô định, đẩy thành phố vào trạng thái rối loạn chưa từng có. Muốn phá vỡ thế bế tắc ấy, cần những người đủ bản lĩnh tiến thẳng đến lõi của cỗ máy, chạm tay vào từng bánh răng và <strong>khởi động lại nhịp xoay của tương lai</strong>.',
         'Mang trong mình tinh thần của các chiến binh, <strong>ROUND TO UNBOUND</strong> chính là hành trình của những <strong>Marketers</strong> dũng cảm trên con đường thoát khỏi giới hạn do chính kỷ nguyên số vô thức tạo nên. Họ lần theo những giá trị tưởng chừng quen thuộc, giải mã những tín hiệu từng bị bỏ quên và kết nối những khả năng vốn rời rạc để xoay chuyển <strong>Chiếc la bàn vận mệnh</strong>. Nhưng tái khởi động cỗ máy chưa bao giờ là đích đến cuối cùng. Bởi phía trước không chỉ là những giới hạn cần được phá vỡ, mà còn là những không gian mới đang chờ được mở ra. Tại <strong>Tầm Nhìn Thương Hiệu 2026</strong>, mỗi thí sinh được trao cơ hội mở ra một góc nhìn mới, tạo nên những điểm chạm khác biệt và kiến tạo những quỹ đạo mới cho <strong>Truyền thông Thương hiệu</strong>. Nếu đã sẵn sàng, đây chính là lúc để bạn cất lên tiếng nói và tạo ra những con đường mới cho hành trình của chính mình.',
@@ -677,9 +677,9 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
                 : defaultOrganizerGroup.logos.map(normalizePartnerLogo),
             }
         const isLegacyLogoBanner = organizerGroup.logos.length === 1
-          && organizerGroup.logos[0]?.image.endsWith('/04-organizations-transparent-v2.png')
+          && String(organizerGroup.logos[0]?.image ?? '').endsWith('/04-organizations-transparent-v2.png')
         const isEmptyOrganizerPlaceholders = organizerGroup.logos.length > 0
-          && organizerGroup.logos.every((logo) => !logo.image.trim())
+          && organizerGroup.logos.every((logo) => !String(logo?.image ?? '').trim())
         return isLegacyLogoBanner || isEmptyOrganizerPlaceholders
           ? { ...defaultOrganizerGroup, logos: defaultOrganizerGroup.logos.map(normalizePartnerLogo) }
           : organizerGroup
@@ -688,11 +688,11 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
         const groups = (legacyPartners.supportGroups ?? [])
           .map((group) => normalizePartnerGroup(group, 'NHÓM ĐỐI TÁC'))
         const bronzeGroup = groups.find((group) => (
-          group.title.trim().toLocaleUpperCase('vi-VN') === defaultBronzePartnerGroup.title
+          String(group?.title ?? '').trim().toLocaleUpperCase('vi-VN') === defaultBronzePartnerGroup.title
         ))
         const standaloneGroups = defaultStandalonePartnerGroups.map((defaultGroup) => {
           const matchingGroup = groups.find((group) => (
-            group.title.trim().toLocaleUpperCase('vi-VN') === defaultGroup.title
+            String(group?.title ?? '').trim().toLocaleUpperCase('vi-VN') === defaultGroup.title
           ))
           return matchingGroup ?? normalizePartnerGroup(defaultGroup, defaultGroup.title)
         })
@@ -723,6 +723,26 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
 }
 
 export const loadSiteContent = async (useDraft = true): Promise<SiteContent> => {
+  // 1. Luôn ưu tiên đọc dữ liệu mới nhất từ máy chủ (áp dụng đồng bộ mọi trình duyệt)
+  try {
+    const apiResponse = await fetch(`/api/site-content?v=${Date.now()}`)
+    if (apiResponse.ok) {
+      const serverData = await apiResponse.json() as unknown
+      if (isSiteContent(serverData)) {
+        const normalized = normalizeSiteContent(serverData)
+        try {
+          localStorage.setItem(contentStorageKey, JSON.stringify(normalized))
+        } catch {
+          // ignore
+        }
+        return normalized
+      }
+    }
+  } catch {
+    // API server chưa sẵn sàng thì tiếp tục fallback
+  }
+
+  // 2. Nếu không gọi được API, kiểm tra draft localStorage
   if (useDraft) {
     const draft = localStorage.getItem(contentStorageKey)
     if (draft) {
@@ -735,6 +755,7 @@ export const loadSiteContent = async (useDraft = true): Promise<SiteContent> => 
     }
   }
 
+  // 3. Fallback cuối cùng: file tĩnh
   const response = await fetch(`${contentFilePath}?v=${Date.now()}`)
   if (!response.ok) throw new Error('Không thể tải site-content.json')
   const content = await response.json() as unknown

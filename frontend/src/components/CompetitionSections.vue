@@ -53,10 +53,10 @@ const footerCardStyle = computed(() => ({
   '--footer-card-scale': `${Math.min(100, Math.max(20, Number(props.site.footer.footerCardScale) || 85))}%`,
 }))
 
-const timelineDescriptionHtml = (description: string) => description
+const timelineDescriptionHtml = (description = '') => String(description || '')
   .split('\n')
   .map((line) => {
-    const trimmed = line.trim()
+    const trimmed = String(line || '').trim()
     if (!trimmed) return '<span class="timeline-copy-spacer"></span>'
     if (/^(HOÀN THIỆN ĐỀ ÁN|PHẦN ĐỘI THI ĐƯỢC YÊU THÍCH NHẤT|ĐÊM CHUNG KẾT)$/.test(trimmed)) {
       return `<strong class="timeline-copy-heading">${trimmed}</strong>`
@@ -69,7 +69,7 @@ const timelineDescriptionHtml = (description: string) => description
   })
   .join('')
 
-const multilineHtml = (content: string) => content.replace(/\r?\n/g, '<br>')
+const multilineHtml = (content = '') => String(content || '').replace(/\r?\n/g, '<br>')
 
 const startGalleryDrag = (event: PointerEvent) => {
   if (!galleryTrack.value) return
@@ -542,7 +542,7 @@ onBeforeUnmount(() => {
             :class="{
               'partner-support-group--compact': group.logos.length <= 2,
               'partner-support-group--single': group.logos.length === 1,
-              'partner-support-group--bronze': group.title.trim().toLocaleUpperCase('vi-VN') === 'NHÀ TÀI TRỢ ĐỒNG',
+              'partner-support-group--bronze': String(group.title || '').trim().toLocaleUpperCase('vi-VN') === 'NHÀ TÀI TRỢ ĐỒNG',
             }"
           >
             <h3>{{ group.title }}</h3>
