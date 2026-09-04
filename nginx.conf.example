@@ -1,0 +1,56 @@
+server {
+    listen 80;
+    server_name your-domain.com; # Thay bằng IP VPS hoặc tên miền của bạn
+
+    # Cho phép tải file ảnh lên tới 20MB (mặc định của Nginx chỉ có 1MB)
+    client_max_body_size 20M;
+
+    # ========================================================
+    # 1. FRONTEND: Phục vụ bản build tĩnh của Vue 3
+    # ========================================================
+    root /var/www/maketter/frontend/dist;
+    index index.html;
+
+    # Gzip nén file giúp tải trang siêu nhanh
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript image/svg+xml;
+
+    # ========================================================
+    # 2. XỬ LÝ ẢNH UPLOAD TỪ LARAVEL STORAGE
+    # ========================================================
+    location /storage {
+        alias /var/www/maketter/backend/public/storage;
+        access_log off;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000, immutable";
+        try_files $uri $uri/ =404;
+    }
+
+    # ========================================================
+    # 3. BACKEND: Chuyển các request /api sang Laravel
+    # ========================================================
+    location ^~ /api {
+        root /var/www/maketter/backend/public;
+        try_files $uri $uri/ /index.php?$query_string;
+
+        # Xử lý PHP cho API
+        location ~ \.php$ {
+            include snippets/fastcgi-php.conf;
+            fastcgi_pass unix:/var/run/php/php8.1-fpm.sock; # Chỉnh lại phiên bản PHP trên VPS (8.1, 8.2 hoặc 8.3)
+            fastcgi_param SCRIPT_FILENAME /var/www/maketter/backend/public/index.php;
+            include fastcgi_params;
+        }
+    }
+
+    # ========================================================
+    # 4. ROUTER VUE (SPA): Giữ trang khi F5 (Reload)
+    # ========================================================
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Chặn truy cập các file ẩn (.env, .git...)
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
