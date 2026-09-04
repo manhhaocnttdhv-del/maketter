@@ -1,24 +1,13 @@
+
 {
   "name": "maketter",
+  "version": "1.0.0",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "assets:canva": "node scripts/download-canva-assets.mjs"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.8",
-    "typescript": "~6.0.2",
-    "vite": "^8.2.0",
-    "vue-tsc": "^3.3.10"
-  },
-  "dependencies": {
-    "@lucide/vue": "^1.33.0",
-    "bootstrap": "^5.3.8",
-    "vue": "^3.5.41",
-    "vue-router": "^5.2.0"
+    "dev": "npm --prefix frontend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:frontend": "npm --prefix frontend run build",
+    "dev:backend": "php backend/artisan serve --port=8000",
+    "storage:link": "php backend/artisan storage:link"
   }
 }
