@@ -28,16 +28,17 @@ server {
     }
 
     # Chuyển tiếp các request /api sang Backend Laravel
-    location ^~ /api {
-        root /var/www/maketter/backend/public;
-        try_files $uri $uri/ /index.php?$query_string;
+    location /api {
+        try_files $uri $uri/ @backend;
+    }
 
-        location ~ \.php$ {
-            include snippets/fastcgi-php.conf;
-            fastcgi_pass unix:/var/run/php/php8.1-fpm.sock; # Kiểm tra 'php -v' trên VPS (8.1, 8.2 hoặc 8.3)
-            fastcgi_param SCRIPT_FILENAME /var/www/maketter/backend/public/index.php;
-            include fastcgi_params;
-        }
+    location @backend {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock; # Kiểm tra 'php -v' trên VPS (8.1, 8.2 hoặc 8.3)
+        fastcgi_param SCRIPT_FILENAME /var/www/maketter/backend/public/index.php;
+        fastcgi_param SCRIPT_NAME /index.php;
+        fastcgi_param REQUEST_URI $request_uri;
+        include fastcgi_params;
     }
 
     # Vue Router SPA
@@ -61,7 +62,6 @@ server {
     index index.php;
 
     location / {
-        
         try_files $uri $uri/ /index.php?$query_string;
     }
 
