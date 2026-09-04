@@ -188,7 +188,11 @@ const selectedModel = computed<unknown>({
         const { organizers: _organizers, supportGroups: _supportGroups, ...partners } = value.partners
         return partners
       }
-      case 'partnerLogos': return { organizers: value.partners.organizers, supportGroups: value.partners.supportGroups }
+      case 'partnerLogos': return {
+        organizerLogoScale: value.partners.organizerLogoScale,
+        organizers: value.partners.organizers,
+        supportGroups: value.partners.supportGroups,
+      }
       case 'footer': return { ...value.footer, footerLogo: value.assets.footerLogo, footerBackground: value.assets.footerBackground }
       default: return {}
     }
@@ -258,6 +262,7 @@ const selectedModel = computed<unknown>({
       case 'faq': site.value.faq = value.faq as SiteContent['faq']; break
       case 'partners': site.value.partners = { ...site.value.partners, ...value } as SiteContent['partners']; break
       case 'partnerLogos':
+        site.value.partners.organizerLogoScale = Math.min(200, Math.max(20, Number(value.organizerLogoScale) || 80))
         site.value.partners.organizers = value.organizers as SiteContent['partners']['organizers']
         site.value.partners.supportGroups = value.supportGroups as SiteContent['partners']['supportGroups']
         break

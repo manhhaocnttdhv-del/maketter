@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { ArrowDown, ArrowUp, GripVertical, ImagePlus, Plus, Trash2 } from '@lucide/vue'
 import BackgroundPresetPicker from './BackgroundPresetPicker.vue'
+import SourceImagePicker from './SourceImagePicker.vue'
 
 const props = withDefaults(defineProps<{
   modelValue: unknown
@@ -37,6 +38,7 @@ const labels: Record<string, string> = {
   activitiesBackground: 'Ảnh nền hoạt động',
   footerLogo: 'Logo footer',
   footerBackground: 'Ảnh nền footer',
+  footerCardScale: 'Kích cỡ khối Kênh liên hệ',
   facebookIcon: 'Icon Facebook',
   tiktokIcon: 'Icon TikTok',
   navigation: 'Menu điều hướng',
@@ -69,6 +71,7 @@ const labels: Record<string, string> = {
   question: 'Câu hỏi',
   answer: 'Câu trả lời',
   organizers: 'Logo đơn vị tổ chức',
+  organizerLogoScale: 'Kích cỡ logo đơn vị tổ chức',
   levels: 'Các cấp đối tác',
   supportGroups: 'Logo nhà tài trợ / bảo trợ',
   logos: 'Danh sách logo',
@@ -314,6 +317,12 @@ const handleFormattingShortcut = (event: KeyboardEvent) => {
           </label>
         </div>
         <input type="text" :value="String(item.name || '')" placeholder="Tên đơn vị" @input="updateArrayValue(index, { ...item, name: ($event.target as HTMLInputElement).value })" />
+        <SourceImagePicker
+          :model-value="String(item.image || '')"
+          label="Chọn ảnh trong source"
+          compact
+          @update:model-value="updateArrayValue(index, { ...item, image: $event })"
+        />
         <div class="logo-manager__actions">
           <button type="button" :disabled="index === 0" title="Đưa lên" @click="moveArrayValue(index, -1)"><ArrowUp :size="13" /></button>
           <button type="button" :disabled="index === (modelValue as unknown[]).length - 1" title="Đưa xuống" @click="moveArrayValue(index, 1)"><ArrowDown :size="13" /></button>
@@ -363,9 +372,16 @@ const handleFormattingShortcut = (event: KeyboardEvent) => {
     />
     <div v-if="modelValue" class="config-image-preview"><img :src="String(modelValue)" alt="" /></div>
     <input type="text" :value="String(modelValue ?? '')" placeholder="/assets/... hoặc https://..." @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
+    <SourceImagePicker :model-value="String(modelValue ?? '')" @update:model-value="emit('update:modelValue', $event)" />
     <label class="config-upload-button"><ImagePlus :size="15" /> Tải ảnh từ máy<input type="file" accept="image/*" @change="handleImageUpload" /></label>
     <small>Ảnh được nhúng trực tiếp vào bản JSON để xem và xuất ngay.</small>
   </div>
+
+  <label v-else-if="typeof modelValue === 'number' && (name === 'organizerLogoScale' || name === 'footerCardScale')" class="config-range-field config-range-field--editable">
+    <span>{{ label }} <strong>{{ modelValue }}%</strong></span>
+    <input type="range" min="20" :max="name === 'organizerLogoScale' ? 200 : 100" step="1" :value="modelValue" @input="emit('update:modelValue', Number(($event.target as HTMLInputElement).value))" />
+    <small>Kéo để thu/phóng khối này (20–{{ name === 'organizerLogoScale' ? 200 : 100 }}%).</small>
+  </label>
 
   <label v-else-if="typeof modelValue === 'number'" class="config-field">
     <span>{{ label }}</span>

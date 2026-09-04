@@ -20,3 +20,15 @@ declare module 'bootstrap' {
   }
 }
 
+declare module 'virtual:source-images' {
+  export interface SourceImage {
+    path: string
+    url: string
+    name: string
+    source: 'public' | 'src'
+  }
+
+  export const sourceImages: SourceImage[]
+  export default sourceImages
+}
+

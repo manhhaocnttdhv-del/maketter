@@ -48,6 +48,14 @@ const cardGridStyle = (key: SectionKey) => hasColumns(key)
   ? { gridTemplateColumns: `repeat(${props.site.settings.sections[key].columns}, minmax(0, 1fr))` }
   : undefined
 
+const organizerLogoStyle = computed(() => ({
+  '--organizer-logo-scale': `${Math.min(200, Math.max(20, Number(props.site.partners.organizerLogoScale) || 80))}%`,
+}))
+
+const footerCardStyle = computed(() => ({
+  '--footer-card-scale': `${Math.min(100, Math.max(20, Number(props.site.footer.footerCardScale) || 85))}%`,
+}))
+
 const timelineDescriptionHtml = (description: string) => description
   .split('\n')
   .map((line) => {
@@ -516,7 +524,7 @@ onBeforeUnmount(() => {
       <div class="section-transition" aria-hidden="true"></div>
       <div class="container px-4 px-lg-5 text-center">
         <div class="section-heading reveal"><h2>{{ site.partners.title }}</h2></div>
-        <div class="partner-organizers reveal">
+        <div class="partner-organizers reveal" :style="organizerLogoStyle">
           <h3>{{ site.partners.organizers.title }}</h3>
           <div class="partner-markers" :class="{ 'partner-markers--banner': site.partners.organizers.logos.length === 1 }">
             <span v-for="(logo, index) in site.partners.organizers.logos" :key="`${logo.name}-${index}`">
@@ -551,7 +559,7 @@ onBeforeUnmount(() => {
     <footer v-if="isEnabled('footer')" id="footer" data-editor-section="footer" class="event-footer" :class="classFor('footer')" :style="styleFor('footer', site.assets.footerBackground)">
       <div class="section-transition" aria-hidden="true"></div>
       <div class="container px-4 px-lg-5">
-        <div class="footer-contact-card reveal" :class="{ 'footer-contact-card--reverse': isReverse('footer') }">
+        <div class="footer-contact-card reveal" :class="{ 'footer-contact-card--reverse': isReverse('footer') }" :style="footerCardStyle">
           <div class="footer-contact-card__details"><img class="footer-contact-card__logo" :src="site.assets.footerLogo" alt="Tầm Nhìn Thương Hiệu" /><div><strong>{{ site.footer.contactTitle || site.footer.title }}</strong><p v-for="(line, index) in site.footer.contactLines" :key="index">{{ line }}</p></div></div>
           <div class="footer-contact-card__socials"><a v-for="(social, index) in site.footer.socials" :key="`${social.label}-${index}`" :href="social.href" target="_blank" rel="noopener noreferrer"><img :src="social.icon" :alt="social.label" /><span>{{ social.label }}</span></a></div>
         </div>

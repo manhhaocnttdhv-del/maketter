@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import BackgroundPresetPicker from './BackgroundPresetPicker.vue'
+import SourceImagePicker from './SourceImagePicker.vue'
 import type { GlobalSettings, HeaderSettings, SiteSettings } from '../../data/site-content'
 
 const props = defineProps<{
@@ -39,6 +40,11 @@ const globalColors: Array<{ key: keyof GlobalSettings; label: string; fallback: 
     <div class="design-group">
       <div class="design-group__title"><strong>Ảnh nền chung từ section 2</strong><span>Section 1 (Hero) giữ ảnh banner riêng</span></div>
       <BackgroundPresetPicker :model-value="globalBackground || ''" @update:model-value="emit('update:globalBackground', $event)" />
+      <SourceImagePicker
+        :model-value="globalBackground || ''"
+        label="Chọn ảnh nền trong source"
+        @update:model-value="emit('update:globalBackground', $event)"
+      />
       
       <div v-if="globalBackground" style="margin-top: 8px;">
         <button

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { CopyCheck, Globe, ImagePlus, RotateCcw } from '@lucide/vue'
 import BackgroundPresetPicker from './BackgroundPresetPicker.vue'
+import SourceImagePicker from './SourceImagePicker.vue'
 import type { SectionSettings } from '../../data/site-content'
 
 const props = defineProps<{ modelValue: SectionSettings }>()
@@ -74,6 +75,11 @@ const setAsGlobal = () => {
         <BackgroundPresetPicker
           :model-value="modelValue.backgroundImage"
           title="Chọn mẫu ảnh nền cho section"
+          @update:model-value="update('backgroundImage', $event)"
+        />
+        <SourceImagePicker
+          :model-value="modelValue.backgroundImage"
+          label="Chọn ảnh nền trong source"
           @update:model-value="update('backgroundImage', $event)"
         />
         

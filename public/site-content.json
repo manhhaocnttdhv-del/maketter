@@ -212,6 +212,7 @@
   "partners": {
     "kicker": "",
     "title": "ĐỐI TÁC ĐỒNG HÀNH",
+    "organizerLogoScale": 80,
     "organizers": {
       "title": "ĐƠN VỊ TỔ CHỨC",
       "logos": [
@@ -240,6 +241,7 @@
     "title": "Kênh liên hệ:",
     "organization": "",
     "contact": "",
+    "footerCardScale": 85,
     "contactTitle": "Kênh liên hệ:",
     "contactLines": [
       "Trưởng Ban Tổ chức: 0369218999 (Nguyễn Thị Minh Hiền)",

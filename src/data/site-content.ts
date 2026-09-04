@@ -248,6 +248,7 @@ export interface SiteContent {
   partners: {
     kicker: string
     title: string
+    organizerLogoScale: number
     organizers: PartnerGroup
     supportGroups: PartnerGroup[]
   }
@@ -255,6 +256,7 @@ export interface SiteContent {
     title: string
     organization: string
     contact: string
+    footerCardScale: number
     contactTitle: string
     contactLines: string[]
     socials: Array<{
@@ -414,6 +416,7 @@ const defaultFooter: SiteContent['footer'] = {
   title: 'Kênh liên hệ:',
   organization: '',
   contact: '',
+  footerCardScale: 85,
   contactTitle: 'Kênh liên hệ:',
   contactLines: [
     'Trưởng Ban Tổ chức: 0369218999 (Nguyễn Thị Minh Hiền)',
@@ -663,6 +666,7 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     partners: {
       ...partnerContent,
       kicker: '',
+      organizerLogoScale: Math.min(200, Math.max(20, Number(legacyPartners.organizerLogoScale) || 80)),
       organizers: (() => {
         const organizerGroup = legacyPartners.organizers
           ? normalizePartnerGroup(legacyPartners.organizers, defaultOrganizerGroup.title)
@@ -674,8 +678,8 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
             }
         const isLegacyLogoBanner = organizerGroup.logos.length === 1
           && organizerGroup.logos[0]?.image.endsWith('/04-organizations-transparent-v2.png')
-        const isEmptyOrganizerPlaceholders = organizerGroup.logos.length === 5
-          && organizerGroup.logos.every((logo) => !logo.image)
+        const isEmptyOrganizerPlaceholders = organizerGroup.logos.length > 0
+          && organizerGroup.logos.every((logo) => !logo.image.trim())
         return isLegacyLogoBanner || isEmptyOrganizerPlaceholders
           ? { ...defaultOrganizerGroup, logos: defaultOrganizerGroup.logos.map(normalizePartnerLogo) }
           : organizerGroup
@@ -701,6 +705,7 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     footer: {
       ...defaultFooter,
       ...(legacy.footer ?? {}),
+      footerCardScale: Math.min(100, Math.max(20, Number(legacy.footer?.footerCardScale) || 85)),
       contactLines: legacy.footer?.contactLines?.length ? legacy.footer.contactLines : defaultFooter.contactLines,
       socials: (legacy.footer?.socials?.length ? legacy.footer.socials : defaultFooter.socials).map((social, index) => ({
         ...social,
