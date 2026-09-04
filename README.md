@@ -7,6 +7,8 @@ Website có hai route:
 - `/` – landing page public.
 - `/editor` – page builder trực quan: sửa text, ảnh, slider, bố cục, padding, màu, CSS và xuất JSON.
 
+Nội dung trang được frontend tải qua `/api/site-content` và lưu trực tiếp trong SQLite, bảng `site_contents`. Dự án không còn đọc hay lưu nội dung website bằng file JSON.
+
 ## Công nghệ
 
 - Vue 3 + TypeScript + Vite
@@ -16,9 +18,19 @@ Website có hai route:
 
 ## Chạy ở máy local
 
-Yêu cầu: Node.js 20 trở lên và npm.
+Yêu cầu: Node.js 20+, npm, PHP 8.1+ (có extension `pdo_sqlite`) và Composer.
 
 ```bash
+cd backend
+composer install
+php artisan migrate
+php artisan serve --port=8000
+```
+
+Mở terminal thứ hai:
+
+```bash
+cd frontend
 npm install
 npm run dev
 ```
@@ -32,9 +44,9 @@ Truy cập `/editor` để chỉnh trực quan theo từng section.
 - **Nội dung & ảnh**: text, link, countdown, carousel, slider giám khảo, FAQ, giải thưởng, footer.
 - **Bố cục & CSS**: bật/tắt section, padding, margin, số cột, nền, overlay, màu, độ rộng container và CSS riêng.
 - **Tải ảnh**: ảnh được nhúng dạng Data URL để preview và xuất JSON ngay. Với ảnh lớn, nên dùng đường dẫn ảnh đã upload lên hosting/CDN để tránh giới hạn localStorage.
-- **JSON nâng cao**: nhập/xuất `site-content.json` để lưu cấu hình hoặc deploy.
+- **Dữ liệu nâng cao**: sửa toàn bộ cấu trúc rồi lưu trực tiếp vào SQLite. Chức năng xuất JSON chỉ tạo một bản sao lưu tải về, không được website dùng làm nguồn dữ liệu.
 
-Nội dung mặc định nằm trong [public/site-content.json](public/site-content.json). Asset Canva đã tải nằm trong `public/assets/tnth-canva/`.
+Nội dung website nằm trong `backend/database/database.sqlite`; editor cập nhật trực tiếp bản ghi active qua API. Asset Canva đã tải nằm trong `frontend/public/assets/tnth-canva/`.
 
 ## Build production
 

@@ -348,9 +348,6 @@ export const defaultSiteSettings: SiteSettings = {
   customCss: '',
 }
 
-export const contentFilePath = '/site-content.json'
-export const contentStorageKey = 'tnth-site-content-draft'
-
 export const isSiteContent = (value: unknown): value is SiteContent => {
   if (typeof value !== 'object' || value === null) return false
   const config = value as Partial<SiteContent>
@@ -596,7 +593,7 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     },
     timeline: {
       ...value.timeline,
-      rounds: (value.timeline.rounds.some((round) => round.title === 'Vòng 1: Online Test' || round.description.startsWith('Top 27 đội thi xuất sắc nhất'))
+      rounds: (value.timeline.rounds.some((round) => round.title === 'Vòng 1: Online Test' || String(round.description ?? '').startsWith('Top 27 đội thi xuất sắc nhất'))
         ? [
             { title: 'Vòng Khởi động: Brand Kickstart', date: '02/09 – 05/09', description: 'Vòng thi warm up cho chương trình nhằm tăng độ nhận diện cho Cuộc thi, kèm theo đó sẽ đáp ứng đề bài NTT Ra Đề. Thí sinh trình bày đề án dưới dạng 3-Page Proposal, từ đó chọn ra Top 2 xuất sắc nhất đi thẳng vào Vòng 2: Brand Campaign.' },
             { title: 'Vòng 1: Brand Insight', date: '27/09 – 02/10', description: 'Từ đề bài, các đội thi hoàn thành bài đánh giá tổng quan thị trường, tình hình thương hiệu, chân dung khách hàng mục tiêu và mục tiêu tổng quát về chiến dịch truyền thông cho thương hiệu của mình. Thí sinh trình bày đề án dưới dạng 10-Page Proposal.' },
@@ -605,7 +602,9 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
           ]
         : value.timeline.rounds).map((round, index) => ({
           ...round,
-          date: officialTimelineDates[index] ?? round.date,
+          title: String(round.title ?? ''),
+          date: String(officialTimelineDates[index] ?? round.date ?? ''),
+          description: String(round.description ?? ''),
         })),
     },
     customContent: legacy.customContent ?? {
@@ -654,7 +653,7 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
           ],
         }
       : value.activities),
-    faq: value.faq.length < 5 || value.faq.some((item) => item.question === 'BTC có hỗ trợ thí sinh ghép đội không?' && item.answer.startsWith('Có.'))
+    faq: (value.faq.length < 5 || value.faq.some((item) => item.question === 'BTC có hỗ trợ thí sinh ghép đội không?' && String(item.answer ?? '').startsWith('Có.'))
       ? [
           { question: 'Thí sinh đăng ký tham gia cuộc thi có cần phải đóng lệ phí không?', answer: 'Không. Thí sinh không cần đóng bất kỳ khoản lệ phí nào khi đăng ký tham gia cuộc thi.' },
           { question: 'BTC có hỗ trợ thí sinh ghép đội không?', answer: 'Không. Ban Tổ chức không hỗ trợ ghép đội. Thí sinh cần chủ động tìm kiếm và thành lập đội thi trước khi đăng ký.' },
@@ -662,7 +661,10 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
           { question: 'Thí sinh lọt top bao nhiêu sẽ nhận được Certificate?', answer: 'Certificate sẽ được trao cho Top 25 đội thi của Vòng 1 và Top 2 đội thi của Vòng Khởi động.' },
           { question: 'Nếu gặp sự cố trong quá trình tham gia thi, đội thi cần làm gì?', answer: 'Trong trường hợp gặp bất kỳ sự cố gì hoặc cần hỗ trợ trong quá trình tham gia cuộc thi, đội thi vui lòng liên hệ Ban Tổ chức qua Fanpage cuộc thi.' },
         ]
-      : value.faq,
+      : value.faq).map((item) => ({
+        question: String(item.question ?? ''),
+        answer: String(item.answer ?? ''),
+      })),
     partners: {
       ...partnerContent,
       kicker: '',
@@ -722,43 +724,22 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
   }
 }
 
-export const loadSiteContent = async (useDraft = true): Promise<SiteContent> => {
-  // 1. Luôn ưu tiên đọc dữ liệu mới nhất từ máy chủ (áp dụng đồng bộ mọi trình duyệt)
+export const loadSiteContent = async (): Promise<SiteContent> => {
+  // SQLite qua API là nguồn dữ liệu chính, dùng chung cho mọi trình duyệt.
   try {
     const apiResponse = await fetch(`/api/site-content?v=${Date.now()}`)
     if (apiResponse.ok) {
       const serverData = await apiResponse.json() as unknown
       if (isSiteContent(serverData)) {
-        const normalized = normalizeSiteContent(serverData)
-        try {
-          localStorage.setItem(contentStorageKey, JSON.stringify(normalized))
-        } catch {
-          // ignore
-        }
-        return normalized
+        return normalizeSiteContent(serverData)
       }
-    }
-  } catch {
-    // API server chưa sẵn sàng thì tiếp tục fallback
-  }
 
-  // 2. Nếu không gọi được API, kiểm tra draft localStorage
-  if (useDraft) {
-    const draft = localStorage.getItem(contentStorageKey)
-    if (draft) {
-      try {
-        const parsed = JSON.parse(draft) as unknown
-        if (isSiteContent(parsed)) return normalizeSiteContent(parsed)
-      } catch {
-        localStorage.removeItem(contentStorageKey)
-      }
+      throw new Error('Dữ liệu SQLite không đúng cấu trúc website.')
     }
-  }
 
-  // 3. Fallback cuối cùng: file tĩnh
-  const response = await fetch(`${contentFilePath}?v=${Date.now()}`)
-  if (!response.ok) throw new Error('Không thể tải site-content.json')
-  const content = await response.json() as unknown
-  if (!isSiteContent(content)) throw new Error('site-content.json không đúng cấu trúc')
-  return normalizeSiteContent(content)
+    const errorResponse = await apiResponse.json().catch(() => null) as { message?: string } | null
+    throw new Error(errorResponse?.message || 'Không thể tải cấu hình từ SQLite.')
+  } catch (error) {
+    throw error instanceof Error ? error : new Error('Không thể kết nối API SQLite.')
+  }
 }

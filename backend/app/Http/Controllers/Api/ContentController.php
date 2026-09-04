@@ -3,63 +3,35 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\SiteContent;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
+use JsonException;
 
 class ContentController extends Controller
 {
-    private function getContentPath(): string
-    {
-        return storage_path('app/site-content.json');
-    }
-
-    private function getFallbackPath(): string
-    {
-        $frontendPublic = base_path('../frontend/public/site-content.json');
-        if (File::exists($frontendPublic)) {
-            return $frontendPublic;
-        }
-
-        $frontendDist = base_path('../frontend/dist/site-content.json');
-        if (File::exists($frontendDist)) {
-            return $frontendDist;
-        }
-
-        return '';
-    }
-
     /**
      * Lấy dữ liệu cấu hình trang web hiện tại.
      */
     public function get(): JsonResponse
     {
         try {
-            $path = $this->getContentPath();
-            if (File::exists($path)) {
-                $data = json_decode(File::get($path), true);
-                if (!empty($data)) {
-                    return response()->json($data);
-                }
+            $record = SiteContent::query()
+                ->where('key', SiteContent::ACTIVE_KEY)
+                ->first();
+
+            if (! $record) {
+                return response()->json(['message' => 'Chưa có cấu hình trang web trong SQLite.'], 404);
             }
 
-            $fallback = $this->getFallbackPath();
-            if ($fallback && File::exists($fallback)) {
-                $data = json_decode(File::get($fallback), true);
-                if (!empty($data)) {
-                    // Tự động sao chép vào storage/app để lần sau đọc nhanh
-                    $dir = dirname($path);
-                    if (!File::isDirectory($dir)) {
-                        @File::makeDirectory($dir, 0775, true);
-                    }
-                    @File::put($path, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-                    return response()->json($data);
-                }
-            }
-
-            return response()->json(['message' => 'Chưa có cấu hình trang web.'], 404);
+            return response()
+                ->json($record->content)
+                ->header('Cache-Control', 'no-store, max-age=0');
         } catch (\Throwable $e) {
-            return response()->json(['message' => 'Lỗi đọc cấu hình: ' . $e->getMessage()], 500);
+            report($e);
+
+            return response()->json(['message' => 'Không thể đọc cấu hình từ SQLite.'], 500);
         }
     }
 
@@ -68,52 +40,63 @@ class ContentController extends Controller
      */
     public function save(Request $request): JsonResponse
     {
-        $raw = $request->getContent();
-        $content = null;
-
-        if (!empty($raw)) {
-            $content = json_decode($raw, true);
-        }
-
-        if (empty($content) || !is_array($content)) {
-            $content = $request->all();
-        }
-
-        if (empty($content) || !is_array($content)) {
+        try {
+            $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
             return response()->json([
                 'success' => false,
-                'message' => 'Dữ liệu JSON gửi lên không hợp lệ hoặc bị rỗng.',
+                'message' => 'Dữ liệu gửi lên không phải JSON hợp lệ.',
+            ], 422);
+        }
+
+        if (! is_array($content)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Dữ liệu JSON phải là một object.',
+            ], 422);
+        }
+
+        $validator = Validator::make($content, [
+            'meta' => ['required', 'array'],
+            'meta.title' => ['required', 'string', 'max:255'],
+            'settings' => ['required', 'array'],
+            'assets' => ['required', 'array'],
+            'navigation' => ['required', 'array'],
+            'hero' => ['required', 'array'],
+            'timeline.rounds' => ['sometimes', 'array'],
+            'timeline.rounds.*.title' => ['present', 'string'],
+            'timeline.rounds.*.date' => ['present', 'string'],
+            'timeline.rounds.*.description' => ['present', 'string'],
+            'faq' => ['sometimes', 'array'],
+            'faq.*.question' => ['present', 'string'],
+            'faq.*.answer' => ['present', 'string'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'JSON thiếu cấu trúc bắt buộc của website.',
+                'errors' => $validator->errors(),
             ], 422);
         }
 
         try {
-            $path = $this->getContentPath();
-            $dir = dirname($path);
-            if (!File::isDirectory($dir)) {
-                File::makeDirectory($dir, 0775, true);
-            }
-
-            $json = json_encode($content, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-            File::put($path, $json);
-
-            // Đồng bộ luôn vào file public/dist của frontend nếu thư mục tồn tại
-            $distPath = base_path('../frontend/dist/site-content.json');
-            if (File::isDirectory(dirname($distPath))) {
-                @File::put($distPath, $json);
-            }
-            $publicPath = base_path('../frontend/public/site-content.json');
-            if (File::isDirectory(dirname($publicPath))) {
-                @File::put($publicPath, $json);
-            }
+            $record = SiteContent::query()->updateOrCreate(
+                ['key' => SiteContent::ACTIVE_KEY],
+                ['content' => $content],
+            );
 
             return response()->json([
                 'success' => true,
-                'message' => 'Đã lưu cấu hình lên máy chủ thành công.',
+                'message' => 'Đã lưu cấu hình vào SQLite.',
+                'updatedAt' => $record->updated_at?->toIso8601String(),
             ]);
         } catch (\Throwable $e) {
+            report($e);
+
             return response()->json([
                 'success' => false,
-                'message' => 'Lỗi ghi cấu hình máy chủ: ' . $e->getMessage() . '. Hãy kiểm tra quyền ghi thư mục storage.',
+                'message' => 'Không thể lưu cấu hình vào SQLite.',
             ], 500);
         }
     }

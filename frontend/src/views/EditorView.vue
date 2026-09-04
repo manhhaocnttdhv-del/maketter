@@ -31,7 +31,6 @@ import ConfigField from '../components/editor/ConfigField.vue'
 import GlobalStyleEditor from '../components/editor/GlobalStyleEditor.vue'
 import SectionStyleEditor from '../components/editor/SectionStyleEditor.vue'
 import {
-  contentStorageKey,
   isSiteContent,
   loadSiteContent,
   normalizeSiteContent,
@@ -323,18 +322,17 @@ const scrollPreviewToActiveSection = async () => {
 const saveDraft = async (showMessage = false) => {
   if (!site.value) return
   try {
-    localStorage.setItem(contentStorageKey, JSON.stringify(site.value))
     jsonText.value = prettyJson(site.value)
     savedState.value = 'saving'
     await saveSiteContentApi(site.value)
     savedState.value = 'saved'
-    if (showMessage) statusMessage.value = 'Đã lưu lên máy chủ thành công (áp dụng cho mọi trình duyệt)'
+    if (showMessage) statusMessage.value = 'Đã lưu vào SQLite thành công (áp dụng cho mọi trình duyệt)'
     errorMessage.value = ''
   } catch (err: unknown) {
     savedState.value = 'error'
     const detail = err instanceof Error ? err.message : 'Không kết nối được máy chủ'
-    statusMessage.value = 'Đang lưu tạm trên trình duyệt'
-    errorMessage.value = `Chưa đồng bộ lên server: ${detail}. Thay đổi chỉ mới lưu tạm trên trình duyệt này.`
+    statusMessage.value = 'Chưa lưu được thay đổi'
+    errorMessage.value = `Không thể lưu vào SQLite: ${detail}.`
   }
 }
 
@@ -365,14 +363,12 @@ const scheduleSave = () => {
   saveTimer = setTimeout(() => saveDraft(), 450)
 }
 
-const loadContent = async (useDraft = true) => {
+const loadContent = async () => {
   try {
     ready = false
-    site.value = await loadSiteContent(useDraft)
+    site.value = await loadSiteContent()
     jsonText.value = prettyJson(site.value)
-    statusMessage.value = useDraft && localStorage.getItem(contentStorageKey)
-      ? 'Đang dùng bản nháp đã lưu'
-      : 'Đang dùng public/site-content.json'
+    statusMessage.value = 'Đã tải cấu hình website'
     errorMessage.value = ''
     savedState.value = 'saved'
     await setupPreviewObservers()
@@ -407,10 +403,10 @@ const downloadJson = () => {
     const blob = new Blob([prettyJson(normalized)], { type: 'application/json;charset=utf-8' })
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
-    link.download = 'site-content.json'
+    link.download = 'site-content-backup.json'
     link.click()
     URL.revokeObjectURL(link.href)
-    statusMessage.value = 'Đã tải site-content.json — thay vào thư mục public khi deploy'
+    statusMessage.value = 'Đã tải bản sao lưu JSON; dữ liệu đang dùng vẫn nằm trong SQLite'
     errorMessage.value = ''
   } catch (error) {
     errorMessage.value = error instanceof Error ? error.message : 'Không thể xuất JSON.'
@@ -432,10 +428,9 @@ const importJson = (event: Event) => {
   input.value = ''
 }
 
-const resetToFile = async () => {
-  localStorage.removeItem(contentStorageKey)
-  await loadContent(false)
-  statusMessage.value = 'Đã khôi phục nội dung từ public/site-content.json'
+const resetFromServer = async () => {
+  await loadContent()
+  statusMessage.value = 'Đã tải lại nội dung đang lưu trên máy chủ'
 }
 
 const handleUploadError = (message: string) => {
@@ -568,7 +563,7 @@ onBeforeUnmount(() => {
             </span>
           </button>
         </nav>
-        <div class="editor-sidebar-footer"><span>{{ statusMessage }}</span><button type="button" @click="resetToFile"><RotateCcw :size="13" /> Khôi phục file gốc</button></div>
+        <div class="editor-sidebar-footer"><span>{{ statusMessage }}</span><button type="button" @click="resetFromServer"><RotateCcw :size="13" /> Tải lại từ SQLite</button></div>
       </aside>
 
       <section ref="previewViewport" class="editor-live-preview">
@@ -621,13 +616,13 @@ onBeforeUnmount(() => {
         </div>
         <div class="inspector-actions">
           <button type="button" class="inspector-save-button" @click="saveDraft(true)"><Save :size="15" /> Lưu lên máy chủ</button>
-          <button type="button" title="Tải site-content.json" @click="downloadJson"><Download :size="15" /></button>
+          <button type="button" title="Tải bản sao lưu JSON" @click="downloadJson"><Download :size="15" /></button>
         </div>
       </aside>
     </div>
 
     <section v-else-if="editorMode === 'json'" class="advanced-json-workspace">
-      <div class="advanced-json-heading"><div><span>CHẾ ĐỘ NÂNG CAO</span><h1>site-content.json</h1><p>Sửa toàn bộ cấu hình gốc. Bấm áp dụng để đồng bộ lại form trực quan và preview.</p></div><div class="advanced-json-actions"><button type="button" @click="resetToFile"><RotateCcw :size="14" /> Khôi phục</button><button type="button" @click="downloadJson"><Download :size="14" /> Tải file</button></div></div>
+      <div class="advanced-json-heading"><div><span>CHẾ ĐỘ NÂNG CAO</span><h1>Dữ liệu website</h1><p>Sửa toàn bộ cấu hình, áp dụng vào preview và lưu trực tiếp lên SQLite.</p></div><div class="advanced-json-actions"><button type="button" @click="resetFromServer"><RotateCcw :size="14" /> Tải lại từ SQLite</button><button type="button" @click="downloadJson"><Download :size="14" /> Tải bản sao lưu</button></div></div>
       <label class="advanced-json-editor"><span>JSON · {{ lineCount }} dòng</span><textarea v-model="jsonText" spellcheck="false"></textarea></label>
       <button type="button" class="apply-json-button" @click="applyJson"><Check :size="16" /> Áp dụng JSON vào website</button>
     </section>

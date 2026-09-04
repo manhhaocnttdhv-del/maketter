@@ -162,18 +162,20 @@ const selectRound = (index: number) => {
 }
 
 const timelineNavLabel = (title: string) => {
-  if (title.startsWith('Vòng Khởi động')) return 'Vòng Khởi động'
-  if (title.startsWith('Vòng 1')) return 'Vòng 1'
-  if (title.startsWith('Vòng 2')) return 'Vòng 2'
-  if (title.startsWith('Chung kết')) return 'Đêm Chung kết'
-  return title
+  const safeTitle = String(title ?? '')
+  if (safeTitle.startsWith('Vòng Khởi động')) return 'Vòng Khởi động'
+  if (safeTitle.startsWith('Vòng 1')) return 'Vòng 1'
+  if (safeTitle.startsWith('Vòng 2')) return 'Vòng 2'
+  if (safeTitle.startsWith('Chung kết')) return 'Đêm Chung kết'
+  return safeTitle
 }
 
 const timelineStageParts = (title = '') => {
-  const separator = title.indexOf(':')
-  if (separator < 0) return [title, '']
-  const label = title.slice(0, separator).trim()
-  return [label.startsWith('Chung kết') ? 'Đêm Chung kết' : label, title.slice(separator + 1).trim()]
+  const safeTitle = String(title ?? '')
+  const separator = safeTitle.indexOf(':')
+  if (separator < 0) return [safeTitle, '']
+  const label = safeTitle.slice(0, separator).trim()
+  return [label.startsWith('Chung kết') ? 'Đêm Chung kết' : label, safeTitle.slice(separator + 1).trim()]
 }
 
 const startVoicesAutoplay = () => {
