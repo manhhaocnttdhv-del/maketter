@@ -345,7 +345,7 @@ export const defaultSiteSettings: SiteSettings = {
     benefits: makeSectionSettings(),
     activities: makeSectionSettings(),
     faq: makeSectionSettings({ paddingTop: 48, paddingBottom: 54 }),
-    partners: makeSectionSettings({ paddingTop: 52, paddingBottom: 52 }),
+    partners: makeSectionSettings({ paddingTop: 52, paddingBottom: 80 }),
     footer: makeSectionSettings({ paddingTop: 36, paddingBottom: 42 }),
   },
   customCss: '',
@@ -740,7 +740,7 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
 }
 
 export const loadSiteContent = async (): Promise<SiteContent> => {
-  let lastError = new Error('Không thể kết nối API SQLite.')
+  let lastError = new Error('Không thể kết nối API dữ liệu.')
 
   // Thử lại ngắn khi backend vừa khởi động hoặc đang reload trong môi trường dev.
   for (let attempt = 0; attempt < 3; attempt += 1) {
@@ -752,13 +752,13 @@ export const loadSiteContent = async (): Promise<SiteContent> => {
           return normalizeSiteContent(serverData)
         }
 
-        throw new Error('Dữ liệu SQLite không đúng cấu trúc website.')
+        throw new Error('Dữ liệu máy chủ không đúng cấu trúc website.')
       }
 
       const errorResponse = await apiResponse.json().catch(() => null) as { message?: string } | null
-      lastError = new Error(errorResponse?.message || 'Không thể tải cấu hình từ SQLite.')
+      lastError = new Error(errorResponse?.message || 'Không thể tải cấu hình từ cơ sở dữ liệu.')
     } catch (error) {
-      lastError = error instanceof Error ? error : new Error('Không thể kết nối API SQLite.')
+      lastError = error instanceof Error ? error : new Error('Không thể kết nối API dữ liệu.')
     }
 
     if (attempt < 2) {

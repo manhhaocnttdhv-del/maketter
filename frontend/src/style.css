@@ -3482,18 +3482,18 @@ a {
 }
 
 .competition-sections>section.configurable-section:not(.event-footer) {
-  padding-top: clamp(40px, 4.2vw, 54px) !important;
-  padding-bottom: clamp(40px, 4.2vw, 54px) !important;
+  padding-top: var(--section-padding-top, 52px) !important;
+  padding-bottom: var(--section-padding-bottom, 52px) !important;
 }
 
 .competition-sections>.metrics-section.configurable-section {
-  padding-top: 38px !important;
-  padding-bottom: 42px !important;
+  padding-top: var(--section-padding-top, 38px) !important;
+  padding-bottom: var(--section-padding-bottom, 42px) !important;
 }
 
 .competition-sections>.event-footer.configurable-section {
-  padding-top: 12px !important;
-  padding-bottom: 16px !important;
+  padding-top: var(--section-padding-top, 12px) !important;
+  padding-bottom: var(--section-padding-bottom, 16px) !important;
 }
 
 .competition-sections .faq-wrap {

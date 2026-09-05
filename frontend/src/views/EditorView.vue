@@ -326,13 +326,13 @@ const saveDraft = async (showMessage = false) => {
     savedState.value = 'saving'
     await saveSiteContentApi(site.value)
     savedState.value = 'saved'
-    if (showMessage) statusMessage.value = 'Đã lưu vào SQLite thành công (áp dụng cho mọi trình duyệt)'
+    if (showMessage) statusMessage.value = 'Đã lưu vào cơ sở dữ liệu thành công (áp dụng cho mọi trình duyệt)'
     errorMessage.value = ''
   } catch (err: unknown) {
     savedState.value = 'error'
     const detail = err instanceof Error ? err.message : 'Không kết nối được máy chủ'
     statusMessage.value = 'Chưa lưu được thay đổi'
-    errorMessage.value = `Không thể lưu vào SQLite: ${detail}.`
+    errorMessage.value = `Không thể lưu vào cơ sở dữ liệu: ${detail}.`
   }
 }
 
@@ -406,7 +406,7 @@ const downloadJson = () => {
     link.download = 'site-content-backup.json'
     link.click()
     URL.revokeObjectURL(link.href)
-    statusMessage.value = 'Đã tải bản sao lưu JSON; dữ liệu đang dùng vẫn nằm trong SQLite'
+    statusMessage.value = 'Đã tải bản sao lưu JSON; dữ liệu đang dùng vẫn nằm trong cơ sở dữ liệu'
     errorMessage.value = ''
   } catch (error) {
     errorMessage.value = error instanceof Error ? error.message : 'Không thể xuất JSON.'
@@ -563,7 +563,7 @@ onBeforeUnmount(() => {
             </span>
           </button>
         </nav>
-        <div class="editor-sidebar-footer"><span>{{ statusMessage }}</span><button type="button" @click="resetFromServer"><RotateCcw :size="13" /> Tải lại từ SQLite</button></div>
+        <div class="editor-sidebar-footer"><span>{{ statusMessage }}</span><button type="button" @click="resetFromServer"><RotateCcw :size="13" /> Tải lại từ máy chủ</button></div>
       </aside>
 
       <section ref="previewViewport" class="editor-live-preview">
@@ -597,7 +597,51 @@ onBeforeUnmount(() => {
           <button type="button" :class="{ active: activeTab === 'design' }" @click="activeTab = 'design'"><Settings2 :size="14" /> Bố cục & CSS</button>
         </div>
         <div class="inspector-scroll">
-          <ConfigField v-if="activeTab === 'content'" v-model="selectedModel" @upload-error="handleUploadError" />
+          <template v-if="activeTab === 'content'">
+            <div class="design-group quick-font-size-editor">
+              <div class="design-group__title">
+                <strong>Cỡ chữ</strong>
+                <span>Áp dụng ngay cho bố cục đang chọn</span>
+              </div>
+              <label v-if="activeSection === 'global'" class="config-field config-number-field">
+                <span>Cỡ chữ toàn website <em>px</em></span>
+                <input v-model.number="site.settings.global.baseFontSize" type="number" min="10" max="28" step="0.5" />
+              </label>
+              <label v-else-if="activeSection === 'header'" class="config-field config-number-field">
+                <span>Cỡ chữ menu <em>px</em></span>
+                <input v-model.number="site.settings.header.fontSize" type="number" min="8" max="26" step="0.5" />
+              </label>
+              <label v-else class="config-field config-number-field">
+                <span>Cỡ chữ nội dung section <em>px</em></span>
+                <input v-model.number="site.settings.sections[activeStyleSection].contentFontSize" type="number" min="10" max="40" step="0.5" />
+              </label>
+            </div>
+            <div v-if="activeSection === 'partners' || activeSection === 'partnerLogos'" class="design-group partner-spacing-editor">
+              <div class="design-group__title">
+                <strong>Khoảng cách section Đối tác</strong>
+                <span>Thay đổi được xem ngay trên khung preview</span>
+              </div>
+              <div class="design-grid design-grid--two design-number-grid">
+                <label class="config-field config-number-field">
+                  <span>Padding trên <em>px</em></span>
+                  <input v-model.number="site.settings.sections.partners.paddingTop" type="number" min="0" max="300" />
+                </label>
+                <label class="config-field config-number-field">
+                  <span>Padding dưới <em>px</em></span>
+                  <input v-model.number="site.settings.sections.partners.paddingBottom" type="number" min="0" max="300" />
+                </label>
+                <label class="config-field config-number-field">
+                  <span>Chiều rộng nội dung <em>px</em></span>
+                  <input v-model.number="site.settings.sections.partners.containerWidth" type="number" min="320" max="1920" />
+                </label>
+                <label class="config-field config-number-field">
+                  <span>Chiều cao tối thiểu <em>px</em></span>
+                  <input v-model.number="site.settings.sections.partners.minHeight" type="number" min="0" max="1600" />
+                </label>
+              </div>
+            </div>
+            <ConfigField v-model="selectedModel" @upload-error="handleUploadError" />
+          </template>
           <GlobalStyleEditor
             v-else-if="activeSection === 'global' || activeSection === 'header'"
             v-model="site.settings"
@@ -622,7 +666,7 @@ onBeforeUnmount(() => {
     </div>
 
     <section v-else-if="editorMode === 'json'" class="advanced-json-workspace">
-      <div class="advanced-json-heading"><div><span>CHẾ ĐỘ NÂNG CAO</span><h1>Dữ liệu website</h1><p>Sửa toàn bộ cấu hình, áp dụng vào preview và lưu trực tiếp lên SQLite.</p></div><div class="advanced-json-actions"><button type="button" @click="resetFromServer"><RotateCcw :size="14" /> Tải lại từ SQLite</button><button type="button" @click="downloadJson"><Download :size="14" /> Tải bản sao lưu</button></div></div>
+      <div class="advanced-json-heading"><div><span>CHẾ ĐỘ NÂNG CAO</span><h1>Dữ liệu website</h1><p>Sửa toàn bộ cấu hình, áp dụng vào preview và lưu trực tiếp lên cơ sở dữ liệu.</p></div><div class="advanced-json-actions"><button type="button" @click="resetFromServer"><RotateCcw :size="14" /> Tải lại từ máy chủ</button><button type="button" @click="downloadJson"><Download :size="14" /> Tải bản sao lưu</button></div></div>
       <label class="advanced-json-editor"><span>JSON · {{ lineCount }} dòng</span><textarea v-model="jsonText" spellcheck="false"></textarea></label>
       <button type="button" class="apply-json-button" @click="applyJson"><Check :size="16" /> Áp dụng JSON vào website</button>
     </section>
