@@ -57,6 +57,7 @@ export const sectionStyle = (
     '--section-container-width': `${settings.containerWidth}px`,
     '--section-columns': String(settings.columns || 0),
     '--section-content-font-size': `${settings.contentFontSize}px`,
+    '--section-heading-font-size': settings.headingFontSize > 0 ? `${settings.headingFontSize}px` : undefined,
     '--section-padding-top': `${settings.paddingTop}px`,
     '--section-padding-bottom': `${settings.paddingBottom}px`,
     paddingTop: `${settings.paddingTop}px`,

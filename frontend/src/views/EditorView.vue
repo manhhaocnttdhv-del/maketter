@@ -611,10 +611,17 @@ onBeforeUnmount(() => {
                 <span>Cỡ chữ menu <em>px</em></span>
                 <input v-model.number="site.settings.header.fontSize" type="number" min="8" max="26" step="0.5" />
               </label>
-              <label v-else class="config-field config-number-field">
-                <span>Cỡ chữ nội dung section <em>px</em></span>
-                <input v-model.number="site.settings.sections[activeStyleSection].contentFontSize" type="number" min="10" max="40" step="0.5" />
-              </label>
+              <div v-else class="design-grid design-grid--two design-number-grid">
+                <label class="config-field config-number-field">
+                  <span>Cỡ chữ nội dung <em>px</em></span>
+                  <input v-model.number="site.settings.sections[activeStyleSection].contentFontSize" type="number" min="10" max="40" step="0.5" />
+                </label>
+                <label class="config-field config-number-field">
+                  <span>Cỡ chữ tiêu đề <em>px</em></span>
+                  <input v-model.number="site.settings.sections[activeStyleSection].headingFontSize" type="number" min="0" max="96" step="0.5" />
+                  <small>Nhập 0 để dùng kích thước thiết kế gốc.</small>
+                </label>
+              </div>
             </div>
             <div v-if="activeSection === 'partners' || activeSection === 'partnerLogos'" class="design-group partner-spacing-editor">
               <div class="design-group__title">

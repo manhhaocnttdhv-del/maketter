@@ -467,8 +467,21 @@ a {
 .configurable-section .timeline-copy-line,
 .configurable-section .accordion-button,
 .configurable-section .accordion-body {
-  font-size: var(--section-content-font-size, 16px) !important;
+  font-size: var(--content-font-size, var(--section-content-font-size, 16px)) !important;
   line-height: 1.7;
+}
+
+/* Cho phép Page Builder chỉnh đồng loạt tiêu đề của từng section. Biến không có
+   giá trị khi chọn 0, nhờ đó kích thước responsive trong thiết kế gốc vẫn được giữ. */
+.configurable-section h1,
+.configurable-section h2,
+.configurable-section h3,
+.configurable-section h4,
+.configurable-section .section-heading h2,
+.configurable-section .intro-heading h2,
+.configurable-section .voices-heading h2,
+.configurable-section .metrics-heading h2 {
+  font-size: var(--section-heading-font-size) !important;
 }
 
 /* Dùng duy nhất ảnh nền toàn website, thay các mảng nền xanh riêng của section. */

@@ -341,11 +341,11 @@ onBeforeUnmount(() => {
         <div class="text-center section-heading reveal">
           <p v-if="site.about.kicker" class="section-kicker justify-content-center">{{ site.about.kicker }}</p>
           <h2>{{ site.about.title }}</h2>
-          <p v-html="site.about.description"></p>
+          <p :style="{ '--content-font-size': `${site.about.descriptionFontSize}px` }" v-html="site.about.description"></p>
         </div>
         <div class="row mt-2 mt-lg-4 g-4 align-items-center" :class="{ 'flex-md-row-reverse': isReverse('about') }">
           <div class="col-md-6 reveal slide-left"><div class="section-image section-image--vision" :style="aboutImageStyle"><div class="image-grid"></div></div></div>
-          <div class="col-md-6 reveal slide-right"><p v-for="(paragraph, index) in site.about.paragraphsHtml" :key="index" v-html="paragraph"></p></div>
+          <div class="col-md-6 reveal slide-right"><p v-for="(paragraph, index) in site.about.paragraphsHtml" :key="index" :style="{ '--content-font-size': `${index === 0 ? site.about.paragraphOneFontSize : site.about.paragraphTwoFontSize}px` }" v-html="paragraph"></p></div>
         </div>
         <div v-if="site.assets.aboutGallery?.length" class="about-years reveal">
           <div class="about-years__heading">

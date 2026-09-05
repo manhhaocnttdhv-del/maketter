@@ -125,6 +125,7 @@ export interface HeaderSettings {
 export interface SectionSettings {
   enabled: boolean
   contentFontSize: number
+  headingFontSize: number
   paddingTop: number
   paddingBottom: number
   marginTop: number
@@ -201,8 +202,11 @@ export interface SiteContent {
     kicker: string
     title: string
     description: string
+    descriptionFontSize: number
     imageLabel: string
     paragraphsHtml: string[]
+    paragraphOneFontSize: number
+    paragraphTwoFontSize: number
     statistics: Statistic[]
   }
   voices: {
@@ -280,6 +284,7 @@ export const contentSectionOrder: SectionKey[] = sectionKeys.filter((key) => key
 const makeSectionSettings = (overrides: Partial<SectionSettings> = {}): SectionSettings => ({
   enabled: true,
   contentFontSize: 16,
+  headingFontSize: 0,
   paddingTop: 52,
   paddingBottom: 52,
   marginTop: 0,
@@ -565,11 +570,14 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       kicker: String(value.about?.kicker ?? '').trim().toUpperCase() === 'ROUND TO UNBOUND' ? '' : (value.about?.kicker || ''),
       title: value.about?.title || 'TẦM NHÌN THƯƠNG HIỆU',
       description: '<strong>TẦM NHÌN THƯƠNG HIỆU</strong> là cuộc thi giải case study đầu tiên về lĩnh vực <strong>Truyền thông thương hiệu</strong> được đặt nền móng bởi <strong>Ban Đối Ngoại - HSV - NEU</strong> với mục đích kết nối và khai phá tiềm năng sáng tạo của các bạn sinh viên trên địa bàn toàn quốc có niềm đam mê với lĩnh vực <strong>Truyền thông thương hiệu</strong> nói riêng và <strong>Marketing</strong> nói chung.',
+      descriptionFontSize: Math.min(40, Math.max(10, Number(value.about?.descriptionFontSize) || 16)),
       imageLabel: '',
       paragraphsHtml: [
         'Với lĩnh vực sáng tạo, độc đáo, chủ đề <strong>"TRUYỀN THÔNG THƯƠNG HIỆU"</strong> hứa hẹn sẽ đem lại cho các bạn thí sinh nhiều ý tưởng mới mẻ, đột phá cũng như giúp các Doanh nghiệp tận dụng và khai phá để phát triển thương hiệu của mình.',
         'Sau bốn mùa tổ chức thành công, <strong>TẦM NHÌN THƯƠNG HIỆU CHÍNH THỨC QUAY TRỞ LẠI</strong> vào tháng 9 này, hứa hẹn mang lại giá trị sâu sắc cùng những thử thách đột phá giúp khơi dậy sức sáng tạo trong mỗi thí sinh đến với cuộc thi.',
       ],
+      paragraphOneFontSize: Math.min(40, Math.max(10, Number(value.about?.paragraphOneFontSize) || 16)),
+      paragraphTwoFontSize: Math.min(40, Math.max(10, Number(value.about?.paragraphTwoFontSize) || 16)),
       statistics: [
         { value: '2.000+', label: 'Thí sinh tham dự' },
         { value: '700+', label: 'Đội thi đăng ký' },

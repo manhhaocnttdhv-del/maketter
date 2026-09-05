@@ -26,6 +26,9 @@ const emit = defineEmits<{
 const labels: Record<string, string> = {
   title: 'Tiêu đề',
   description: 'Mô tả',
+  descriptionFontSize: 'Cỡ chữ mô tả',
+  paragraphOneFontSize: 'Cỡ chữ nội dung 1',
+  paragraphTwoFontSize: 'Cỡ chữ nội dung 2',
   editorPassword: 'Mật khẩu quản trị (/editor)',
   label: 'Nhãn hiển thị',
   target: 'ID section đích',
@@ -115,6 +118,9 @@ const isImage = computed(() => {
 const draggedLogoIndex = ref<number | null>(null)
 
 const rangeFields: Record<string, { min: number; max: number; unit: string; hint: string }> = {
+  descriptionFontSize: { min: 10, max: 40, unit: 'px', hint: 'Cỡ chữ riêng của phần mô tả.' },
+  paragraphOneFontSize: { min: 10, max: 40, unit: 'px', hint: 'Cỡ chữ riêng của nội dung 1.' },
+  paragraphTwoFontSize: { min: 10, max: 40, unit: 'px', hint: 'Cỡ chữ riêng của nội dung 2.' },
   organizerLogoScale: { min: 20, max: 200, unit: '%', hint: 'Kéo để thu/phóng logo đơn vị tổ chức.' },
   footerCardScale: { min: 20, max: 100, unit: '%', hint: 'Kéo để thay đổi độ rộng khối Kênh liên hệ.' },
   footerLogoScale: { min: 100, max: 300, unit: '%', hint: 'Phóng phần logo nhìn thấy mà không làm thay đổi bố cục.' },
