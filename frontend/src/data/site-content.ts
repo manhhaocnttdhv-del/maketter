@@ -257,6 +257,9 @@ export interface SiteContent {
     organization: string
     contact: string
     footerCardScale: number
+    footerLogoScale: number
+    contactFontSize: number
+    contactNameFontSize: number
     contactTitle: string
     contactLines: string[]
     socials: Array<{
@@ -342,7 +345,7 @@ export const defaultSiteSettings: SiteSettings = {
     benefits: makeSectionSettings(),
     activities: makeSectionSettings(),
     faq: makeSectionSettings({ paddingTop: 48, paddingBottom: 54 }),
-    partners: makeSectionSettings({ paddingBottom: 54 }),
+    partners: makeSectionSettings({ paddingTop: 52, paddingBottom: 52 }),
     footer: makeSectionSettings({ paddingTop: 36, paddingBottom: 42 }),
   },
   customCss: '',
@@ -414,6 +417,9 @@ const defaultFooter: SiteContent['footer'] = {
   organization: '',
   contact: '',
   footerCardScale: 85,
+  footerLogoScale: 220,
+  contactFontSize: 18,
+  contactNameFontSize: 17,
   contactTitle: 'Kênh liên hệ:',
   contactLines: [
     'Trưởng Ban Tổ chức: 0369218999 (Nguyễn Thị Minh Hiền)',
@@ -437,6 +443,11 @@ const defaultOrganizerGroup: PartnerGroup = {
 const defaultBronzePartnerGroup: PartnerGroup = {
   title: 'NHÀ TÀI TRỢ ĐỒNG',
   logos: [{ image: '', name: 'Logo' }],
+}
+
+const defaultGoldPartnerGroup: PartnerGroup = {
+  title: 'NHÀ TÀI TRỢ VÀNG',
+  logos: Array.from({ length: 2 }, () => ({ image: '', name: 'Logo' })),
 }
 
 const defaultStandalonePartnerGroups: PartnerGroup[] = [
@@ -689,18 +700,19 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       supportGroups: (() => {
         const groups = (legacyPartners.supportGroups ?? [])
           .map((group) => normalizePartnerGroup(group, 'NHÓM ĐỐI TÁC'))
-        const bronzeGroup = groups.find((group) => (
-          String(group?.title ?? '').trim().toLocaleUpperCase('vi-VN') === defaultBronzePartnerGroup.title
-        ))
-        const standaloneGroups = defaultStandalonePartnerGroups.map((defaultGroup) => {
+        const normalizedTitle = (group: PartnerGroup) => String(group.title ?? '').trim().toLocaleUpperCase('vi-VN')
+        const defaultGroups = [defaultGoldPartnerGroup, defaultBronzePartnerGroup, ...defaultStandalonePartnerGroups]
+        const defaultTitles = new Set(defaultGroups.map(normalizedTitle))
+        const knownGroups = defaultGroups.map((defaultGroup) => {
           const matchingGroup = groups.find((group) => (
-            String(group?.title ?? '').trim().toLocaleUpperCase('vi-VN') === defaultGroup.title
+            normalizedTitle(group) === normalizedTitle(defaultGroup)
           ))
           return matchingGroup ?? normalizePartnerGroup(defaultGroup, defaultGroup.title)
         })
+        const customGroups = groups.filter((group) => !defaultTitles.has(normalizedTitle(group)))
         return [
-          bronzeGroup ?? normalizePartnerGroup(defaultBronzePartnerGroup, defaultBronzePartnerGroup.title),
-          ...standaloneGroups,
+          ...knownGroups,
+          ...customGroups,
         ]
       })(),
     },
@@ -708,6 +720,9 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       ...defaultFooter,
       ...(legacy.footer ?? {}),
       footerCardScale: Math.min(100, Math.max(20, Number(legacy.footer?.footerCardScale) || 85)),
+      footerLogoScale: Math.min(300, Math.max(100, Number(legacy.footer?.footerLogoScale) || 220)),
+      contactFontSize: Math.min(28, Math.max(12, Number(legacy.footer?.contactFontSize) || 18)),
+      contactNameFontSize: Math.min(28, Math.max(12, Number(legacy.footer?.contactNameFontSize) || 17)),
       contactLines: legacy.footer?.contactLines?.length ? legacy.footer.contactLines : defaultFooter.contactLines,
       socials: (legacy.footer?.socials?.length ? legacy.footer.socials : defaultFooter.socials).map((social, index) => ({
         ...social,

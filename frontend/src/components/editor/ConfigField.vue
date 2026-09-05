@@ -44,6 +44,9 @@ const labels: Record<string, string> = {
   footerLogo: 'Logo footer',
   footerBackground: 'Ảnh nền footer',
   footerCardScale: 'Kích cỡ khối Kênh liên hệ',
+  footerLogoScale: 'Kích cỡ logo con mắt',
+  contactFontSize: 'Cỡ chữ chức danh & số điện thoại',
+  contactNameFontSize: 'Cỡ chữ tên người liên hệ',
   facebookIcon: 'Icon Facebook',
   tiktokIcon: 'Icon TikTok',
   navigation: 'Menu điều hướng',
@@ -110,6 +113,15 @@ const isImage = computed(() => {
     || /\.(png|jpe?g|webp|gif|svg)(\?.*)?$/i.test(props.modelValue)
 })
 const draggedLogoIndex = ref<number | null>(null)
+
+const rangeFields: Record<string, { min: number; max: number; unit: string; hint: string }> = {
+  organizerLogoScale: { min: 20, max: 200, unit: '%', hint: 'Kéo để thu/phóng logo đơn vị tổ chức.' },
+  footerCardScale: { min: 20, max: 100, unit: '%', hint: 'Kéo để thay đổi độ rộng khối Kênh liên hệ.' },
+  footerLogoScale: { min: 100, max: 300, unit: '%', hint: 'Phóng phần logo nhìn thấy mà không làm thay đổi bố cục.' },
+  contactFontSize: { min: 12, max: 28, unit: 'px', hint: 'Cỡ chữ chức danh và số điện thoại.' },
+  contactNameFontSize: { min: 12, max: 28, unit: 'px', hint: 'Cỡ chữ tên người liên hệ.' },
+}
+const rangeField = computed(() => rangeFields[props.name])
 
 const updateObjectValue = (key: string, value: unknown) => {
   emit('update:modelValue', { ...(props.modelValue as Record<string, unknown>), [key]: value })
@@ -393,10 +405,10 @@ const handleFormattingShortcut = (event: KeyboardEvent) => {
     <small>Ảnh được lưu vào backend Laravel và hiển thị ngay trên website.</small>
   </div>
 
-  <label v-else-if="typeof modelValue === 'number' && (name === 'organizerLogoScale' || name === 'footerCardScale')" class="config-range-field config-range-field--editable">
-    <span>{{ label }} <strong>{{ modelValue }}%</strong></span>
-    <input type="range" min="20" :max="name === 'organizerLogoScale' ? 200 : 100" step="1" :value="modelValue" @input="emit('update:modelValue', Number(($event.target as HTMLInputElement).value))" />
-    <small>Kéo để thu/phóng khối này (20–{{ name === 'organizerLogoScale' ? 200 : 100 }}%).</small>
+  <label v-else-if="typeof modelValue === 'number' && rangeField" class="config-range-field config-range-field--editable">
+    <span>{{ label }} <strong>{{ modelValue }}{{ rangeField.unit }}</strong></span>
+    <input type="range" :min="rangeField.min" :max="rangeField.max" step="1" :value="modelValue" @input="emit('update:modelValue', Number(($event.target as HTMLInputElement).value))" />
+    <small>{{ rangeField.hint }} ({{ rangeField.min }}–{{ rangeField.max }}{{ rangeField.unit }})</small>
   </label>
 
   <label v-else-if="typeof modelValue === 'number'" class="config-field">

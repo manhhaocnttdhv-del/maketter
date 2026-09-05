@@ -51,6 +51,9 @@ const organizerLogoStyle = computed(() => ({
 
 const footerCardStyle = computed(() => ({
   '--footer-card-scale': `${Math.min(100, Math.max(20, Number(props.site.footer.footerCardScale) || 85))}%`,
+  '--footer-logo-scale': `${Math.min(300, Math.max(100, Number(props.site.footer.footerLogoScale) || 220)) / 100}`,
+  '--footer-contact-font-size': `${Math.min(28, Math.max(12, Number(props.site.footer.contactFontSize) || 18))}px`,
+  '--footer-contact-name-font-size': `${Math.min(28, Math.max(12, Number(props.site.footer.contactNameFontSize) || 17))}px`,
 }))
 
 const footerContacts = computed(() => props.site.footer.contactLines.map((line) => {
@@ -554,6 +557,7 @@ onBeforeUnmount(() => {
             :class="{
               'partner-support-group--compact': group.logos.length <= 2,
               'partner-support-group--single': group.logos.length === 1,
+              'partner-support-group--gold': String(group.title || '').trim().toLocaleUpperCase('vi-VN') === 'NHÀ TÀI TRỢ VÀNG',
               'partner-support-group--bronze': String(group.title || '').trim().toLocaleUpperCase('vi-VN') === 'NHÀ TÀI TRỢ ĐỒNG',
             }"
           >
