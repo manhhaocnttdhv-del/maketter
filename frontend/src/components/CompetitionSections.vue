@@ -47,6 +47,9 @@ const cardGridStyle = (key: SectionKey) => hasColumns(key)
 
 const organizerLogoStyle = computed(() => ({
   '--organizer-logo-scale': `${Math.min(200, Math.max(20, Number(props.site.partners.organizerLogoScale) || 80))}%`,
+  '--organizer-padding-top': `${Math.min(300, Math.max(0, Number(props.site.partners.organizerPaddingTop) || 0))}px`,
+  '--organizer-padding-bottom': `${Math.min(300, Math.max(0, Number.isFinite(Number(props.site.partners.organizerPaddingBottom)) ? Number(props.site.partners.organizerPaddingBottom) : 40))}px`,
+  '--organizer-padding-x': `${Math.min(300, Math.max(0, Number(props.site.partners.organizerPaddingX) || 0))}px`,
 }))
 
 const footerCardStyle = computed(() => ({

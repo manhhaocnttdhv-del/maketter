@@ -253,6 +253,9 @@ export interface SiteContent {
     kicker: string
     title: string
     organizerLogoScale: number
+    organizerPaddingTop: number
+    organizerPaddingBottom: number
+    organizerPaddingX: number
     organizers: PartnerGroup
     supportGroups: PartnerGroup[]
   }
@@ -688,6 +691,9 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       ...partnerContent,
       kicker: '',
       organizerLogoScale: Math.min(200, Math.max(20, Number(legacyPartners.organizerLogoScale) || 80)),
+      organizerPaddingTop: Math.min(300, Math.max(0, Number(legacyPartners.organizerPaddingTop) || 0)),
+      organizerPaddingBottom: Math.min(300, Math.max(0, Number.isFinite(Number(legacyPartners.organizerPaddingBottom)) ? Number(legacyPartners.organizerPaddingBottom) : 40)),
+      organizerPaddingX: Math.min(300, Math.max(0, Number(legacyPartners.organizerPaddingX) || 0)),
       organizers: (() => {
         const organizerGroup = legacyPartners.organizers
           ? normalizePartnerGroup(legacyPartners.organizers, defaultOrganizerGroup.title)

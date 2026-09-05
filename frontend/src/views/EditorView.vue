@@ -190,6 +190,9 @@ const selectedModel = computed<unknown>({
       }
       case 'partnerLogos': return {
         organizerLogoScale: value.partners.organizerLogoScale,
+        organizerPaddingTop: value.partners.organizerPaddingTop,
+        organizerPaddingBottom: value.partners.organizerPaddingBottom,
+        organizerPaddingX: value.partners.organizerPaddingX,
         organizers: value.partners.organizers,
         supportGroups: value.partners.supportGroups,
       }
@@ -263,6 +266,9 @@ const selectedModel = computed<unknown>({
       case 'partners': site.value.partners = { ...site.value.partners, ...value } as SiteContent['partners']; break
       case 'partnerLogos':
         site.value.partners.organizerLogoScale = Math.min(200, Math.max(20, Number(value.organizerLogoScale) || 80))
+        site.value.partners.organizerPaddingTop = Math.min(300, Math.max(0, Number(value.organizerPaddingTop) || 0))
+        site.value.partners.organizerPaddingBottom = Math.min(300, Math.max(0, Number(value.organizerPaddingBottom) || 0))
+        site.value.partners.organizerPaddingX = Math.min(300, Math.max(0, Number(value.organizerPaddingX) || 0))
         site.value.partners.organizers = value.organizers as SiteContent['partners']['organizers']
         site.value.partners.supportGroups = value.supportGroups as SiteContent['partners']['supportGroups']
         break

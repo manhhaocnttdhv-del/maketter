@@ -2094,6 +2094,7 @@ a {
 
 .partner-organizers {
   margin-top: 28px;
+  padding: var(--organizer-padding-top, 0) var(--organizer-padding-x, 0) var(--organizer-padding-bottom, 40px);
 }
 
 .partner-organizers h3,
