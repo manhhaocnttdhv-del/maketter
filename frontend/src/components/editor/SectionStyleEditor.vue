@@ -19,11 +19,11 @@ const isUploading = ref(false)
 const numberFields: Array<{ key: keyof SectionSettings; label: string; min: number; max: number; step?: number }> = [
   { key: 'contentFontSize', label: 'Cỡ chữ nội dung', min: 10, max: 40, step: 0.5 },
   { key: 'headingFontSize', label: 'Cỡ chữ tiêu đề (0 = mặc định)', min: 0, max: 96, step: 0.5 },
-  { key: 'paddingTop', label: 'Padding trên', min: 0, max: 300 },
-  { key: 'paddingBottom', label: 'Padding dưới', min: 0, max: 300 },
+  { key: 'paddingTop', label: 'Padding trên', min: 0, max: 500 },
+  { key: 'paddingBottom', label: 'Padding dưới', min: 0, max: 500 },
   { key: 'marginTop', label: 'Margin trên', min: -200, max: 300 },
   { key: 'marginBottom', label: 'Margin dưới', min: -200, max: 300 },
-  { key: 'minHeight', label: 'Chiều cao tối thiểu', min: 0, max: 1600 },
+  { key: 'minHeight', label: 'Chiều cao tối thiểu', min: 0, max: 2000 },
   { key: 'containerWidth', label: 'Chiều rộng container', min: 320, max: 1920 },
   { key: 'borderRadius', label: 'Bo góc section', min: 0, max: 160 },
 ]

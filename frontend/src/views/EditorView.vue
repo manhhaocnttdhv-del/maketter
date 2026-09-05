@@ -623,27 +623,27 @@ onBeforeUnmount(() => {
                 </label>
               </div>
             </div>
-            <div v-if="activeSection === 'partners' || activeSection === 'partnerLogos'" class="design-group partner-spacing-editor">
+            <div v-if="activeIsSection" class="design-group section-spacing-editor">
               <div class="design-group__title">
-                <strong>Khoảng cách section Đối tác</strong>
+                <strong>Khoảng cách & kích thước section</strong>
                 <span>Thay đổi được xem ngay trên khung preview</span>
               </div>
               <div class="design-grid design-grid--two design-number-grid">
                 <label class="config-field config-number-field">
                   <span>Padding trên <em>px</em></span>
-                  <input v-model.number="site.settings.sections.partners.paddingTop" type="number" min="0" max="300" />
+                  <input v-model.number="site.settings.sections[activeStyleSection].paddingTop" type="number" min="0" max="500" />
                 </label>
                 <label class="config-field config-number-field">
                   <span>Padding dưới <em>px</em></span>
-                  <input v-model.number="site.settings.sections.partners.paddingBottom" type="number" min="0" max="300" />
+                  <input v-model.number="site.settings.sections[activeStyleSection].paddingBottom" type="number" min="0" max="500" />
                 </label>
                 <label class="config-field config-number-field">
                   <span>Chiều rộng nội dung <em>px</em></span>
-                  <input v-model.number="site.settings.sections.partners.containerWidth" type="number" min="320" max="1920" />
+                  <input v-model.number="site.settings.sections[activeStyleSection].containerWidth" type="number" min="320" max="1920" />
                 </label>
                 <label class="config-field config-number-field">
                   <span>Chiều cao tối thiểu <em>px</em></span>
-                  <input v-model.number="site.settings.sections.partners.minHeight" type="number" min="0" max="1600" />
+                  <input v-model.number="site.settings.sections[activeStyleSection].minHeight" type="number" min="0" max="2000" />
                 </label>
               </div>
             </div>
