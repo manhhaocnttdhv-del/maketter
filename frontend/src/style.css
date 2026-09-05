@@ -2113,6 +2113,7 @@ a {
 .partner-support-groups {
   max-width: 1000px;
   margin: 0 auto;
+  padding-bottom: var(--partner-groups-padding-bottom, 64px);
   display: grid;
   gap: 32px;
 }

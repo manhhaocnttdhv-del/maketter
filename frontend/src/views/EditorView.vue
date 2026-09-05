@@ -193,6 +193,7 @@ const selectedModel = computed<unknown>({
         organizerPaddingTop: value.partners.organizerPaddingTop,
         organizerPaddingBottom: value.partners.organizerPaddingBottom,
         organizerPaddingX: value.partners.organizerPaddingX,
+        supportGroupsPaddingBottom: value.partners.supportGroupsPaddingBottom,
         organizers: value.partners.organizers,
         supportGroups: value.partners.supportGroups,
       }
@@ -269,6 +270,7 @@ const selectedModel = computed<unknown>({
         site.value.partners.organizerPaddingTop = Math.min(300, Math.max(0, Number(value.organizerPaddingTop) || 0))
         site.value.partners.organizerPaddingBottom = Math.min(300, Math.max(0, Number(value.organizerPaddingBottom) || 0))
         site.value.partners.organizerPaddingX = Math.min(300, Math.max(0, Number(value.organizerPaddingX) || 0))
+        site.value.partners.supportGroupsPaddingBottom = Math.min(300, Math.max(0, Number(value.supportGroupsPaddingBottom) || 0))
         site.value.partners.organizers = value.organizers as SiteContent['partners']['organizers']
         site.value.partners.supportGroups = value.supportGroups as SiteContent['partners']['supportGroups']
         break

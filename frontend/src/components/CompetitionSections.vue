@@ -52,6 +52,10 @@ const organizerLogoStyle = computed(() => ({
   '--organizer-padding-x': `${Math.min(300, Math.max(0, Number(props.site.partners.organizerPaddingX) || 0))}px`,
 }))
 
+const partnerSupportGroupsStyle = computed(() => ({
+  '--partner-groups-padding-bottom': `${Math.min(300, Math.max(0, Number.isFinite(Number(props.site.partners.supportGroupsPaddingBottom)) ? Number(props.site.partners.supportGroupsPaddingBottom) : 64))}px`,
+}))
+
 const footerCardStyle = computed(() => ({
   '--footer-card-scale': `${Math.min(100, Math.max(20, Number(props.site.footer.footerCardScale) || 85))}%`,
   '--footer-logo-scale': `${Math.min(300, Math.max(100, Number(props.site.footer.footerLogoScale) || 220)) / 100}`,
@@ -552,7 +556,7 @@ onBeforeUnmount(() => {
             </span>
           </div>
         </div>
-        <div class="partner-support-groups reveal">
+        <div class="partner-support-groups reveal" :style="partnerSupportGroupsStyle">
           <section
             v-for="(group, groupIndex) in site.partners.supportGroups"
             :key="`${group.title}-${groupIndex}`"
