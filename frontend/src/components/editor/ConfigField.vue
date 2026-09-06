@@ -26,6 +26,9 @@ const emit = defineEmits<{
 const labels: Record<string, string> = {
   title: 'Tiêu đề',
   description: 'Mô tả',
+  descriptionFontSize: 'Cỡ chữ mô tả',
+  paragraphOneFontSize: 'Cỡ chữ nội dung 1',
+  paragraphTwoFontSize: 'Cỡ chữ nội dung 2',
   editorPassword: 'Mật khẩu quản trị (/editor)',
   label: 'Nhãn hiển thị',
   target: 'ID section đích',
@@ -80,6 +83,10 @@ const labels: Record<string, string> = {
   answer: 'Câu trả lời',
   organizers: 'Logo đơn vị tổ chức',
   organizerLogoScale: 'Kích cỡ logo đơn vị tổ chức',
+  organizerPaddingTop: 'Padding trên khung tổ chức',
+  organizerPaddingBottom: 'Padding dưới khung tổ chức',
+  organizerPaddingX: 'Padding hai bên khung tổ chức',
+  supportGroupsPaddingBottom: 'Padding dưới cùng nhóm đối tác',
   levels: 'Các cấp đối tác',
   supportGroups: 'Logo nhà tài trợ / bảo trợ',
   logos: 'Danh sách logo',
@@ -117,7 +124,14 @@ const isImage = computed(() => {
 const draggedLogoIndex = ref<number | null>(null)
 
 const rangeFields: Record<string, { min: number; max: number; unit: string; hint: string }> = {
+  descriptionFontSize: { min: 10, max: 40, unit: 'px', hint: 'Cỡ chữ riêng của phần mô tả.' },
+  paragraphOneFontSize: { min: 10, max: 40, unit: 'px', hint: 'Cỡ chữ riêng của nội dung 1.' },
+  paragraphTwoFontSize: { min: 10, max: 40, unit: 'px', hint: 'Cỡ chữ riêng của nội dung 2.' },
   organizerLogoScale: { min: 20, max: 200, unit: '%', hint: 'Kéo để thu/phóng logo đơn vị tổ chức.' },
+  organizerPaddingTop: { min: 0, max: 300, unit: 'px', hint: 'Khoảng trống phía trên trong khung đơn vị tổ chức.' },
+  organizerPaddingBottom: { min: 0, max: 300, unit: 'px', hint: 'Khoảng trống phía dưới trong khung đơn vị tổ chức.' },
+  organizerPaddingX: { min: 0, max: 300, unit: 'px', hint: 'Khoảng trống bên trái và bên phải khung đơn vị tổ chức.' },
+  supportGroupsPaddingBottom: { min: 0, max: 300, unit: 'px', hint: 'Khoảng trống sau hàng logo cuối, trước section FAQ.' },
   footerCardScale: { min: 20, max: 100, unit: '%', hint: 'Kéo để thay đổi độ rộng khối Kênh liên hệ.' },
   footerLogoScale: { min: 100, max: 300, unit: '%', hint: 'Phóng phần logo nhìn thấy mà không làm thay đổi bố cục.' },
   contactFontSize: { min: 12, max: 28, unit: 'px', hint: 'Cỡ chữ chức danh và số điện thoại.' },

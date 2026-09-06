@@ -125,6 +125,7 @@ export interface HeaderSettings {
 export interface SectionSettings {
   enabled: boolean
   contentFontSize: number
+  headingFontSize: number
   paddingTop: number
   paddingBottom: number
   marginTop: number
@@ -201,8 +202,11 @@ export interface SiteContent {
     kicker: string
     title: string
     description: string
+    descriptionFontSize: number
     imageLabel: string
     paragraphsHtml: string[]
+    paragraphOneFontSize: number
+    paragraphTwoFontSize: number
     statistics: Statistic[]
   }
   voices: {
@@ -249,6 +253,10 @@ export interface SiteContent {
     kicker: string
     title: string
     organizerLogoScale: number
+    organizerPaddingTop: number
+    organizerPaddingBottom: number
+    organizerPaddingX: number
+    supportGroupsPaddingBottom: number
     organizers: PartnerGroup
     supportGroups: PartnerGroup[]
   }
@@ -280,6 +288,7 @@ export const contentSectionOrder: SectionKey[] = sectionKeys.filter((key) => key
 const makeSectionSettings = (overrides: Partial<SectionSettings> = {}): SectionSettings => ({
   enabled: true,
   contentFontSize: 16,
+  headingFontSize: 0,
   paddingTop: 52,
   paddingBottom: 52,
   marginTop: 0,
@@ -345,7 +354,7 @@ export const defaultSiteSettings: SiteSettings = {
     benefits: makeSectionSettings(),
     activities: makeSectionSettings(),
     faq: makeSectionSettings({ paddingTop: 48, paddingBottom: 54 }),
-    partners: makeSectionSettings({ paddingTop: 52, paddingBottom: 52 }),
+    partners: makeSectionSettings({ paddingTop: 52, paddingBottom: 80 }),
     footer: makeSectionSettings({ paddingTop: 36, paddingBottom: 42 }),
   },
   customCss: '',
@@ -572,11 +581,14 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       kicker: String(value.about?.kicker ?? '').trim().toUpperCase() === 'ROUND TO UNBOUND' ? '' : (value.about?.kicker || ''),
       title: value.about?.title || 'TẦM NHÌN THƯƠNG HIỆU',
       description: '<strong>TẦM NHÌN THƯƠNG HIỆU</strong> là cuộc thi giải case study đầu tiên về lĩnh vực <strong>Truyền thông thương hiệu</strong> được đặt nền móng bởi <strong>Ban Đối Ngoại - HSV - NEU</strong> với mục đích kết nối và khai phá tiềm năng sáng tạo của các bạn sinh viên trên địa bàn toàn quốc có niềm đam mê với lĩnh vực <strong>Truyền thông thương hiệu</strong> nói riêng và <strong>Marketing</strong> nói chung.',
+      descriptionFontSize: Math.min(40, Math.max(10, Number(value.about?.descriptionFontSize) || 16)),
       imageLabel: '',
       paragraphsHtml: [
         'Với lĩnh vực sáng tạo, độc đáo, chủ đề <strong>"TRUYỀN THÔNG THƯƠNG HIỆU"</strong> hứa hẹn sẽ đem lại cho các bạn thí sinh nhiều ý tưởng mới mẻ, đột phá cũng như giúp các Doanh nghiệp tận dụng và khai phá để phát triển thương hiệu của mình.',
         'Sau bốn mùa tổ chức thành công, <strong>TẦM NHÌN THƯƠNG HIỆU CHÍNH THỨC QUAY TRỞ LẠI</strong> vào tháng 9 này, hứa hẹn mang lại giá trị sâu sắc cùng những thử thách đột phá giúp khơi dậy sức sáng tạo trong mỗi thí sinh đến với cuộc thi.',
       ],
+      paragraphOneFontSize: Math.min(40, Math.max(10, Number(value.about?.paragraphOneFontSize) || 16)),
+      paragraphTwoFontSize: Math.min(40, Math.max(10, Number(value.about?.paragraphTwoFontSize) || 16)),
       statistics: [
         { value: '2.000+', label: 'Thí sinh tham dự' },
         { value: '700+', label: 'Đội thi đăng ký' },
@@ -698,6 +710,10 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       ...partnerContent,
       kicker: '',
       organizerLogoScale: Math.min(200, Math.max(20, Number(legacyPartners.organizerLogoScale) || 80)),
+      organizerPaddingTop: Math.min(300, Math.max(0, Number(legacyPartners.organizerPaddingTop) || 0)),
+      organizerPaddingBottom: Math.min(300, Math.max(0, Number.isFinite(Number(legacyPartners.organizerPaddingBottom)) ? Number(legacyPartners.organizerPaddingBottom) : 40)),
+      organizerPaddingX: Math.min(300, Math.max(0, Number(legacyPartners.organizerPaddingX) || 0)),
+      supportGroupsPaddingBottom: Math.min(300, Math.max(0, Number.isFinite(Number(legacyPartners.supportGroupsPaddingBottom)) ? Number(legacyPartners.supportGroupsPaddingBottom) : 64)),
       organizers: (() => {
         const organizerGroup = legacyPartners.organizers
           ? normalizePartnerGroup(legacyPartners.organizers, defaultOrganizerGroup.title)
@@ -758,7 +774,7 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
 }
 
 export const loadSiteContent = async (): Promise<SiteContent> => {
-  let lastError = new Error('Không thể kết nối API SQLite.')
+  let lastError = new Error('Không thể kết nối API dữ liệu.')
 
   // Thử lại ngắn khi backend vừa khởi động hoặc đang reload trong môi trường dev.
   for (let attempt = 0; attempt < 3; attempt += 1) {
@@ -770,13 +786,13 @@ export const loadSiteContent = async (): Promise<SiteContent> => {
           return normalizeSiteContent(serverData)
         }
 
-        throw new Error('Dữ liệu SQLite không đúng cấu trúc website.')
+        throw new Error('Dữ liệu máy chủ không đúng cấu trúc website.')
       }
 
       const errorResponse = await apiResponse.json().catch(() => null) as { message?: string } | null
-      lastError = new Error(errorResponse?.message || 'Không thể tải cấu hình từ SQLite.')
+      lastError = new Error(errorResponse?.message || 'Không thể tải cấu hình từ cơ sở dữ liệu.')
     } catch (error) {
-      lastError = error instanceof Error ? error : new Error('Không thể kết nối API SQLite.')
+      lastError = error instanceof Error ? error : new Error('Không thể kết nối API dữ liệu.')
     }
 
     if (attempt < 2) {

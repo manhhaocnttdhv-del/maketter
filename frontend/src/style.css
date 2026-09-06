@@ -468,8 +468,21 @@ a {
 .configurable-section .timeline-copy-line,
 .configurable-section .accordion-button,
 .configurable-section .accordion-body {
-  font-size: var(--section-content-font-size, 16px) !important;
+  font-size: var(--content-font-size, var(--section-content-font-size, 16px)) !important;
   line-height: 1.7;
+}
+
+/* Cho phép Page Builder chỉnh đồng loạt tiêu đề của từng section. Biến không có
+   giá trị khi chọn 0, nhờ đó kích thước responsive trong thiết kế gốc vẫn được giữ. */
+.configurable-section h1,
+.configurable-section h2,
+.configurable-section h3,
+.configurable-section h4,
+.configurable-section .section-heading h2,
+.configurable-section .intro-heading h2,
+.configurable-section .voices-heading h2,
+.configurable-section .metrics-heading h2 {
+  font-size: var(--section-heading-font-size) !important;
 }
 
 /* Dùng duy nhất ảnh nền toàn website, thay các mảng nền xanh riêng của section. */
@@ -2137,6 +2150,7 @@ a {
 
 .partner-organizers {
   margin-top: 28px;
+  padding: var(--organizer-padding-top, 0) var(--organizer-padding-x, 0) var(--organizer-padding-bottom, 40px);
 }
 
 .partner-organizers h3,
@@ -2155,6 +2169,7 @@ a {
 .partner-support-groups {
   max-width: 1000px;
   margin: 0 auto;
+  padding-bottom: var(--partner-groups-padding-bottom, 64px);
   display: grid;
   gap: 32px;
 }
@@ -3523,18 +3538,18 @@ a {
 }
 
 .competition-sections>section.configurable-section:not(.event-footer) {
-  padding-top: clamp(40px, 4.2vw, 54px) !important;
-  padding-bottom: clamp(40px, 4.2vw, 54px) !important;
+  padding-top: var(--section-padding-top, 52px) !important;
+  padding-bottom: var(--section-padding-bottom, 52px) !important;
 }
 
 .competition-sections>.metrics-section.configurable-section {
-  padding-top: 38px !important;
-  padding-bottom: 42px !important;
+  padding-top: var(--section-padding-top, 38px) !important;
+  padding-bottom: var(--section-padding-bottom, 42px) !important;
 }
 
 .competition-sections>.event-footer.configurable-section {
-  padding-top: 12px !important;
-  padding-bottom: 16px !important;
+  padding-top: var(--section-padding-top, 12px) !important;
+  padding-bottom: var(--section-padding-bottom, 16px) !important;
 }
 
 .competition-sections .faq-wrap {

@@ -56,7 +56,7 @@ class SiteContentApiTest extends TestCase
     {
         $this->getJson('/api/site-content')
             ->assertNotFound()
-            ->assertJsonPath('message', 'Chưa có cấu hình trang web trong SQLite.');
+            ->assertJsonPath('message', 'Chưa có cấu hình trang web trong cơ sở dữ liệu.');
     }
 
     public function test_post_rejects_null_timeline_text_that_would_break_the_frontend(): void

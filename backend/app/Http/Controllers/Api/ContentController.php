@@ -22,7 +22,7 @@ class ContentController extends Controller
                 ->first();
 
             if (! $record) {
-                return response()->json(['message' => 'Chưa có cấu hình trang web trong SQLite.'], 404);
+                return response()->json(['message' => 'Chưa có cấu hình trang web trong cơ sở dữ liệu.'], 404);
             }
 
             return response()
@@ -31,7 +31,7 @@ class ContentController extends Controller
         } catch (\Throwable $e) {
             report($e);
 
-            return response()->json(['message' => 'Không thể đọc cấu hình từ SQLite.'], 500);
+            return response()->json(['message' => 'Không thể đọc cấu hình từ cơ sở dữ liệu.'], 500);
         }
     }
 
@@ -88,7 +88,7 @@ class ContentController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Đã lưu cấu hình vào SQLite.',
+                'message' => 'Đã lưu cấu hình vào cơ sở dữ liệu.',
                 'updatedAt' => $record->updated_at?->toIso8601String(),
             ]);
         } catch (\Throwable $e) {
@@ -96,7 +96,7 @@ class ContentController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Không thể lưu cấu hình vào SQLite.',
+                'message' => 'Không thể lưu cấu hình vào cơ sở dữ liệu.',
             ], 500);
         }
     }
