@@ -298,7 +298,7 @@ a {
 .hero-title-artwork {
   display: block;
   width: min(100%, 560px);
-  max-height: clamp(120px, 20vh, 172px);
+  max-height: none;
   height: auto;
   margin: 0 0 clamp(4px, 0.8vh, 8px) 0;
   object-fit: contain;
@@ -4658,10 +4658,31 @@ a {
   font-weight: 800;
 }
 
-.config-range-field input {
+.config-range-field > input,
+.config-range-controls input[type="range"] {
   width: 100%;
   margin-top: 8px;
   accent-color: #536bd4;
+}
+
+.config-range-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 64px;
+  align-items: center;
+  gap: 9px;
+}
+
+.config-range-controls input[type="number"] {
+  width: 64px;
+  margin-top: 8px;
+  padding: 5px 4px;
+  color: #4059a8;
+  background: white;
+  border: 1px solid #cdd9fb;
+  border-radius: 6px;
+  font-size: 9px;
+  font-weight: 800;
+  text-align: center;
 }
 
 .config-range-field--editable {

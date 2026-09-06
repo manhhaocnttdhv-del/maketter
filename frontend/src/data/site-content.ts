@@ -552,9 +552,9 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       tagline: String(value.hero?.tagline ?? '').trim().toUpperCase() === 'ROUND TO UNBOUND' ? '' : (value.hero?.tagline || ''),
       ctaLabel: String(value.hero?.ctaLabel ?? 'ĐĂNG KÝ NGAY'),
       ctaHref: normalizeButtonHref(value.hero?.ctaHref),
-      titleArtworkWidth: Math.min(800, Math.max(120, Number(value.hero?.titleArtworkWidth) || 520)),
-      titleArtworkOffsetX: Math.min(300, Math.max(-300, Number(value.hero?.titleArtworkOffsetX) || 0)),
-      titleArtworkOffsetY: Math.min(300, Math.max(-300, Number(value.hero?.titleArtworkOffsetY) || 0)),
+      titleArtworkWidth: Math.min(800, Math.max(120, Number(value.hero?.titleArtworkWidth) || 360)),
+      titleArtworkOffsetX: Math.min(300, Math.max(-300, Number.isFinite(Number(value.hero?.titleArtworkOffsetX)) ? Number(value.hero?.titleArtworkOffsetX) : 70)),
+      titleArtworkOffsetY: Math.min(300, Math.max(-300, Number.isFinite(Number(value.hero?.titleArtworkOffsetY)) ? Number(value.hero?.titleArtworkOffsetY) : -40)),
     },
     intro: {
       ...value.intro,

@@ -429,7 +429,10 @@ const handleFormattingShortcut = (event: KeyboardEvent) => {
 
   <label v-else-if="typeof modelValue === 'number' && rangeField" class="config-range-field config-range-field--editable">
     <span>{{ label }} <strong>{{ modelValue }}{{ rangeField.unit }}</strong></span>
-    <input type="range" :min="rangeField.min" :max="rangeField.max" step="1" :value="modelValue" @input="emit('update:modelValue', Number(($event.target as HTMLInputElement).value))" />
+    <div class="config-range-controls">
+      <input type="range" :min="rangeField.min" :max="rangeField.max" step="1" :value="modelValue" @input="emit('update:modelValue', Number(($event.target as HTMLInputElement).value))" />
+      <input type="number" :min="rangeField.min" :max="rangeField.max" step="1" :value="modelValue" @input="emit('update:modelValue', Number(($event.target as HTMLInputElement).value))" />
+    </div>
     <small>{{ rangeField.hint }} ({{ rangeField.min }}–{{ rangeField.max }}{{ rangeField.unit }})</small>
   </label>
 

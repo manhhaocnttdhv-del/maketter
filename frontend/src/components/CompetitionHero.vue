@@ -70,6 +70,7 @@ const heroShadeStyle = computed(() => ({
 
 const heroTitleArtworkStyle = computed(() => ({
   width: `min(100%, ${props.site.hero.titleArtworkWidth}px)`,
+  maxHeight: 'none',
   transform: `translate(${props.site.hero.titleArtworkOffsetX}px, ${props.site.hero.titleArtworkOffsetY}px)`,
 }))
 
