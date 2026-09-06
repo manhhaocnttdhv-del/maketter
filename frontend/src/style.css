@@ -3538,13 +3538,14 @@ a {
 }
 
 .competition-sections>section.configurable-section:not(.event-footer) {
-  padding-top: var(--section-padding-top, 52px) !important;
-  padding-bottom: var(--section-padding-bottom, 52px) !important;
+  min-height: 0 !important;
+  padding-top: min(var(--section-padding-top, 34px), 34px) !important;
+  padding-bottom: min(var(--section-padding-bottom, 34px), 34px) !important;
 }
 
 .competition-sections>.metrics-section.configurable-section {
-  padding-top: var(--section-padding-top, 38px) !important;
-  padding-bottom: var(--section-padding-bottom, 42px) !important;
+  padding-top: min(var(--section-padding-top, 30px), 30px) !important;
+  padding-bottom: min(var(--section-padding-bottom, 34px), 34px) !important;
 }
 
 .competition-sections>.event-footer.configurable-section {
