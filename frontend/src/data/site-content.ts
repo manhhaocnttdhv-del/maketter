@@ -483,6 +483,11 @@ const normalizePartnerGroup = (group: PartnerGroup, fallbackTitle: string): Part
 
 const officialTimelineDates = ['2/9 – 5/9', '27/9 – 2/10', '9/10 – 14/10', '5/11']
 
+const normalizeButtonHref = (value: unknown): string => {
+  const href = String(value ?? '').trim()
+  return href === '#' || href === '#register' ? '' : href
+}
+
 export const normalizeSiteContent = (value: SiteContent): SiteContent => {
   const legacy = value as Partial<SiteContent>
   const legacySettings = value.settings as Partial<SiteSettings>
@@ -547,6 +552,8 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     hero: {
       ...value.hero,
       tagline: String(value.hero?.tagline ?? '').trim().toUpperCase() === 'ROUND TO UNBOUND' ? '' : (value.hero?.tagline || ''),
+      ctaLabel: String(value.hero?.ctaLabel ?? 'ĐĂNG KÝ NGAY'),
+      ctaHref: normalizeButtonHref(value.hero?.ctaHref),
     },
     intro: {
       ...value.intro,
@@ -652,18 +659,29 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
           ],
         }
       : value.benefits,
-    activities: (value.activities.cards.length < 4
-      ? {
-          ...value.activities,
-          kicker: '',
-          cards: [
-            { title: 'WEBINAR', date: '28/08', description: 'Hoạt động chia sẻ kiến thức Marketing chuyên sâu, tạo cơ hội kết nối người tham gia với các diễn giả và góp phần thu hút sự quan tâm của các thí sinh tiềm năng.', ctaLabel: 'RECAP HOẠT ĐỘNG', ctaHref: value.activities.cards[0]?.ctaHref || '#' },
-            { title: 'INFORMATION DAY', date: '18/09', description: 'Cung cấp thông tin toàn diện về cuộc thi, đồng thời mang đến những chia sẻ và lời khuyên từ các chuyên gia Marketing, giúp thí sinh chuẩn bị tốt cho Vòng 1.', ctaLabel: 'ĐĂNG KÝ NGAY', ctaHref: value.activities.cards[1]?.ctaHref || '#register' },
-            { title: 'TRAINING DAY 1', date: '28/09', description: 'Các đội thi được trau dồi thêm kiến thức và kỹ năng cần thiết cho Vòng 1.', ctaLabel: 'TÌM HIỂU THÊM', ctaHref: '#' },
-            { title: 'TRAINING DAY 2', date: '10/10', description: 'TOP 27 đội thi vượt qua Vòng 1 được huấn luyện kỹ năng chuyên sâu, chuẩn bị hành trang cho Vòng 2.', ctaLabel: 'TÌM HIỂU THÊM', ctaHref: '#' },
-          ],
-        }
-      : value.activities),
+    activities: (() => {
+      const activities = value.activities.cards.length < 4
+        ? {
+            ...value.activities,
+            kicker: '',
+            cards: [
+              { title: 'WEBINAR', date: '28/08', description: 'Hoạt động chia sẻ kiến thức Marketing chuyên sâu, tạo cơ hội kết nối người tham gia với các diễn giả và góp phần thu hút sự quan tâm của các thí sinh tiềm năng.', ctaLabel: 'RECAP HOẠT ĐỘNG', ctaHref: normalizeButtonHref(value.activities.cards[0]?.ctaHref) },
+              { title: 'INFORMATION DAY', date: '18/09', description: 'Cung cấp thông tin toàn diện về cuộc thi, đồng thời mang đến những chia sẻ và lời khuyên từ các chuyên gia Marketing, giúp thí sinh chuẩn bị tốt cho Vòng 1.', ctaLabel: 'ĐĂNG KÝ NGAY', ctaHref: normalizeButtonHref(value.activities.cards[1]?.ctaHref) },
+              { title: 'TRAINING DAY 1', date: '28/09', description: 'Các đội thi được trau dồi thêm kiến thức và kỹ năng cần thiết cho Vòng 1.', ctaLabel: 'TÌM HIỂU THÊM', ctaHref: '' },
+              { title: 'TRAINING DAY 2', date: '10/10', description: 'TOP 27 đội thi vượt qua Vòng 1 được huấn luyện kỹ năng chuyên sâu, chuẩn bị hành trang cho Vòng 2.', ctaLabel: 'TÌM HIỂU THÊM', ctaHref: '' },
+            ],
+          }
+        : value.activities
+
+      return {
+        ...activities,
+        cards: activities.cards.map((card) => ({
+          ...card,
+          ctaLabel: String(card.ctaLabel ?? 'TÌM HIỂU THÊM'),
+          ctaHref: normalizeButtonHref(card.ctaHref),
+        })),
+      }
+    })(),
     faq: (value.faq.length < 5 || value.faq.some((item) => item.question === 'BTC có hỗ trợ thí sinh ghép đội không?' && String(item.answer ?? '').startsWith('Có.'))
       ? [
           { question: 'Thí sinh đăng ký tham gia cuộc thi có cần phải đóng lệ phí không?', answer: 'Không. Thí sinh không cần đóng bất kỳ khoản lệ phí nào khi đăng ký tham gia cuộc thi.' },

@@ -32,10 +32,6 @@ const slideImageStyle = (slide: IntroSlide) => ({
   objectPosition: slide.position ?? 'center',
 })
 
-const aboutImageStyle = computed(() => ({
-  backgroundImage: `url("${props.site.assets.aboutImage}")`,
-}))
-
 const styleFor = (key: SectionKey, fallbackImage = '') => sectionStyle(props.site, key, fallbackImage)
 const classFor = (key: SectionKey) => sectionClass(props.site, key)
 const isEnabled = (key: SectionKey) => props.site.settings.sections[key].enabled
@@ -313,17 +309,13 @@ onBeforeUnmount(() => {
             </div>
           </div>
           <div class="col-lg-6 reveal slide-right">
-            <div id="organizerCarousel" class="carousel slide carousel-fade section-carousel" data-bs-ride="carousel" data-bs-interval="3800" @mouseenter="stopOrgAutoplay" @mouseleave="startOrgAutoplay">
+            <div id="organizerCarousel" class="carousel slide carousel-fade section-carousel" style="height: auto; overflow: visible; border: 0; border-radius: 0; box-shadow: none;" data-bs-ride="carousel" data-bs-interval="3800" @mouseenter="stopOrgAutoplay" @mouseleave="startOrgAutoplay">
               <div class="carousel-indicators">
                 <button v-for="(_, index) in site.assets.organizerSlides" :key="index" type="button" data-bs-target="#organizerCarousel" :data-bs-slide-to="index" :class="{ active: index === 0 }" :aria-label="`Slide ${index + 1}`"></button>
               </div>
-              <div class="carousel-inner">
-                <div v-for="(slide, index) in site.assets.organizerSlides" :key="`${slide.image}-${index}`" class="carousel-item" :class="{ active: index === 0 }">
-                  <div class="section-image section-image--organizer">
-                    <img class="section-image--organizer__media" :src="slide.image" :alt="slide.label || site.intro.subtitle || 'Ban Đối Ngoại - Hội Sinh Viên - NEU'" :style="slideImageStyle(slide)" />
-                    <div class="image-grid"></div>
-                    <span v-if="slide.label">{{ slide.label }}</span>
-                  </div>
+              <div class="carousel-inner" style="height: auto; overflow: visible; border-radius: 0;">
+                <div v-for="(slide, index) in site.assets.organizerSlides" :key="`${slide.image}-${index}`" class="carousel-item" style="height: auto; overflow: visible; border-radius: 0;" :class="{ active: index === 0 }">
+                  <img class="section-image--organizer__media" :src="slide.image" :alt="slide.label || site.intro.subtitle || 'Ban Đối Ngoại - Hội Sinh Viên - NEU'" style="position: static; width: 100%; height: auto; max-width: 100%; min-height: 0; display: block; object-fit: contain; border-radius: 0; clip-path: none;" :style="slideImageStyle(slide)" />
                 </div>
               </div>
               <button class="carousel-control-prev" type="button" data-bs-target="#organizerCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span><span class="visually-hidden">Trước</span></button>
@@ -344,7 +336,15 @@ onBeforeUnmount(() => {
           <p v-html="site.about.description"></p>
         </div>
         <div class="row mt-2 mt-lg-4 g-4 align-items-center" :class="{ 'flex-md-row-reverse': isReverse('about') }">
-          <div class="col-md-6 reveal slide-left"><div class="section-image section-image--vision" :style="aboutImageStyle"><div class="image-grid"></div></div></div>
+          <div class="col-md-6 reveal slide-left">
+            <div class="section-image section-image--vision">
+              <img
+                class="section-image--vision__media"
+                :src="site.assets.aboutImage"
+                :alt="site.about.title || 'Tầm nhìn thương hiệu'"
+              />
+            </div>
+          </div>
           <div class="col-md-6 reveal slide-right"><p v-for="(paragraph, index) in site.about.paragraphsHtml" :key="index" v-html="paragraph"></p></div>
         </div>
         <div v-if="site.assets.aboutGallery?.length" class="about-years reveal">
@@ -525,7 +525,7 @@ onBeforeUnmount(() => {
       <div class="section-transition" aria-hidden="true"></div>
       <div class="container px-4 px-lg-5 position-relative">
         <div class="text-center section-heading reveal"><h2>{{ site.activities.title }}</h2></div>
-        <div class="row g-3 mt-1" :class="{ 'configured-card-grid': hasColumns('activities') }" :style="cardGridStyle('activities')"><div v-for="(activity, index) in site.activities.cards" :key="`${activity.title}-${index}`" class="reveal" :class="hasColumns('activities') ? '' : [index % 2 === 0 ? 'slide-left' : 'slide-right']"><article class="activity-card h-100"><h3>{{ activity.title }} <em>{{ activity.date }}</em></h3><p v-html="activity.description"></p><a :class="{ 'activity-cta--bubble': index < 2 }" :href="activity.ctaHref">{{ activity.ctaLabel }} <ChevronRight :size="16" /></a></article></div></div>
+        <div class="row g-3 mt-1" :class="{ 'configured-card-grid': hasColumns('activities') }" :style="cardGridStyle('activities')"><div v-for="(activity, index) in site.activities.cards" :key="`${activity.title}-${index}`" class="reveal" :class="hasColumns('activities') ? '' : [index % 2 === 0 ? 'slide-left' : 'slide-right']"><article class="activity-card h-100"><h3>{{ activity.title }} <em>{{ activity.date }}</em></h3><p v-html="activity.description"></p><a :class="{ 'activity-cta--bubble': index < 2 }" :href="activity.ctaHref || undefined">{{ activity.ctaLabel }} <ChevronRight :size="16" /></a></article></div></div>
       </div>
     </section>
 
@@ -557,7 +557,6 @@ onBeforeUnmount(() => {
             :class="{
               'partner-support-group--compact': group.logos.length <= 2,
               'partner-support-group--single': group.logos.length === 1,
-              'partner-support-group--gold': String(group.title || '').trim().toLocaleUpperCase('vi-VN') === 'NHÀ TÀI TRỢ VÀNG',
               'partner-support-group--bronze': String(group.title || '').trim().toLocaleUpperCase('vi-VN') === 'NHÀ TÀI TRỢ ĐỒNG',
             }"
           >

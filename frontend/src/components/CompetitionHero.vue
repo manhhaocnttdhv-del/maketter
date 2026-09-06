@@ -136,7 +136,7 @@ onBeforeUnmount(() => {
               </div>
             </div>
 
-            <a id="content" class="register-button" :href="site.hero.ctaHref">{{ site.hero.ctaLabel }}</a>
+            <a id="content" class="register-button" :href="site.hero.ctaHref || undefined">{{ site.hero.ctaLabel }}</a>
           </div>
         </div>
       </section>

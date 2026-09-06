@@ -56,7 +56,7 @@ const labels: Record<string, string> = {
   tagline: 'Thông điệp ngắn',
   deadline: 'Thời hạn countdown (ISO)',
   ctaLabel: 'Chữ trên nút',
-  ctaHref: 'Link của nút',
+  ctaHref: 'URL của nút',
   paragraphsHtml: 'Các đoạn nội dung (hỗ trợ HTML)',
   kicker: 'Dòng dẫn nhỏ',
   imageLabel: 'Chữ trên ảnh',
@@ -102,8 +102,10 @@ const labels: Record<string, string> = {
 const label = computed(() => labels[props.name] ?? props.name.replace(/([A-Z])/g, ' $1').replace(/^./, (letter) => letter.toUpperCase()))
 const isArray = computed(() => Array.isArray(props.modelValue))
 const isObject = computed(() => typeof props.modelValue === 'object' && props.modelValue !== null && !isArray.value)
+const isLink = computed(() => typeof props.modelValue === 'string' && /(?:href|url|link)$/i.test(props.name))
 const isLongText = computed(() => {
   if (typeof props.modelValue !== 'string') return false
+  if (isLink.value) return false
   return props.modelValue.length > 70 || /(description|paragraph|answer|quote|customCss|items)/i.test(props.name)
 })
 const isImage = computed(() => {
@@ -419,7 +421,9 @@ const handleFormattingShortcut = (event: KeyboardEvent) => {
   <label v-else class="config-field">
     <span>{{ label }}</span>
     <textarea v-if="isLongText" :value="String(modelValue ?? '')" rows="4" @keydown="handleFormattingShortcut" @input="emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"></textarea>
+    <input v-else-if="isLink" type="text" inputmode="url" :value="String(modelValue ?? '')" placeholder="https://..." @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
     <input v-else type="text" :value="String(modelValue ?? '')" @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
     <small v-if="isLongText">Bôi đen chữ: Ctrl+B để in đậm + tự đổi màu cyan · Ctrl+Shift+C để chỉ đổi màu.</small>
+    <small v-else-if="isLink">Dán đường link đầy đủ bắt đầu bằng https:// để nút mở đúng trang.</small>
   </label>
 </template>
