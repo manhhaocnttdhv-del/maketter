@@ -71,9 +71,6 @@ export interface PartnerGroup {
 
 export interface Testimonial {
   image: string
-  name: string
-  role: string
-  quote: string
 }
 
 export type SectionKey =
@@ -190,6 +187,9 @@ export interface SiteContent {
     deadline: string
     ctaLabel: string
     ctaHref: string
+    titleArtworkWidth: number
+    titleArtworkOffsetX: number
+    titleArtworkOffsetY: number
   }
   intro: {
     title?: string
@@ -406,18 +406,8 @@ const normalizeSettings = (settings?: Partial<SiteSettings>): SiteSettings => {
 const defaultVoices: SiteContent['voices'] = {
   title: 'TẦM NHÌN THƯƠNG HIỆU 2025\nVỚI GIÁM KHẢO, THÍ SINH',
   slides: [
-    {
-      image: '/assets/tnth-canva/07-mahsy0l1pt4-MAHSy0l1pT4.jpg',
-      name: 'CHỊ NGUYỄN THỊ A',
-      role: 'Giám khảo',
-      quote: 'Tầm Nhìn Thương Hiệu là một hành trình để người trẻ thử sức, kết nối và biến góc nhìn thương hiệu thành giải pháp thực tế.',
-    },
-    {
-      image: '/assets/tnth-canva/08-mahsy0vtyai-MAHSy0vtyAI.jpg',
-      name: 'BẠN NGUYỄN MINH AN',
-      role: 'Thí sinh mùa 2025',
-      quote: 'Cuộc thi đã giúp mình nhìn một bài toán thương hiệu bằng tư duy sâu hơn, đồng thời gặp gỡ những người đồng đội đầy cảm hứng.',
-    },
+    { image: '/assets/tnth-canva/07-mahsy0l1pt4-MAHSy0l1pT4.jpg' },
+    { image: '/assets/tnth-canva/08-mahsy0vtyai-MAHSy0vtyAI.jpg' },
   ],
 }
 
@@ -554,8 +544,7 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       ...(legacy.voices ?? {}),
       title: (legacy.voices?.title || defaultVoices.title).replace('2026', '2025'),
       slides: (legacy.voices?.slides?.length ? legacy.voices.slides : defaultVoices.slides).map((s) => ({
-        ...s,
-        role: String(s.role || '').replace('2026', '2025'),
+        image: String(s.image || ''),
       })),
     },
     hero: {
@@ -563,6 +552,9 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       tagline: String(value.hero?.tagline ?? '').trim().toUpperCase() === 'ROUND TO UNBOUND' ? '' : (value.hero?.tagline || ''),
       ctaLabel: String(value.hero?.ctaLabel ?? 'ĐĂNG KÝ NGAY'),
       ctaHref: normalizeButtonHref(value.hero?.ctaHref),
+      titleArtworkWidth: Math.min(800, Math.max(120, Number(value.hero?.titleArtworkWidth) || 520)),
+      titleArtworkOffsetX: Math.min(300, Math.max(-300, Number(value.hero?.titleArtworkOffsetX) || 0)),
+      titleArtworkOffsetY: Math.min(300, Math.max(-300, Number(value.hero?.titleArtworkOffsetY) || 0)),
     },
     intro: {
       ...value.intro,

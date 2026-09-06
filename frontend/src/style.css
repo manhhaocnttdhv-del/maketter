@@ -783,8 +783,8 @@ a {
 
 .intro-section .section-carousel,
 .intro-section .section-carousel .carousel-inner {
-  overflow: visible !important;
-  border-radius: 0 !important;
+  overflow: hidden;
+  border-radius: clamp(16px, 2vw, 24px);
   clip-path: none !important;
   -webkit-mask-image: none !important;
   mask-image: none !important;
@@ -793,6 +793,11 @@ a {
 .intro-section .section-carousel {
   border: 0 !important;
   box-shadow: none;
+}
+
+.intro-section .section-carousel .carousel-item {
+  overflow: hidden;
+  border-radius: inherit;
 }
 
 .intro-section .section-image--organizer__media {
@@ -805,7 +810,7 @@ a {
   display: block;
   object-fit: contain !important;
   object-position: center center !important;
-  border-radius: 0 !important;
+  border-radius: inherit;
   clip-path: none !important;
 }
 
@@ -831,9 +836,9 @@ a {
   min-height: 0;
   max-height: none;
   aspect-ratio: auto;
-  overflow: visible;
+  overflow: hidden;
   border: 0;
-  border-radius: 0;
+  border-radius: clamp(16px, 2vw, 24px);
   background: none;
   box-shadow: none;
 }
@@ -847,7 +852,7 @@ a {
   display: block;
   object-fit: contain;
   object-position: center;
-  border-radius: 0;
+  border-radius: inherit;
   clip-path: none;
 }
 
@@ -5249,7 +5254,7 @@ a {
 }
 
 .voices-carousel {
-  max-width: 940px;
+  max-width: 720px;
   width: 100%;
   margin: 0 auto;
   padding: 0 66px 27px;
@@ -5258,9 +5263,29 @@ a {
 
 .voices-carousel .carousel-inner {
   overflow: hidden;
-  border-radius: 42px;
+  border-radius: clamp(20px, 3vw, 36px);
   position: relative;
   width: 100%;
+  aspect-ratio: 1;
+}
+
+.voice-slide-image {
+  width: 100%;
+  aspect-ratio: 1;
+  margin: 0;
+  overflow: hidden;
+  background: rgba(31, 64, 132, .72);
+  border: 2px solid rgba(244, 250, 255, .9);
+  border-radius: inherit;
+  box-sizing: border-box;
+}
+
+.voice-slide-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
 }
 
 .voices-carousel.carousel-fade .carousel-item {

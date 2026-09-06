@@ -316,13 +316,13 @@ onBeforeUnmount(() => {
             </div>
           </div>
           <div class="col-lg-6 reveal slide-right">
-            <div id="organizerCarousel" class="carousel slide carousel-fade section-carousel" style="height: auto; overflow: visible; border: 0; border-radius: 0; box-shadow: none;" data-bs-ride="carousel" data-bs-interval="3800" @mouseenter="stopOrgAutoplay" @mouseleave="startOrgAutoplay">
+            <div id="organizerCarousel" class="carousel slide carousel-fade section-carousel" data-bs-ride="carousel" data-bs-interval="3800" @mouseenter="stopOrgAutoplay" @mouseleave="startOrgAutoplay">
               <div class="carousel-indicators">
                 <button v-for="(_, index) in site.assets.organizerSlides" :key="index" type="button" data-bs-target="#organizerCarousel" :data-bs-slide-to="index" :class="{ active: index === 0 }" :aria-label="`Slide ${index + 1}`"></button>
               </div>
-              <div class="carousel-inner" style="height: auto; overflow: visible; border-radius: 0;">
-                <div v-for="(slide, index) in site.assets.organizerSlides" :key="`${slide.image}-${index}`" class="carousel-item" style="height: auto; overflow: visible; border-radius: 0;" :class="{ active: index === 0 }">
-                  <img class="section-image--organizer__media" :src="slide.image" :alt="slide.label || site.intro.subtitle || 'Ban Đối Ngoại - Hội Sinh Viên - NEU'" style="position: static; width: 100%; height: auto; max-width: 100%; min-height: 0; display: block; object-fit: contain; border-radius: 0; clip-path: none;" :style="slideImageStyle(slide)" />
+              <div class="carousel-inner">
+                <div v-for="(slide, index) in site.assets.organizerSlides" :key="`${slide.image}-${index}`" class="carousel-item" :class="{ active: index === 0 }">
+                  <img class="section-image--organizer__media" :src="slide.image" :alt="slide.label || site.intro.subtitle || 'Ban Đối Ngoại - Hội Sinh Viên - NEU'" :style="slideImageStyle(slide)" />
                 </div>
               </div>
               <button class="carousel-control-prev" type="button" data-bs-target="#organizerCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span><span class="visually-hidden">Trước</span></button>
@@ -399,11 +399,10 @@ onBeforeUnmount(() => {
         <div class="text-center voices-heading reveal"><h2>{{ site.voices.title }}</h2></div>
         <div id="voicesCarousel" class="carousel slide carousel-fade voices-carousel reveal" data-bs-ride="carousel" data-bs-interval="2200" @mouseenter="stopVoicesAutoplay" @mouseleave="startVoicesAutoplay">
           <div class="carousel-inner">
-            <div v-for="(voice, index) in site.voices.slides" :key="`${voice.name}-${index}`" class="carousel-item" :class="{ active: index === 0 }">
-              <article class="voice-card">
-                <div class="voice-card__portrait"><img v-if="voice.image" :src="voice.image" :alt="voice.name" /></div>
-                <div class="voice-card__copy"><h3>{{ voice.name }}</h3><p>{{ voice.role }}</p><blockquote>“<span v-html="voice.quote"></span>”</blockquote></div>
-              </article>
+            <div v-for="(voice, index) in site.voices.slides" :key="`${voice.image}-${index}`" class="carousel-item" :class="{ active: index === 0 }">
+              <figure class="voice-slide-image">
+                <img v-if="voice.image" :src="voice.image" :alt="`Ảnh giám khảo, thí sinh ${index + 1}`" />
+              </figure>
             </div>
           </div>
           <button class="carousel-control-prev" type="button" data-bs-target="#voicesCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span><span class="visually-hidden">Trước</span></button>

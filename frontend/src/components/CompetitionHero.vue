@@ -68,6 +68,11 @@ const heroShadeStyle = computed(() => ({
   opacity: heroSettings.value.overlayOpacity,
 }))
 
+const heroTitleArtworkStyle = computed(() => ({
+  width: `min(100%, ${props.site.hero.titleArtworkWidth}px)`,
+  transform: `translate(${props.site.hero.titleArtworkOffsetX}px, ${props.site.hero.titleArtworkOffsetY}px)`,
+}))
+
 const headerStyle = computed(() => ({
   height: `${headerSettings.value.height}px`,
   minHeight: `${headerSettings.value.height}px`,
@@ -121,7 +126,7 @@ onBeforeUnmount(() => {
 
         <div class="hero-content container">
           <div class="hero-copy">
-            <img v-if="site.assets.heroTitleArtwork" class="hero-title-artwork" :src="site.assets.heroTitleArtwork" alt="Tầm Nhìn Thương Hiệu 2026" />
+            <img v-if="site.assets.heroTitleArtwork" class="hero-title-artwork" :src="site.assets.heroTitleArtwork" alt="Tầm Nhìn Thương Hiệu 2026" :style="heroTitleArtworkStyle" />
             <h1 v-else>
               <span>{{ site.hero.titleLineOne }}</span>
               <span>{{ site.hero.titleLineTwo }}</span>

@@ -36,6 +36,9 @@ const labels: Record<string, string> = {
   headerLogo: 'Logo header',
   heroBackground: 'Ảnh nền hero',
   heroTitleArtwork: 'Ảnh title hero (xóa để dùng text động)',
+  titleArtworkWidth: 'Kích cỡ chữ TNTH 2026',
+  titleArtworkOffsetX: 'Vị trí ngang chữ TNTH 2026',
+  titleArtworkOffsetY: 'Vị trí dọc chữ TNTH 2026',
   heroOrganizations: 'Logo các đơn vị',
   organizerSlides: 'Ảnh slide giới thiệu',
   aboutImage: 'Ảnh giới thiệu',
@@ -124,6 +127,9 @@ const isImage = computed(() => {
 const draggedLogoIndex = ref<number | null>(null)
 
 const rangeFields: Record<string, { min: number; max: number; unit: string; hint: string }> = {
+  titleArtworkWidth: { min: 120, max: 800, unit: 'px', hint: 'Kéo để thu/phóng cụm chữ Tầm Nhìn Thương Hiệu 2026.' },
+  titleArtworkOffsetX: { min: -300, max: 300, unit: 'px', hint: 'Số âm dịch sang trái, số dương dịch sang phải.' },
+  titleArtworkOffsetY: { min: -300, max: 300, unit: 'px', hint: 'Số âm dịch lên trên, số dương dịch xuống dưới.' },
   descriptionFontSize: { min: 10, max: 40, unit: 'px', hint: 'Cỡ chữ riêng của phần mô tả.' },
   paragraphOneFontSize: { min: 10, max: 40, unit: 'px', hint: 'Cỡ chữ riêng của nội dung 1.' },
   paragraphTwoFontSize: { min: 10, max: 40, unit: 'px', hint: 'Cỡ chữ riêng của nội dung 2.' },
