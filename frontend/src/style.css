@@ -5296,8 +5296,8 @@ a {
 
 .voice-slide-image {
   position: relative;
-  width: 100%;
-  max-width: 720px;
+  width: 500px;
+  max-width: 100%;
   aspect-ratio: 1;
   margin: 0 auto;
   overflow: hidden;
@@ -5423,6 +5423,14 @@ a {
 
 .voices-carousel .carousel-control-next {
   right: 0;
+}
+
+.voices-carousel:has(.carousel-item.active .voice-slide-image) .carousel-control-prev {
+  left: max(0px, calc(50% - 320px));
+}
+
+.voices-carousel:has(.carousel-item.active .voice-slide-image) .carousel-control-next {
+  right: max(0px, calc(50% - 320px));
 }
 
 .voices-carousel .carousel-control-prev-icon,
