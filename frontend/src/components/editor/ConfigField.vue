@@ -196,6 +196,13 @@ const addArrayValue = () => {
   emit('update:modelValue', [...current, emptyFromTemplate(template)])
 }
 
+const addVoiceSlide = (withText: boolean) => {
+  const slide = withText
+    ? { image: '', name: '', role: '', quote: '' }
+    : { image: '' }
+  emit('update:modelValue', [...(props.modelValue as unknown[]), slide])
+}
+
 const handleMultipleImageUpload = async (event: Event) => {
   const input = event.target as HTMLInputElement
   const files = Array.from(input.files ?? [])
@@ -375,6 +382,28 @@ const handleFormattingShortcut = (event: KeyboardEvent) => {
         </div>
       </article>
     </div>
+  </div>
+
+  <div v-else-if="isArray && name === 'slides'" class="config-array">
+    <div class="config-array__heading">
+      <div><strong>{{ label }}</strong><span>{{ (modelValue as unknown[]).length }} mục</span></div>
+      <div class="config-array__add-options">
+        <button type="button" @click="addVoiceSlide(true)"><Plus :size="14" /> Ảnh + text</button>
+        <button type="button" @click="addVoiceSlide(false)"><ImagePlus :size="14" /> Chỉ ảnh</button>
+      </div>
+    </div>
+    <div v-if="!(modelValue as unknown[]).length" class="config-array__empty">Chưa có slide.</div>
+    <article v-for="(item, index) in (modelValue as unknown[])" :key="index" class="config-array-item">
+      <div class="config-array-item__toolbar">
+        <span>Mục {{ index + 1 }} · {{ typeof item === 'object' && item !== null && ('name' in item || 'role' in item || 'quote' in item) ? 'Ảnh + text' : 'Chỉ ảnh' }}</span>
+        <div>
+          <button type="button" :disabled="index === 0" title="Đưa lên" @click="moveArrayValue(index, -1)"><ArrowUp :size="13" /></button>
+          <button type="button" :disabled="index === (modelValue as unknown[]).length - 1" title="Đưa xuống" @click="moveArrayValue(index, 1)"><ArrowDown :size="13" /></button>
+          <button type="button" class="is-danger" title="Xóa" @click="removeArrayValue(index)"><Trash2 :size="13" /></button>
+        </div>
+      </div>
+      <ConfigField :model-value="item" :name="''" :depth="depth + 1" @update:model-value="updateArrayValue(index, $event)" @upload-error="emit('upload-error', $event)" />
+    </article>
   </div>
 
   <div v-else-if="isArray" class="config-array">

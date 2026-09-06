@@ -71,6 +71,9 @@ export interface PartnerGroup {
 
 export interface Testimonial {
   image: string
+  name?: string
+  role?: string
+  quote?: string
 }
 
 export type SectionKey =
@@ -406,8 +409,30 @@ const normalizeSettings = (settings?: Partial<SiteSettings>): SiteSettings => {
 const defaultVoices: SiteContent['voices'] = {
   title: 'TẦM NHÌN THƯƠNG HIỆU 2025\nVỚI GIÁM KHẢO, THÍ SINH',
   slides: [
-    { image: '/assets/tnth-canva/07-mahsy0l1pt4-MAHSy0l1pT4.jpg' },
-    { image: '/assets/tnth-canva/08-mahsy0vtyai-MAHSy0vtyAI.jpg' },
+    {
+      image: '/assets/tnth-canva/07-mahsy0l1pt4-MAHSy0l1pT4.jpg',
+      name: 'CHỊ NGUYỄN THỊ A',
+      role: 'Quán quân Tầm Nhìn Thương Hiệu 2025',
+      quote: 'Nếu được nhắn nhủ một điều tới các đội thi đầy nhiệt huyết của Tầm Nhìn Thương Hiệu 2026, mình muốn nói rằng: Các bạn hãy cứ dám thử, dám thể hiện và hãy tận hưởng hành trình này, vì biết đâu đích đến có lẽ không cần là một giải thưởng, mà chính là một phần thưởng lớn hơn - một phiên bản tốt hơn của bản thân.',
+    },
+    {
+      image: '/assets/tnth-canva/08-mahsy0vtyai-MAHSy0vtyAI.jpg',
+      name: 'BẠN NGUYỄN MINH AN',
+      role: 'Thí sinh mùa 2025',
+      quote: 'Cuộc thi đã giúp mình nhìn một bài toán thương hiệu bằng tư duy sâu hơn, đồng thời gặp gỡ những người đồng đội đầy cảm hứng.',
+    },
+    {
+      image: '/assets/tnth-canva/07-mahsy0l1pt4-MAHSy0l1pT4.jpg',
+      name: '',
+      role: '',
+      quote: '',
+    },
+    {
+      image: '/assets/tnth-canva/08-mahsy0vtyai-MAHSy0vtyAI.jpg',
+      name: '',
+      role: '',
+      quote: '',
+    },
   ],
 }
 
@@ -480,8 +505,6 @@ const normalizePartnerGroup = (group: PartnerGroup, fallbackTitle: string): Part
     : [{ image: '', name: 'Logo' }],
 })
 
-const officialTimelineDates = ['2/9 – 5/9', '27/9 – 2/10', '9/10 – 14/10', '5/11']
-
 const normalizeButtonHref = (value: unknown): string => {
   const href = String(value ?? '').trim()
   return href === '#' || href === '#register' ? '' : href
@@ -543,9 +566,13 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       ...defaultVoices,
       ...(legacy.voices ?? {}),
       title: (legacy.voices?.title || defaultVoices.title).replace('2026', '2025'),
-      slides: (legacy.voices?.slides?.length ? legacy.voices.slides : defaultVoices.slides).map((s) => ({
-        image: String(s.image || ''),
-      })),
+      slides: (legacy.voices?.slides?.length ? legacy.voices.slides : defaultVoices.slides).map((s) => {
+        const image = String(s.image || '')
+        const name = String(s.name || '')
+        const role = String(s.role || '').replace('2026', '2025')
+        const quote = String(s.quote || '')
+        return name || role || quote ? { image, name, role, quote } : { image }
+      }),
     },
     hero: {
       ...value.hero,
@@ -622,10 +649,10 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
             { title: 'Vòng 2: Brand Campaign', date: '09/10 – 14/10', description: 'Top 27 xuất sắc nhất sẽ có cơ hội bước vào Vòng 3 và tiếp tục hoàn thiện đề án kế hoạch truyền thông tích hợp của Doanh nghiệp.' },
             { title: 'Vòng Chung kết: Grand Finale', date: '05/11', description: 'VIRAL CLIP\nCác đội hoàn thiện 01 Viral Clip với nội dung bám sát đề án và chiến dịch truyền thông của đội. BTC sẽ đăng tải sản phẩm lên Fanpage và Website chính thức của cuộc thi để thực hiện phần bình chọn công khai.\n\nĐÊM CHUNG KẾT\nPhần 1: Top 4 đội thi thuyết trình IMC Plan và trả lời câu hỏi phản biện từ Ban Giám khảo.\nPhần 2: Các đội nhận 01 minicase từ BTC trong 24 giờ trước Đêm Chung kết; tại sân khấu, Top 4 trình bày kế hoạch giải quyết tình huống và tham gia phản biện trực tiếp.' },
           ]
-        : value.timeline.rounds).map((round, index) => ({
+        : value.timeline.rounds).map((round) => ({
           ...round,
           title: String(round.title ?? ''),
-          date: String(officialTimelineDates[index] ?? round.date ?? ''),
+          date: String(round.date ?? ''),
           description: String(round.description ?? ''),
         })),
     },

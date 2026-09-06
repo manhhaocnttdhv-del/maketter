@@ -194,6 +194,9 @@ const timelineStageParts = (title = '') => {
   return [label.startsWith('Chung kết') ? 'Vòng Chung kết' : label, safeTitle.slice(separator + 1).trim()]
 }
 
+const voiceHasText = (voice: SiteContent['voices']['slides'][number]) =>
+  Boolean(voice.name?.trim() || voice.role?.trim() || voice.quote?.trim())
+
 const startVoicesAutoplay = () => {
   if (voicesAutoplayId) clearInterval(voicesAutoplayId)
   voicesAutoplayId = window.setInterval(() => {
@@ -400,7 +403,15 @@ onBeforeUnmount(() => {
         <div id="voicesCarousel" class="carousel slide carousel-fade voices-carousel reveal" data-bs-ride="carousel" data-bs-interval="2200" @mouseenter="stopVoicesAutoplay" @mouseleave="startVoicesAutoplay">
           <div class="carousel-inner">
             <div v-for="(voice, index) in site.voices.slides" :key="`${voice.image}-${index}`" class="carousel-item" :class="{ active: index === 0 }">
-              <figure class="voice-slide-image">
+              <article v-if="voiceHasText(voice)" class="voice-card">
+                <div class="voice-card__portrait"><img v-if="voice.image" :src="voice.image" :alt="voice.name || `Ảnh slide ${index + 1}`" /></div>
+                <div class="voice-card__copy">
+                  <h3 v-if="voice.name">{{ voice.name }}</h3>
+                  <p v-if="voice.role">{{ voice.role }}</p>
+                  <blockquote v-if="voice.quote">“<span v-html="voice.quote"></span>”</blockquote>
+                </div>
+              </article>
+              <figure v-else class="voice-slide-image">
                 <img v-if="voice.image" :src="voice.image" :alt="`Ảnh giám khảo, thí sinh ${index + 1}`" />
               </figure>
             </div>
