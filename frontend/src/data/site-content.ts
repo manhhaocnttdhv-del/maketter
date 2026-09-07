@@ -396,6 +396,12 @@ const normalizeSettings = (settings?: Partial<SiteSettings>): SiteSettings => {
     ? settings.sectionOrder.filter((key): key is SectionKey => contentSectionOrder.includes(key as SectionKey))
     : []
   const sectionOrder = [...new Set([...requestedOrder, ...contentSectionOrder])]
+  if (!requestedOrder.includes('partnerVoices')) {
+    const appendedPartnerVoicesIndex = sectionOrder.indexOf('partnerVoices')
+    if (appendedPartnerVoicesIndex >= 0) sectionOrder.splice(appendedPartnerVoicesIndex, 1)
+    const voicesIndex = sectionOrder.indexOf('voices')
+    sectionOrder.splice(voicesIndex >= 0 ? voicesIndex + 1 : 0, 0, 'partnerVoices')
+  }
   const faqIndex = sectionOrder.indexOf('faq')
   const partnersIndex = sectionOrder.indexOf('partners')
   if (partnersIndex > faqIndex) {
@@ -517,8 +523,7 @@ const normalizePartnerGroup = (group: PartnerGroup, fallbackTitle: string): Part
 })
 
 const normalizeButtonHref = (value: unknown): string => {
-  const href = String(value ?? '').trim()
-  return href === '#' || href === '#register' ? '' : href
+  return String(value ?? '').trim()
 }
 
 export const normalizeSiteContent = (value: SiteContent): SiteContent => {
@@ -540,9 +545,6 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       ])) as SiteSettings['sections'],
     }
   const normalizedSettings = normalizeSettings(settingsWithRefinedSpacing)
-  if (normalizedSettings.sections.hero.overlayOpacity === 0.15) {
-    normalizedSettings.sections.hero.overlayOpacity = 0.05
-  }
   return {
     ...value,
     meta: {
@@ -552,35 +554,27 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     assets: {
       ...value.assets,
       globalBackground: value.assets.globalBackground
-        || value.assets.activitiesBackground
-        || '/assets/tnth-canva/10-mahsd0narra-MAHSd0NArRA.png',
-      heroBackground: !value.assets.globalBackground && String(value.assets?.heroBackground ?? '').endsWith('10-mahsd0narra-MAHSd0NArRA.png')
-        ? '/assets/tnth-canva/01-mahscd5rwcc-MAHScd5RwCc.png'
-        : (value.assets?.heroBackground || ''),
-      heroOrganizations: String(value.assets?.heroOrganizations ?? '').endsWith('04-magucn8vs0s-MAGucN8vS0s.png')
-        ? '/assets/tnth-canva/04-organizations-transparent-v2.png'
-        : (value.assets?.heroOrganizations || ''),
-      statisticIcon: String(value.assets?.statisticIcon ?? '').endsWith('02-magto6-z-j8-MAGto6_z-j8.png')
-        ? '/assets/tnth-canva/03-mahsv-hibxi-MAHSv-hIBxI.png'
-        : (value.assets?.statisticIcon || ''),
-      compassOverlay: String(value.assets?.compassOverlay ?? '').endsWith('11-mahsv9hppfa-MAHSv9HpPfA.png')
-        ? '/assets/tnth-compass-blue-silver.png'
-        : (value.assets?.compassOverlay || ''),
-      heroTitleArtwork: value.assets?.heroTitleArtwork || '/assets/tnth-canva/06-mahstkk4kow-MAHStKK4Kow.png',
-      footerLogo: value.assets?.footerLogo || '/assets/tnth-canva/02-magto6-z-j8-MAGto6_z-j8.png',
-      footerBackground: value.assets?.footerBackground || '/assets/tnth-canva/10-mahsd0narra-MAHSd0NArRA.png',
-      aboutGallery: value.assets?.aboutGallery?.length
+        ?? value.assets.activitiesBackground
+        ?? '/assets/tnth-canva/10-mahsd0narra-MAHSd0NArRA.png',
+      heroBackground: value.assets?.heroBackground ?? '',
+      heroOrganizations: value.assets?.heroOrganizations ?? '',
+      statisticIcon: value.assets?.statisticIcon ?? '',
+      compassOverlay: value.assets?.compassOverlay ?? '',
+      heroTitleArtwork: value.assets?.heroTitleArtwork ?? '/assets/tnth-canva/06-mahstkk4kow-MAHStKK4Kow.png',
+      footerLogo: value.assets?.footerLogo ?? '/assets/tnth-canva/02-magto6-z-j8-MAGto6_z-j8.png',
+      footerBackground: value.assets?.footerBackground ?? '/assets/tnth-canva/10-mahsd0narra-MAHSd0NArRA.png',
+      aboutGallery: Array.isArray(value.assets?.aboutGallery)
         ? value.assets.aboutGallery
         : Array.from({ length: 6 }, (_, index) => `/assets/tnth-years/${String(index + 1).padStart(2, '0')}.jpg`),
     },
     voices: {
       ...defaultVoices,
       ...(legacy.voices ?? {}),
-      title: (legacy.voices?.title || defaultVoices.title).replace('2026', '2025'),
-      slides: (legacy.voices?.slides?.length ? legacy.voices.slides : defaultVoices.slides).map((s) => {
+      title: legacy.voices?.title ?? defaultVoices.title,
+      slides: (Array.isArray(legacy.voices?.slides) ? legacy.voices.slides : defaultVoices.slides).map((s) => {
         const image = String(s.image || '')
         const name = String(s.name || '')
-        const role = String(s.role || '').replace('2026', '2025')
+        const role = String(s.role || '')
         const quote = String(s.quote || '')
         return name || role || quote ? { image, name, role, quote } : { image }
       }),
@@ -588,11 +582,11 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     partnerVoices: {
       ...defaultPartnerVoices,
       ...(legacy.partnerVoices ?? {}),
-      slides: (legacy.partnerVoices?.slides?.length ? legacy.partnerVoices.slides : defaultPartnerVoices.slides).map((slide) => ({ ...slide })),
+      slides: (Array.isArray(legacy.partnerVoices?.slides) ? legacy.partnerVoices.slides : defaultPartnerVoices.slides).map((slide) => ({ ...slide })),
     },
     hero: {
       ...value.hero,
-      tagline: String(value.hero?.tagline ?? '').trim().toUpperCase() === 'ROUND TO UNBOUND' ? '' : (value.hero?.tagline || ''),
+      tagline: value.hero?.tagline ?? '',
       ctaLabel: String(value.hero?.ctaLabel ?? 'ĐĂNG KÝ NGAY'),
       ctaHref: normalizeButtonHref(value.hero?.ctaHref),
       titleArtworkWidth: Math.min(800, Math.max(120, Number(value.hero?.titleArtworkWidth) || 360)),
@@ -601,71 +595,50 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
     },
     intro: {
       ...value.intro,
-      title: value.intro?.title || 'BAN TỔ CHỨC',
-      subtitle: value.intro?.subtitle || 'BAN ĐỐI NGOẠI - HỘI SINH VIÊN - NEU',
-      paragraphsHtml: [
-        '<strong>Ban Đối Ngoại</strong> là đơn vị trực thuộc <strong>Hội Sinh viên Đại học Kinh tế Quốc Dân</strong> với vai trò tiêu biểu là phụ trách công tác Đối Ngoại cho các sự kiện của <strong>Hội Sinh viên - Đại học Kinh tế Quốc dân</strong>.',
-        'Trải qua <strong>20 năm</strong> hoạt động, <strong>Ban Đối Ngoại</strong> đã không ngừng khẳng định vị thế của mình với chuyên môn chính gồm Mời tài trợ, Truyền thông báo chí, góp phần tạo nên thành công cho các chương trình bên trong và ngoài khuôn khổ Đại học.',
-        'Với phong thái tự tin chuyên nghiệp, <strong>Ban Đối Ngoại</strong> đã kết nối hàng trăm doanh nghiệp, báo đài với cộng đồng sinh viên, tham gia tổ chức <strong>200+ sự kiện</strong> ... Fanpage của Ban Đối Ngoại đã thu hút được <strong>37000+ lượt theo dõi</strong> từ các bạn sinh viên và các doanh nghiệp, tổ chức, đối tác đồng hành.',
-      ],
-      ctaLabel: 'TÌM HIỂU THÊM',
-      ctaHref: 'https://www.facebook.com/bandoingoai.neu',
+      title: value.intro?.title ?? 'BAN TỔ CHỨC',
+      subtitle: value.intro?.subtitle ?? 'BAN ĐỐI NGOẠI - HỘI SINH VIÊN - NEU',
+      paragraphsHtml: Array.isArray(value.intro?.paragraphsHtml)
+        ? value.intro.paragraphsHtml
+        : [
+            '<strong>Ban Đối Ngoại</strong> là đơn vị trực thuộc <strong>Hội Sinh viên Đại học Kinh tế Quốc Dân</strong> với vai trò tiêu biểu là phụ trách công tác Đối Ngoại cho các sự kiện của <strong>Hội Sinh viên - Đại học Kinh tế Quốc dân</strong>.',
+            'Trải qua <strong>20 năm</strong> hoạt động, <strong>Ban Đối Ngoại</strong> đã không ngừng khẳng định vị thế của mình với chuyên môn chính gồm Mời tài trợ, Truyền thông báo chí, góp phần tạo nên thành công cho các chương trình bên trong và ngoài khuôn khổ Đại học.',
+            'Với phong thái tự tin chuyên nghiệp, <strong>Ban Đối Ngoại</strong> đã kết nối hàng trăm doanh nghiệp, báo đài với cộng đồng sinh viên, tham gia tổ chức <strong>200+ sự kiện</strong> ... Fanpage của Ban Đối Ngoại đã thu hút được <strong>37000+ lượt theo dõi</strong> từ các bạn sinh viên và các doanh nghiệp, tổ chức, đối tác đồng hành.',
+          ],
+      ctaLabel: value.intro?.ctaLabel ?? 'TÌM HIỂU THÊM',
+      ctaHref: value.intro?.ctaHref ?? 'https://www.facebook.com/bandoingoai.neu',
     },
     about: {
       ...value.about,
-      kicker: String(value.about?.kicker ?? '').trim().toUpperCase() === 'ROUND TO UNBOUND' ? '' : (value.about?.kicker || ''),
-      title: value.about?.title || 'TẦM NHÌN THƯƠNG HIỆU',
-      description: '<strong>TẦM NHÌN THƯƠNG HIỆU</strong> là cuộc thi giải case study đầu tiên về lĩnh vực <strong>Truyền thông thương hiệu</strong> được đặt nền móng bởi <strong>Ban Đối Ngoại - HSV - NEU</strong> với mục đích kết nối và khai phá tiềm năng sáng tạo của các bạn sinh viên trên địa bàn toàn quốc có niềm đam mê với lĩnh vực <strong>Truyền thông thương hiệu</strong> nói riêng và <strong>Marketing</strong> nói chung.',
+      kicker: value.about?.kicker ?? '',
+      title: value.about?.title ?? 'TẦM NHÌN THƯƠNG HIỆU',
+      description: value.about?.description ?? '<strong>TẦM NHÌN THƯƠNG HIỆU</strong> là cuộc thi giải case study đầu tiên về lĩnh vực <strong>Truyền thông thương hiệu</strong> được đặt nền móng bởi <strong>Ban Đối Ngoại - HSV - NEU</strong> với mục đích kết nối và khai phá tiềm năng sáng tạo của các bạn sinh viên trên địa bàn toàn quốc có niềm đam mê với lĩnh vực <strong>Truyền thông thương hiệu</strong> nói riêng và <strong>Marketing</strong> nói chung.',
       descriptionFontSize: Math.min(40, Math.max(10, Number(value.about?.descriptionFontSize) || 16)),
-      imageLabel: '',
-      paragraphsHtml: [
-        'Với lĩnh vực sáng tạo, độc đáo, chủ đề <strong>"TRUYỀN THÔNG THƯƠNG HIỆU"</strong> hứa hẹn sẽ đem lại cho các bạn thí sinh nhiều ý tưởng mới mẻ, đột phá cũng như giúp các Doanh nghiệp tận dụng và khai phá để phát triển thương hiệu của mình.',
-        'Sau bốn mùa tổ chức thành công, <strong>TẦM NHÌN THƯƠNG HIỆU CHÍNH THỨC QUAY TRỞ LẠI</strong> vào tháng 9 này, hứa hẹn mang lại giá trị sâu sắc cùng những thử thách đột phá giúp khơi dậy sức sáng tạo trong mỗi thí sinh đến với cuộc thi.',
-      ],
+      imageLabel: value.about?.imageLabel ?? '',
+      paragraphsHtml: Array.isArray(value.about?.paragraphsHtml)
+        ? value.about.paragraphsHtml
+        : [
+            'Với lĩnh vực sáng tạo, độc đáo, chủ đề <strong>"TRUYỀN THÔNG THƯƠNG HIỆU"</strong> hứa hẹn sẽ đem lại cho các bạn thí sinh nhiều ý tưởng mới mẻ, đột phá cũng như giúp các Doanh nghiệp tận dụng và khai phá để phát triển thương hiệu của mình.',
+            'Sau bốn mùa tổ chức thành công, <strong>TẦM NHÌN THƯƠNG HIỆU CHÍNH THỨC QUAY TRỞ LẠI</strong> vào tháng 9 này, hứa hẹn mang lại giá trị sâu sắc cùng những thử thách đột phá giúp khơi dậy sức sáng tạo trong mỗi thí sinh đến với cuộc thi.',
+          ],
       paragraphOneFontSize: Math.min(40, Math.max(10, Number(value.about?.paragraphOneFontSize) || 16)),
       paragraphTwoFontSize: Math.min(40, Math.max(10, Number(value.about?.paragraphTwoFontSize) || 16)),
-      statistics: [
-        { value: '2.000+', label: 'Thí sinh tham dự' },
-        { value: '700+', label: 'Đội thi đăng ký' },
-        { value: '60+', label: 'Trường Đại học, Cao đẳng trên cả nước' },
-        { value: '1.000.000+', label: 'Lượt tiếp cận trên các nền tảng trực tuyến' },
-        { value: '70+', label: 'Doanh nghiệp đối tác tiêu biểu' },
-        { value: '70+', label: 'Bài báo mạng và các đơn vị truyền thông uy tín' },
-      ],
+      statistics: Array.isArray(value.about?.statistics) ? value.about.statistics : [],
     },
     theme: {
       ...value.theme,
-      kicker: String(value.theme?.kicker ?? '').trim().toUpperCase() === 'TẦM NHÌN THƯƠNG HIỆU 2026' ? '' : (value.theme?.kicker || ''),
-      title: String(value.theme?.title ?? '').trim().toUpperCase() === 'CHỦ ĐỀ: ROUND TO UNBOUND'
-        ? 'CHỦ ĐỀ\nTẦM NHÌN THƯƠNG HIỆU 2026'
-        : (value.theme?.title || ''),
-      subtitle: value.theme?.subtitle || 'ROUND TO UNBOUND',
-      quote: String(value.theme?.quote ?? '').toLocaleLowerCase('vi-VN').includes('la bàn vận mệnh') ? '' : (value.theme?.quote || ''),
-      paragraphsHtml: [
-        'Giữa trung tâm đầy hỗn mang của thế giới công nghệ số, tồn tại một <strong>Chiếc la bàn vận mệnh</strong> định hướng mọi kết nối và duy trì nhịp vận hành của cả thế giới. Thế nhưng, vào khoảnh khắc nó ngừng xoay, mọi tín hiệu dần biến mất, mọi chuyển động mắc kẹt trong những vòng lặp vô định, đẩy thành phố vào trạng thái rối loạn chưa từng có. Muốn phá vỡ thế bế tắc ấy, cần những người đủ bản lĩnh tiến thẳng đến lõi của cỗ máy, chạm tay vào từng bánh răng và <strong>khởi động lại nhịp xoay của tương lai</strong>.',
-        'Mang trong mình tinh thần của các chiến binh, <strong>ROUND TO UNBOUND</strong> chính là hành trình của những <strong>Marketers</strong> dũng cảm trên con đường thoát khỏi giới hạn do chính kỷ nguyên số vô thức tạo nên. Họ lần theo những giá trị tưởng chừng quen thuộc, giải mã những tín hiệu từng bị bỏ quên và kết nối những khả năng vốn rời rạc để xoay chuyển <strong>Chiếc la bàn vận mệnh</strong>. Nhưng tái khởi động cỗ máy chưa bao giờ là đích đến cuối cùng. Bởi phía trước không chỉ là những giới hạn cần được phá vỡ, mà còn là những không gian mới đang chờ được mở ra. Tại <strong>Tầm Nhìn Thương Hiệu 2026</strong>, mỗi thí sinh được trao cơ hội mở ra một góc nhìn mới, tạo nên những điểm chạm khác biệt và kiến tạo những quỹ đạo mới cho <strong>Truyền thông Thương hiệu</strong>. Nếu đã sẵn sàng, đây chính là lúc để bạn cất lên tiếng nói và tạo ra những con đường mới cho hành trình của chính mình.',
-      ],
+      kicker: value.theme?.kicker ?? '',
+      title: value.theme?.title ?? '',
+      subtitle: value.theme?.subtitle ?? 'ROUND TO UNBOUND',
+      quote: value.theme?.quote ?? '',
+      paragraphsHtml: Array.isArray(value.theme?.paragraphsHtml) ? value.theme.paragraphsHtml : [],
     },
     rules: {
       ...value.rules,
-      cards: value.rules.cards.some((card) => card.items.includes('Thành viên Ban Tổ chức của Tầm Nhìn Thương Hiệu 2025.'))
-        ? [
-            { title: 'ĐỐI TƯỢNG THAM GIA', items: ['Sinh viên đang theo học tại các trường Đại học, Cao đẳng trên địa bàn toàn quốc.', 'Độ tuổi từ 18–24 tuổi; đã tốt nghiệp THPT hoặc vừa tốt nghiệp Đại học, Cao đẳng trong vòng 06 tháng.'] },
-            { title: 'ĐỐI TƯỢNG KHÔNG ĐƯỢC THAM GIA', items: ['Thành viên Ban Giám khảo, Ban Cố vấn và Diễn giả của cuộc thi.', 'Thí sinh dự thi Chung kết Tầm Nhìn Thương Hiệu 2025.', 'Thành viên Ban Tổ chức Tầm Nhìn Thương Hiệu 2025.', 'Thành viên Ban Tổ chức Tầm Nhìn Thương Hiệu 2026.'] },
-            { title: 'HÌNH THỨC DỰ THI', items: ['Thí sinh đăng ký dự thi theo đội với số lượng 03 người/đội.', 'Mỗi thí sinh chỉ được đăng ký dự thi với 01 đội duy nhất.'] },
-          ]
-        : value.rules.cards,
+      cards: value.rules.cards,
     },
     timeline: {
       ...value.timeline,
-      rounds: (value.timeline.rounds.some((round) => round.title === 'Vòng 1: Online Test' || String(round.description ?? '').startsWith('Top 27 đội thi xuất sắc nhất'))
-        ? [
-            { title: 'Vòng Khởi động: Brand Kickstart', date: '02/09 – 05/09', description: 'Vòng thi warm up cho chương trình nhằm tăng độ nhận diện cho Cuộc thi, kèm theo đó sẽ đáp ứng đề bài NTT Ra Đề. Thí sinh trình bày đề án dưới dạng 3-Page Proposal, từ đó chọn ra Top 2 xuất sắc nhất đi thẳng vào Vòng 2: Brand Campaign.' },
-            { title: 'Vòng 1: Brand Insight', date: '27/09 – 02/10', description: 'Từ đề bài, các đội thi hoàn thành bài đánh giá tổng quan thị trường, tình hình thương hiệu, chân dung khách hàng mục tiêu và mục tiêu tổng quát về chiến dịch truyền thông cho thương hiệu của mình. Thí sinh trình bày đề án dưới dạng 10-Page Proposal.' },
-            { title: 'Vòng 2: Brand Campaign', date: '09/10 – 14/10', description: 'Top 27 xuất sắc nhất sẽ có cơ hội bước vào Vòng 3 và tiếp tục hoàn thiện đề án kế hoạch truyền thông tích hợp của Doanh nghiệp.' },
-            { title: 'Vòng Chung kết: Grand Finale', date: '05/11', description: 'VIRAL CLIP\nCác đội hoàn thiện 01 Viral Clip với nội dung bám sát đề án và chiến dịch truyền thông của đội. BTC sẽ đăng tải sản phẩm lên Fanpage và Website chính thức của cuộc thi để thực hiện phần bình chọn công khai.\n\nĐÊM CHUNG KẾT\nPhần 1: Top 4 đội thi thuyết trình IMC Plan và trả lời câu hỏi phản biện từ Ban Giám khảo.\nPhần 2: Các đội nhận 01 minicase từ BTC trong 24 giờ trước Đêm Chung kết; tại sân khấu, Top 4 trình bày kế hoạch giải quyết tình huống và tham gia phản biện trực tiếp.' },
-          ]
-        : value.timeline.rounds).map((round) => ({
+      rounds: value.timeline.rounds.map((round) => ({
           ...round,
           title: String(round.title ?? ''),
           date: String(round.date ?? ''),
@@ -685,40 +658,10 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
         },
       ],
     },
-    prizes: /^50\.000\.000|^1XX|^XX/.test(`${value.prizes.totalValue}${value.prizes.cards[0]?.value ?? ''}`)
-      ? {
-          ...value.prizes,
-          totalValue: '18.000.000 ĐỒNG',
-          cards: [
-            { title: 'QUÁN QUÂN', value: '8.000.000 ĐỒNG', benefits: ['01 đội Quán quân'] },
-            { title: 'Á QUÂN', value: '5.000.000 ĐỒNG', benefits: ['01 đội Á quân'] },
-            { title: 'QUÝ QUÂN', value: '2.000.000 ĐỒNG/ĐỘI', benefits: ['02 đội Quý quân'] },
-            { title: 'ĐỘI ĐƯỢC YÊU THÍCH NHẤT', value: '1.000.000 ĐỒNG', benefits: ['01 đội'] },
-          ],
-        }
-      : value.prizes,
-    benefits: value.benefits.groups.some((group) => group.items.includes('Thí sinh cam kết các thông tin cung cấp là chính xác và tuân thủ pháp luật.'))
-      ? {
-          ...value.benefits,
-          groups: [
-            { title: 'QUY ĐỊNH CHUNG', items: ['BTC có quyền điều chỉnh thể lệ, thời gian và nội dung các vòng thi cũng như hoạt động bên lề trong trường hợp cần thiết, và sẽ thông báo đến thí sinh ít nhất 24 giờ trước khi áp dụng thay đổi.', 'BTC có quyền cung cấp bài thi của thí sinh đến Ban Giám khảo, các đơn vị Bảo trợ Chuyên môn và Nhà tài trợ.', 'BTC có quyền sử dụng thông tin và hình ảnh thí sinh nhằm mục đích quảng bá cuộc thi, trong phạm vi phù hợp và không vi phạm pháp luật.', 'BTC có quyền hủy bỏ kết quả của đội thi nếu phát hiện hành vi gian lận, chống đối hoặc không hợp tác trong quá trình dự thi.', 'BTC có trách nhiệm giải quyết kiến nghị, khiếu nại, đảm bảo quyền lợi chính đáng của thí sinh một cách khách quan, công bằng và minh bạch. Quyết định của BTC là quyết định cuối cùng.', 'BTC cam kết trao đầy đủ giải thưởng cho thí sinh theo đúng nội dung trong thể lệ.'] },
-            { title: 'QUYỀN LỢI THÍ SINH', items: ['Có cơ hội vận dụng kiến thức chuyên môn để giải quyết các bài toán thực tế từ thương hiệu.', 'Cơ hội mở rộng kiến thức, kết nối đa chiều qua chuỗi sự kiện Webinar, Information Day và Training Day, với sự đồng hành của các doanh nghiệp uy tín, các đơn vị đào tạo chuyên môn và đội ngũ giảng viên NEU.', 'Có cơ hội mở rộng tư duy, nâng tầm hiểu biết cùng chuỗi Training Day dành riêng cho các thí sinh.', 'Top 27 đội thi tham gia Vòng 2: IMC Plan sẽ nhận được đánh giá chi tiết từ đội ngũ ban giám khảo – những chuyên gia đầu ngành Truyền thông thương hiệu.', 'Top 4 chung cuộc sẽ nhận được sự đồng hành hướng dẫn từ các Mentor giàu kinh nghiệm chuyên môn.', 'Cơ cấu giải thưởng hấp dẫn cùng nhiều phần quà giá trị từ Ban Tổ chức và các đơn vị doanh nghiệp đồng hành.'] },
-          ],
-        }
-      : value.benefits,
+    prizes: value.prizes,
+    benefits: value.benefits,
     activities: (() => {
-      const activities = value.activities.cards.length < 4
-        ? {
-            ...value.activities,
-            kicker: '',
-            cards: [
-              { title: 'WEBINAR', date: '28/08', description: 'Hoạt động chia sẻ kiến thức Marketing chuyên sâu, tạo cơ hội kết nối người tham gia với các diễn giả và góp phần thu hút sự quan tâm của các thí sinh tiềm năng.', ctaLabel: 'RECAP HOẠT ĐỘNG', ctaHref: normalizeButtonHref(value.activities.cards[0]?.ctaHref) },
-              { title: 'INFORMATION DAY', date: '18/09', description: 'Cung cấp thông tin toàn diện về cuộc thi, đồng thời mang đến những chia sẻ và lời khuyên từ các chuyên gia Marketing, giúp thí sinh chuẩn bị tốt cho Vòng 1.', ctaLabel: 'ĐĂNG KÝ NGAY', ctaHref: normalizeButtonHref(value.activities.cards[1]?.ctaHref) },
-              { title: 'TRAINING DAY 1', date: '28/09', description: 'Các đội thi được trau dồi thêm kiến thức và kỹ năng cần thiết cho Vòng 1.', ctaLabel: 'TÌM HIỂU THÊM', ctaHref: '' },
-              { title: 'TRAINING DAY 2', date: '10/10', description: 'TOP 27 đội thi vượt qua Vòng 1 được huấn luyện kỹ năng chuyên sâu, chuẩn bị hành trang cho Vòng 2.', ctaLabel: 'TÌM HIỂU THÊM', ctaHref: '' },
-            ],
-          }
-        : value.activities
+      const activities = value.activities
 
       return {
         ...activities,
@@ -729,21 +672,13 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
         })),
       }
     })(),
-    faq: (value.faq.length < 5 || value.faq.some((item) => item.question === 'BTC có hỗ trợ thí sinh ghép đội không?' && String(item.answer ?? '').startsWith('Có.'))
-      ? [
-          { question: 'Thí sinh đăng ký tham gia cuộc thi có cần phải đóng lệ phí không?', answer: 'Không. Thí sinh không cần đóng bất kỳ khoản lệ phí nào khi đăng ký tham gia cuộc thi.' },
-          { question: 'BTC có hỗ trợ thí sinh ghép đội không?', answer: 'Không. Ban Tổ chức không hỗ trợ ghép đội. Thí sinh cần chủ động tìm kiếm và thành lập đội thi trước khi đăng ký.' },
-          { question: 'Khi nào đội thi được xác nhận đăng ký thành công?', answer: 'Đội thi sẽ nhận được email xác nhận đăng ký thành công từ Ban Tổ chức trong vòng 24 giờ kể từ khi hoàn tất đăng ký và thông tin được kiểm tra, xác nhận hợp lệ.' },
-          { question: 'Thí sinh lọt top bao nhiêu sẽ nhận được Certificate?', answer: 'Certificate sẽ được trao cho Top 25 đội thi của Vòng 1 và Top 2 đội thi của Vòng Khởi động.' },
-          { question: 'Nếu gặp sự cố trong quá trình tham gia thi, đội thi cần làm gì?', answer: 'Trong trường hợp gặp bất kỳ sự cố gì hoặc cần hỗ trợ trong quá trình tham gia cuộc thi, đội thi vui lòng liên hệ Ban Tổ chức qua Fanpage cuộc thi.' },
-        ]
-      : value.faq).map((item) => ({
+    faq: value.faq.map((item) => ({
         question: String(item.question ?? ''),
         answer: String(item.answer ?? ''),
       })),
     partners: {
       ...partnerContent,
-      kicker: '',
+      kicker: legacyPartners.kicker ?? '',
       organizerLogoScale: Math.min(200, Math.max(20, Number(legacyPartners.organizerLogoScale) || 80)),
       organizerPaddingTop: Math.min(300, Math.max(0, Number(legacyPartners.organizerPaddingTop) || 0)),
       organizerPaddingBottom: Math.min(300, Math.max(0, Number.isFinite(Number(legacyPartners.organizerPaddingBottom)) ? Number(legacyPartners.organizerPaddingBottom) : 40)),
@@ -758,31 +693,14 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
                 ? legacyOrganizerMarkers.map(normalizePartnerLogo)
                 : defaultOrganizerGroup.logos.map(normalizePartnerLogo),
             }
-        const isLegacyLogoBanner = organizerGroup.logos.length === 1
-          && String(organizerGroup.logos[0]?.image ?? '').endsWith('/04-organizations-transparent-v2.png')
-        const isEmptyOrganizerPlaceholders = organizerGroup.logos.length > 0
-          && organizerGroup.logos.every((logo) => !String(logo?.image ?? '').trim())
-        return isLegacyLogoBanner || isEmptyOrganizerPlaceholders
-          ? { ...defaultOrganizerGroup, logos: defaultOrganizerGroup.logos.map(normalizePartnerLogo) }
-          : organizerGroup
+        return organizerGroup
       })(),
       supportGroups: (() => {
-        const groups = (legacyPartners.supportGroups ?? [])
-          .map((group) => normalizePartnerGroup(group, 'NHÓM ĐỐI TÁC'))
-        const normalizedTitle = (group: PartnerGroup) => String(group.title ?? '').trim().toLocaleUpperCase('vi-VN')
-        const defaultGroups = [defaultGoldPartnerGroup, defaultBronzePartnerGroup, ...defaultStandalonePartnerGroups]
-        const defaultTitles = new Set(defaultGroups.map(normalizedTitle))
-        const knownGroups = defaultGroups.map((defaultGroup) => {
-          const matchingGroup = groups.find((group) => (
-            normalizedTitle(group) === normalizedTitle(defaultGroup)
-          ))
-          return matchingGroup ?? normalizePartnerGroup(defaultGroup, defaultGroup.title)
-        })
-        const customGroups = groups.filter((group) => !defaultTitles.has(normalizedTitle(group)))
-        return [
-          ...knownGroups,
-          ...customGroups,
-        ]
+        if (Array.isArray(legacyPartners.supportGroups)) {
+          return legacyPartners.supportGroups.map((group) => normalizePartnerGroup(group, 'NHÓM ĐỐI TÁC'))
+        }
+        return [defaultGoldPartnerGroup, defaultBronzePartnerGroup, ...defaultStandalonePartnerGroups]
+          .map((group) => normalizePartnerGroup(group, group.title))
       })(),
     },
     footer: {
@@ -792,16 +710,10 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
       footerLogoScale: Math.min(300, Math.max(100, Number(legacy.footer?.footerLogoScale) || 220)),
       contactFontSize: Math.min(28, Math.max(12, Number(legacy.footer?.contactFontSize) || 18)),
       contactNameFontSize: Math.min(28, Math.max(12, Number(legacy.footer?.contactNameFontSize) || 17)),
-      contactLines: legacy.footer?.contactLines?.length ? legacy.footer.contactLines : defaultFooter.contactLines,
-      socials: (legacy.footer?.socials?.length ? legacy.footer.socials : defaultFooter.socials).map((social, index) => ({
+      contactLines: Array.isArray(legacy.footer?.contactLines) ? legacy.footer.contactLines : defaultFooter.contactLines,
+      socials: (Array.isArray(legacy.footer?.socials) ? legacy.footer.socials : defaultFooter.socials).map((social) => ({
         ...social,
-        href: social.href === '#'
-          ? [
-              'https://www.facebook.com/tamnhinthuonghieu.neu',
-              'https://www.facebook.com/groups/403557561880905/',
-              'https://www.tiktok.com/@tamnhinthuonghieu_neu',
-            ][index] || social.href
-          : social.href,
+        href: social.href,
       })),
     },
     settings: normalizedSettings,
