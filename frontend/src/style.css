@@ -5375,9 +5375,19 @@ a {
 }
 
 @media (max-width: 767px) {
+  .voice-slide-image {
+    border: 0;
+  }
+
+  .voice-slide-image img {
+    object-fit: contain;
+    object-position: center;
+  }
+
   .voice-card {
     min-height: 0;
     grid-template-columns: 1fr;
+    border: 0;
     border-radius: 26px;
   }
 
@@ -5385,6 +5395,8 @@ a {
   .voice-card__portrait img {
     height: 210px;
     min-height: 210px;
+    object-fit: contain;
+    object-position: center top;
   }
 
   .voice-card__copy {
@@ -5707,9 +5719,40 @@ a {
     padding: 0 0 25px;
   }
 
-.voices-carousel .carousel-control-prev,
+  .voices-carousel .carousel-control-prev,
   .voices-carousel .carousel-control-next {
-    width: 13%;
+    top: 105px;
+    bottom: auto;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: linear-gradient(145deg, rgba(22, 55, 122, .92), rgba(58, 102, 185, .82));
+    border: 1px solid rgba(167, 241, 255, .78);
+    border-radius: 50%;
+    box-shadow: 0 8px 22px rgba(2, 12, 46, .42), inset 0 1px rgba(255, 255, 255, .22), 0 0 15px rgba(92, 225, 255, .2);
+    backdrop-filter: blur(8px);
+    transform: translateY(-50%);
+    opacity: 1;
+    z-index: 4;
+  }
+
+  .voices-carousel .carousel-control-prev {
+    left: 10px !important;
+  }
+
+  .voices-carousel .carousel-control-next {
+    right: 10px !important;
+  }
+
+  .voices-carousel .carousel-control-prev-icon,
+  .voices-carousel .carousel-control-next-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .partner-voices-section .voices-carousel .carousel-control-prev,
+  .partner-voices-section .voices-carousel .carousel-control-next {
+    top: calc(50% - 12px);
   }
 
   .footer-contact-card {

@@ -61,6 +61,7 @@ const sections: EditorSection[] = [
   { id: 'about', label: 'Giới thiệu cuộc thi', hint: 'Thông tin tổng quan' },
   { id: 'metrics', label: 'Số liệu nổi bật', hint: 'Icon và các con số' },
   { id: 'voices', label: 'Slider giám khảo', hint: 'Chia sẻ từ giám khảo, thí sinh' },
+  { id: 'partnerVoices', label: 'Slider đối tác', hint: 'Tầm nhìn thương hiệu với đối tác' },
   { id: 'theme', label: 'Chủ đề', hint: 'Poster và diễn giải' },
   { id: 'rules', label: 'Thể lệ', hint: 'Các thẻ quy định' },
   { id: 'timeline', label: 'Timeline', hint: 'Các vòng và thời gian' },
@@ -176,6 +177,7 @@ const selectedModel = computed<unknown>({
       }
       case 'metrics': return { statistics: value.about.statistics, statisticIcon: value.assets.statisticIcon }
       case 'voices': return value.voices
+      case 'partnerVoices': return value.partnerVoices
       case 'theme': return { ...value.theme, themePoster: value.assets.themePoster }
       case 'rules': return value.rules
       case 'timeline': return { ...value.timeline, timelineBackground: value.assets.timelineBackground, compassOverlay: value.assets.compassOverlay }
@@ -240,6 +242,7 @@ const selectedModel = computed<unknown>({
         site.value.assets.statisticIcon = String(value.statisticIcon ?? '')
         break
       case 'voices': site.value.voices = value as unknown as SiteContent['voices']; break
+      case 'partnerVoices': site.value.partnerVoices = value as unknown as SiteContent['partnerVoices']; break
       case 'theme': {
         const { themePoster, ...theme } = value
         site.value.theme = theme as SiteContent['theme']

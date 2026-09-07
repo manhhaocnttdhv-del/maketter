@@ -82,6 +82,7 @@ export type SectionKey =
   | 'about'
   | 'metrics'
   | 'voices'
+  | 'partnerVoices'
   | 'theme'
   | 'rules'
   | 'timeline'
@@ -216,6 +217,10 @@ export interface SiteContent {
     title: string
     slides: Testimonial[]
   }
+  partnerVoices: {
+    title: string
+    slides: Testimonial[]
+  }
   theme: {
     kicker: string
     title: string
@@ -282,7 +287,7 @@ export interface SiteContent {
 }
 
 export const sectionKeys: SectionKey[] = [
-  'hero', 'intro', 'about', 'metrics', 'voices', 'theme', 'rules', 'timeline', 'customContent',
+  'hero', 'intro', 'about', 'metrics', 'voices', 'partnerVoices', 'theme', 'rules', 'timeline', 'customContent',
   'prizes', 'benefits', 'activities', 'partners', 'faq', 'footer',
 ]
 
@@ -349,6 +354,7 @@ export const defaultSiteSettings: SiteSettings = {
     about: makeSectionSettings(),
     metrics: makeSectionSettings({ paddingTop: 44, paddingBottom: 48 }),
     voices: makeSectionSettings({ paddingTop: 48, paddingBottom: 54, containerWidth: 1180 }),
+    partnerVoices: makeSectionSettings({ paddingTop: 48, paddingBottom: 54, containerWidth: 1180 }),
     theme: makeSectionSettings(),
     rules: makeSectionSettings(),
     timeline: makeSectionSettings(),
@@ -434,6 +440,11 @@ const defaultVoices: SiteContent['voices'] = {
       quote: '',
     },
   ],
+}
+
+const defaultPartnerVoices: SiteContent['partnerVoices'] = {
+  title: 'TẦM NHÌN THƯƠNG HIỆU\nVỚI ĐỐI TÁC',
+  slides: defaultVoices.slides.map((slide) => ({ ...slide })),
 }
 
 const defaultFooter: SiteContent['footer'] = {
@@ -573,6 +584,11 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
         const quote = String(s.quote || '')
         return name || role || quote ? { image, name, role, quote } : { image }
       }),
+    },
+    partnerVoices: {
+      ...defaultPartnerVoices,
+      ...(legacy.partnerVoices ?? {}),
+      slides: (legacy.partnerVoices?.slides?.length ? legacy.partnerVoices.slides : defaultPartnerVoices.slides).map((slide) => ({ ...slide })),
     },
     hero: {
       ...value.hero,
