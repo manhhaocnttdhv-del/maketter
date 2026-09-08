@@ -91,8 +91,25 @@ const headerContainerStyle = computed(() => ({
   '--header-font-size': `${headerSettings.value.fontSize}px`,
 }))
 
-const closeMobileNavigation = () => {
+const navigateTo = (target: string) => {
   isNavigationOpen.value = false
+  activeNavigationTarget.value = target
+
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      const section = document.getElementById(target)
+      if (!section) return
+
+      section.scrollIntoView({
+        behavior: props.preview ? 'auto' : 'smooth',
+        block: 'start',
+      })
+
+      if (!props.preview && window.location.hash !== `#${target}`) {
+        window.history.replaceState(null, '', `#${target}`)
+      }
+    })
+  })
 }
 
 onMounted(() => {
@@ -111,7 +128,7 @@ onBeforeUnmount(() => {
     <div class="event-frame">
       <header v-if="headerSettings.enabled" data-editor-section="header" class="event-nav navbar navbar-expand-md" :class="{ 'event-nav--inline': !headerSettings.sticky }" :style="headerStyle">
         <div class="event-nav__inner container" :style="headerContainerStyle">
-          <a href="#top" class="event-mark" :aria-label="site.meta.title" @click="closeMobileNavigation">
+          <a href="#top" class="event-mark" :aria-label="site.meta.title" @click.prevent="navigateTo('top')">
             <img :src="site.assets.headerLogo" alt="Logo Tầm Nhìn Thương Hiệu" />
           </a>
           <button
@@ -127,7 +144,7 @@ onBeforeUnmount(() => {
           </button>
           <div id="eventNavigation" class="collapse navbar-collapse" :class="{ show: isNavigationOpen }">
             <ul class="navbar-nav ms-auto align-items-lg-center">
-              <li v-for="item in site.navigation" :key="item.target" class="nav-item"><a class="nav-link" :class="{ active: activeNavigationTarget === item.target }" :href="`#${item.target}`" :aria-current="activeNavigationTarget === item.target ? 'page' : undefined" @click="closeMobileNavigation">{{ item.label }}</a></li>
+              <li v-for="item in site.navigation" :key="item.target" class="nav-item"><a class="nav-link" :class="{ active: activeNavigationTarget === item.target }" :href="`#${item.target}`" :aria-current="activeNavigationTarget === item.target ? 'page' : undefined" @click.prevent="navigateTo(item.target)">{{ item.label }}</a></li>
             </ul>
           </div>
         </div>

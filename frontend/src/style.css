@@ -5529,7 +5529,7 @@ a {
   grid-column: span 2;
   min-width: 0;
   min-height: 0;
-  aspect-ratio: 1.72 / 1;
+  aspect-ratio: 1 / 1;
   margin: 0;
   padding: 0;
   display: flex;
@@ -5587,7 +5587,7 @@ a {
 .partner-showcase-logo--cover {
   min-height: 0;
   padding: 0;
-  aspect-ratio: 1.72 / 1;
+  aspect-ratio: 1 / 1;
   background: transparent;
   border: 2px solid rgba(151, 226, 255, .82);
   box-shadow: 0 7px 16px rgba(0, 8, 38, .3);
@@ -5671,7 +5671,7 @@ a {
 
 .editor-device-frame.is-mobile .partner-showcase-logo {
   grid-column: span 2;
-  aspect-ratio: 1.55 / 1;
+  aspect-ratio: 1 / 1;
 }
 
 .editor-device-frame.is-mobile .partner-showcase-logo:last-child:nth-child(odd) {
@@ -5707,13 +5707,13 @@ a {
     grid-column: span 2;
     min-height: 0;
     padding: 0;
-    aspect-ratio: 1.55 / 1;
+    aspect-ratio: 1 / 1;
     border-radius: 10px;
   }
 
   .partner-showcase-logo--cover {
     padding: 0;
-    aspect-ratio: 1.55 / 1;
+    aspect-ratio: 1 / 1;
   }
 
   .partner-showcase-logo:last-child:nth-child(odd) {
