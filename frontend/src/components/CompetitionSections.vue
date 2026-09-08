@@ -69,6 +69,9 @@ const footerContacts = computed(() => props.site.footer.contactLines.map((line) 
   }
 }))
 
+const partnerShowcaseLogos = computed(() => (props.site.partnerVoices.logos ?? [])
+  .filter((logo) => Boolean(logo.image?.trim())))
+
 const timelineDescriptionHtml = (description = '') => String(description || '')
   .split('\n')
   .map((line) => {
@@ -430,26 +433,20 @@ onBeforeUnmount(() => {
         <div v-if="site.partnerVoices.title" class="partner-showcase-heading reveal">
           <h2>{{ site.partnerVoices.title }}</h2>
         </div>
-        <div class="partner-showcase-board reveal">
-          <div class="partner-showcase-board__header">
-            <span aria-hidden="true"></span>
-            <h3>{{ site.partnerVoices.badge }}</h3>
-            <span aria-hidden="true"></span>
-          </div>
+        <div v-if="partnerShowcaseLogos.length" class="partner-showcase-board reveal">
           <div class="partner-showcase-grid" role="list" aria-label="Danh sách doanh nghiệp từng hợp tác">
             <article
-              v-for="(logo, index) in site.partnerVoices.logos"
+              v-for="(logo, index) in partnerShowcaseLogos"
               :key="`${logo.name}-${index}`"
               class="partner-showcase-logo"
+              :class="{ 'partner-showcase-logo--cover': logo.display === 'cover' }"
               role="listitem"
             >
               <a v-if="logo.href" :href="logo.href" target="_blank" rel="noopener noreferrer">
-                <img v-if="logo.image" :src="logo.image" :alt="logo.name || `Đối tác ${index + 1}`" loading="lazy" />
-                <span v-else class="partner-showcase-logo__empty">Chèn logo</span>
+                <img :src="logo.image" :alt="logo.name || `Đối tác ${index + 1}`" loading="lazy" />
               </a>
               <div v-else>
-                <img v-if="logo.image" :src="logo.image" :alt="logo.name || `Đối tác ${index + 1}`" loading="lazy" />
-                <span v-else class="partner-showcase-logo__empty">Chèn logo</span>
+                <img :src="logo.image" :alt="logo.name || `Đối tác ${index + 1}`" loading="lazy" />
               </div>
             </article>
           </div>

@@ -63,6 +63,7 @@ export interface PartnerLogo {
   image: string
   name: string
   href?: string
+  display?: 'contain' | 'cover'
 }
 
 export interface PartnerGroup {
@@ -519,6 +520,7 @@ const normalizePartnerLogo = (value: unknown): PartnerLogo => {
     image: String(logo.image ?? logo.logo ?? ''),
     name: String(logo.name ?? logo.label ?? 'Logo'),
     href: logo.href ? String(logo.href) : undefined,
+    display: logo.display === 'cover' ? 'cover' : undefined,
   }
 }
 
@@ -591,7 +593,10 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
         slides?: unknown[]
       }
       const legacySlideLogos = Array.isArray(partnerVoices.slides)
-        ? partnerVoices.slides.map(normalizePartnerLogo)
+        ? partnerVoices.slides.map((slide) => ({
+            ...normalizePartnerLogo(slide),
+            display: 'cover' as const,
+          }))
         : []
       const migratedLogos = legacySlideLogos.length
         ? [

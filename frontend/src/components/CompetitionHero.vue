@@ -9,8 +9,7 @@ const props = defineProps<{
 }>()
 
 const now = ref(Date.now())
-const navigationCollapse = ref<HTMLElement | null>(null)
-const navigationToggle = ref<HTMLButtonElement | null>(null)
+const isNavigationOpen = ref(false)
 let intervalId: ReturnType<typeof setInterval> | undefined
 const activeNavigationTarget = ref('top')
 
@@ -93,9 +92,7 @@ const headerContainerStyle = computed(() => ({
 }))
 
 const closeMobileNavigation = () => {
-  const element = navigationCollapse.value
-  if (!element?.classList.contains('show')) return
-  navigationToggle.value?.click()
+  isNavigationOpen.value = false
 }
 
 onMounted(() => {
@@ -117,10 +114,18 @@ onBeforeUnmount(() => {
           <a href="#top" class="event-mark" :aria-label="site.meta.title" @click="closeMobileNavigation">
             <img :src="site.assets.headerLogo" alt="Logo Tầm Nhìn Thương Hiệu" />
           </a>
-          <button ref="navigationToggle" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#eventNavigation" aria-controls="eventNavigation" aria-label="Mở điều hướng">
+          <button
+            class="navbar-toggler"
+            :class="{ collapsed: !isNavigationOpen }"
+            type="button"
+            aria-controls="eventNavigation"
+            :aria-expanded="isNavigationOpen"
+            :aria-label="isNavigationOpen ? 'Đóng điều hướng' : 'Mở điều hướng'"
+            @click="isNavigationOpen = !isNavigationOpen"
+          >
             <span></span><span></span><span></span>
           </button>
-          <div id="eventNavigation" ref="navigationCollapse" class="collapse navbar-collapse">
+          <div id="eventNavigation" class="collapse navbar-collapse" :class="{ show: isNavigationOpen }">
             <ul class="navbar-nav ms-auto align-items-lg-center">
               <li v-for="item in site.navigation" :key="item.target" class="nav-item"><a class="nav-link" :class="{ active: activeNavigationTarget === item.target }" :href="`#${item.target}`" :aria-current="activeNavigationTarget === item.target ? 'page' : undefined" @click="closeMobileNavigation">{{ item.label }}</a></li>
             </ul>
