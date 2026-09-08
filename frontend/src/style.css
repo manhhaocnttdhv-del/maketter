@@ -2202,7 +2202,7 @@ a {
   overflow: hidden;
   color: rgba(220, 242, 255, .66);
   background: rgba(19, 55, 124, .5);
-  border: 1px dashed rgba(159, 224, 255, .44);
+  border: 1px solid rgba(159, 224, 255, .44);
   border-radius: 14px;
   font-size: 11px;
   font-weight: 800;
