@@ -69,6 +69,9 @@ const footerContacts = computed(() => props.site.footer.contactLines.map((line) 
   }
 }))
 
+const partnerShowcaseLogos = computed(() => (props.site.partnerVoices.logos ?? [])
+  .filter((logo) => Boolean(logo.image?.trim())))
+
 const timelineDescriptionHtml = (description = '') => String(description || '')
   .split('\n')
   .map((line) => {
@@ -152,10 +155,8 @@ const stopGalleryAutoplay = () => {
 
 let orgCarouselInstance: Carousel | null = null
 let voicesCarouselInstance: Carousel | null = null
-let partnerVoicesCarouselInstance: Carousel | null = null
 let orgAutoplayId: ReturnType<typeof window.setInterval> | undefined
 let voicesAutoplayId: ReturnType<typeof window.setInterval> | undefined
-let partnerVoicesAutoplayId: ReturnType<typeof window.setInterval> | undefined
 const activeRoundIndex = ref(0)
 let timelineAutoplayId: ReturnType<typeof window.setInterval> | undefined
 
@@ -213,18 +214,6 @@ const stopVoicesAutoplay = () => {
   }
 }
 
-const startPartnerVoicesAutoplay = () => {
-  if (partnerVoicesAutoplayId) clearInterval(partnerVoicesAutoplayId)
-  partnerVoicesAutoplayId = window.setInterval(() => partnerVoicesCarouselInstance?.next(), 2200)
-}
-
-const stopPartnerVoicesAutoplay = () => {
-  if (partnerVoicesAutoplayId) {
-    clearInterval(partnerVoicesAutoplayId)
-    partnerVoicesAutoplayId = undefined
-  }
-}
-
 const startOrgAutoplay = () => {
   if (orgAutoplayId) clearInterval(orgAutoplayId)
   orgAutoplayId = window.setInterval(() => {
@@ -264,17 +253,6 @@ const initCarousels = () => {
     voicesCarouselInstance.cycle()
   }
 
-  const partnerVoicesEl = root.value?.querySelector('#partnerVoicesCarousel')
-  if (partnerVoicesEl) {
-    partnerVoicesCarouselInstance = Carousel.getOrCreateInstance(partnerVoicesEl, {
-      interval: 2200,
-      ride: 'carousel',
-      wrap: true,
-      pause: false,
-      touch: true,
-    })
-    partnerVoicesCarouselInstance.cycle()
-  }
 }
 
 onMounted(() => {
@@ -284,7 +262,6 @@ onMounted(() => {
     startGalleryAutoplay()
     startOrgAutoplay()
     startVoicesAutoplay()
-    startPartnerVoicesAutoplay()
     startTimelineAutoplay()
 
     const revealElements = root.value?.querySelectorAll<HTMLElement>('.reveal') ?? []
@@ -318,11 +295,9 @@ onBeforeUnmount(() => {
   stopGalleryAutoplay()
   stopOrgAutoplay()
   stopVoicesAutoplay()
-  stopPartnerVoicesAutoplay()
   stopTimelineAutoplay()
   orgCarouselInstance?.dispose()
   voicesCarouselInstance?.dispose()
-  partnerVoicesCarouselInstance?.dispose()
 })
 </script>
 
@@ -452,21 +427,29 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
-    <section v-if="isEnabled('partnerVoices')" data-editor-section="partnerVoices" class="content-section voices-section partner-voices-section section-deep-blue" :class="classFor('partnerVoices')" :style="styleFor('partnerVoices')">
+    <section v-if="isEnabled('partnerVoices')" data-editor-section="partnerVoices" class="content-section partner-showcase-section section-deep-blue" :class="classFor('partnerVoices')" :style="styleFor('partnerVoices')">
       <div class="section-transition" aria-hidden="true"></div>
       <div class="container px-4 px-lg-5">
-        <div class="text-center voices-heading reveal"><h2>{{ site.partnerVoices.title }}</h2></div>
-        <div id="partnerVoicesCarousel" class="carousel slide carousel-fade voices-carousel reveal" data-bs-ride="carousel" data-bs-interval="2200" data-bs-pause="false">
-          <div class="carousel-inner">
-            <div v-for="(voice, index) in site.partnerVoices.slides" :key="`${voice.image}-${index}`" class="carousel-item" :class="{ active: index === 0 }">
-              <figure class="voice-slide-image">
-                <img v-if="voice.image" :src="voice.image" :alt="`Tầm nhìn thương hiệu với đối tác - ảnh ${index + 1}`" />
-              </figure>
-            </div>
+        <div v-if="site.partnerVoices.title" class="partner-showcase-heading reveal">
+          <h2>{{ site.partnerVoices.title }}</h2>
+        </div>
+        <div v-if="partnerShowcaseLogos.length" class="partner-showcase-board reveal">
+          <div class="partner-showcase-grid" role="list" aria-label="Danh sách doanh nghiệp từng hợp tác">
+            <article
+              v-for="(logo, index) in partnerShowcaseLogos"
+              :key="`${logo.name}-${index}`"
+              class="partner-showcase-logo"
+              :class="{ 'partner-showcase-logo--cover': logo.display === 'cover' }"
+              role="listitem"
+            >
+              <a v-if="logo.href" :href="logo.href" target="_blank" rel="noopener noreferrer">
+                <img :src="logo.image" :alt="logo.name || `Đối tác ${index + 1}`" loading="lazy" />
+              </a>
+              <div v-else>
+                <img :src="logo.image" :alt="logo.name || `Đối tác ${index + 1}`" loading="lazy" />
+              </div>
+            </article>
           </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#partnerVoicesCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span><span class="visually-hidden">Trước</span></button>
-          <button class="carousel-control-next" type="button" data-bs-target="#partnerVoicesCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span><span class="visually-hidden">Sau</span></button>
-          <div class="carousel-indicators"><button v-for="(_, index) in site.partnerVoices.slides" :key="index" type="button" data-bs-target="#partnerVoicesCarousel" :data-bs-slide-to="index" :class="{ active: index === 0 }" :aria-label="`Slide ${index + 1}`"></button></div>
         </div>
       </div>
     </section>

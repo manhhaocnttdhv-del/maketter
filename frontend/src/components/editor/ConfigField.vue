@@ -65,6 +65,7 @@ const labels: Record<string, string> = {
   ctaHref: 'URL của nút',
   paragraphsHtml: 'Các đoạn nội dung (hỗ trợ HTML)',
   kicker: 'Dòng dẫn nhỏ',
+  badge: 'Tiêu đề trong khung logo',
   imageLabel: 'Chữ trên ảnh',
   statistics: 'Các số liệu',
   value: 'Giá trị',

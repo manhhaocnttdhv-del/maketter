@@ -9,6 +9,7 @@ const props = defineProps<{
 }>()
 
 const now = ref(Date.now())
+const isNavigationOpen = ref(false)
 let intervalId: ReturnType<typeof setInterval> | undefined
 const activeNavigationTarget = ref('top')
 
@@ -90,6 +91,27 @@ const headerContainerStyle = computed(() => ({
   '--header-font-size': `${headerSettings.value.fontSize}px`,
 }))
 
+const navigateTo = (target: string) => {
+  isNavigationOpen.value = false
+  activeNavigationTarget.value = target
+
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      const section = document.getElementById(target)
+      if (!section) return
+
+      section.scrollIntoView({
+        behavior: props.preview ? 'auto' : 'smooth',
+        block: 'start',
+      })
+
+      if (!props.preview && window.location.hash !== `#${target}`) {
+        window.history.replaceState(null, '', `#${target}`)
+      }
+    })
+  })
+}
+
 onMounted(() => {
   updateActiveNavigation()
   if (!props.preview) window.addEventListener('scroll', updateActiveNavigation, { passive: true })
@@ -106,15 +128,23 @@ onBeforeUnmount(() => {
     <div class="event-frame">
       <header v-if="headerSettings.enabled" data-editor-section="header" class="event-nav navbar navbar-expand-md" :class="{ 'event-nav--inline': !headerSettings.sticky }" :style="headerStyle">
         <div class="event-nav__inner container" :style="headerContainerStyle">
-          <a href="#top" class="event-mark" :aria-label="site.meta.title">
+          <a href="#top" class="event-mark" :aria-label="site.meta.title" @click.prevent="navigateTo('top')">
             <img :src="site.assets.headerLogo" alt="Logo Tầm Nhìn Thương Hiệu" />
           </a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#eventNavigation" aria-controls="eventNavigation" aria-label="Mở điều hướng">
+          <button
+            class="navbar-toggler"
+            :class="{ collapsed: !isNavigationOpen }"
+            type="button"
+            aria-controls="eventNavigation"
+            :aria-expanded="isNavigationOpen"
+            :aria-label="isNavigationOpen ? 'Đóng điều hướng' : 'Mở điều hướng'"
+            @click="isNavigationOpen = !isNavigationOpen"
+          >
             <span></span><span></span><span></span>
           </button>
-          <div id="eventNavigation" class="collapse navbar-collapse">
+          <div id="eventNavigation" class="collapse navbar-collapse" :class="{ show: isNavigationOpen }">
             <ul class="navbar-nav ms-auto align-items-lg-center">
-              <li v-for="item in site.navigation" :key="item.target" class="nav-item"><a class="nav-link" :class="{ active: activeNavigationTarget === item.target }" :href="`#${item.target}`" :aria-current="activeNavigationTarget === item.target ? 'page' : undefined">{{ item.label }}</a></li>
+              <li v-for="item in site.navigation" :key="item.target" class="nav-item"><a class="nav-link" :class="{ active: activeNavigationTarget === item.target }" :href="`#${item.target}`" :aria-current="activeNavigationTarget === item.target ? 'page' : undefined" @click.prevent="navigateTo(item.target)">{{ item.label }}</a></li>
             </ul>
           </div>
         </div>

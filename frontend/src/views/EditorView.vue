@@ -61,7 +61,7 @@ const sections: EditorSection[] = [
   { id: 'about', label: 'Giới thiệu cuộc thi', hint: 'Thông tin tổng quan' },
   { id: 'metrics', label: 'Số liệu nổi bật', hint: 'Icon và các con số' },
   { id: 'voices', label: 'Slider giám khảo', hint: 'Chia sẻ từ giám khảo, thí sinh' },
-  { id: 'partnerVoices', label: 'Slider đối tác', hint: 'Tầm nhìn thương hiệu với đối tác' },
+  { id: 'partnerVoices', label: 'Doanh nghiệp hợp tác', hint: 'Bảng logo 4 cột · hỗ trợ tải nhiều ảnh' },
   { id: 'theme', label: 'Chủ đề', hint: 'Poster và diễn giải' },
   { id: 'rules', label: 'Thể lệ', hint: 'Các thẻ quy định' },
   { id: 'timeline', label: 'Timeline', hint: 'Các vòng và thời gian' },

@@ -62,6 +62,8 @@ export interface PartnerLevel {
 export interface PartnerLogo {
   image: string
   name: string
+  href?: string
+  display?: 'contain' | 'cover'
 }
 
 export interface PartnerGroup {
@@ -219,7 +221,8 @@ export interface SiteContent {
   }
   partnerVoices: {
     title: string
-    slides: Testimonial[]
+    badge: string
+    logos: PartnerLogo[]
   }
   theme: {
     kicker: string
@@ -450,7 +453,11 @@ const defaultVoices: SiteContent['voices'] = {
 
 const defaultPartnerVoices: SiteContent['partnerVoices'] = {
   title: 'TẦM NHÌN THƯƠNG HIỆU\nVỚI ĐỐI TÁC',
-  slides: defaultVoices.slides.map((slide) => ({ ...slide })),
+  badge: 'DOANH NGHIỆP TỪNG HỢP TÁC',
+  logos: Array.from({ length: 12 }, (_, index) => ({
+    image: '',
+    name: `Đối tác ${index + 1}`,
+  })),
 }
 
 const defaultFooter: SiteContent['footer'] = {
@@ -512,6 +519,8 @@ const normalizePartnerLogo = (value: unknown): PartnerLogo => {
   return {
     image: String(logo.image ?? logo.logo ?? ''),
     name: String(logo.name ?? logo.label ?? 'Logo'),
+    href: logo.href ? String(logo.href) : undefined,
+    display: logo.display === 'cover' ? 'cover' : undefined,
   }
 }
 
@@ -579,11 +588,34 @@ export const normalizeSiteContent = (value: SiteContent): SiteContent => {
         return name || role || quote ? { image, name, role, quote } : { image }
       }),
     },
-    partnerVoices: {
-      ...defaultPartnerVoices,
-      ...(legacy.partnerVoices ?? {}),
-      slides: (Array.isArray(legacy.partnerVoices?.slides) ? legacy.partnerVoices.slides : defaultPartnerVoices.slides).map((slide) => ({ ...slide })),
-    },
+    partnerVoices: (() => {
+      const partnerVoices = (legacy.partnerVoices ?? {}) as Partial<SiteContent['partnerVoices']> & {
+        slides?: unknown[]
+      }
+      const legacySlideLogos = Array.isArray(partnerVoices.slides)
+        ? partnerVoices.slides.map((slide) => ({
+            ...normalizePartnerLogo(slide),
+            display: 'cover' as const,
+          }))
+        : []
+      const migratedLogos = legacySlideLogos.length
+        ? [
+            ...legacySlideLogos,
+            ...Array.from({ length: Math.max(0, 12 - legacySlideLogos.length) }, (_, index) => ({
+              image: '',
+              name: `Đối tác ${legacySlideLogos.length + index + 1}`,
+            })),
+          ]
+        : defaultPartnerVoices.logos.map((logo) => ({ ...logo }))
+
+      return {
+        title: String(partnerVoices.title ?? defaultPartnerVoices.title),
+        badge: String(partnerVoices.badge ?? defaultPartnerVoices.badge),
+        logos: Array.isArray(partnerVoices.logos) && partnerVoices.logos.length
+          ? partnerVoices.logos.map(normalizePartnerLogo)
+          : migratedLogos,
+      }
+    })(),
     hero: {
       ...value.hero,
       tagline: value.hero?.tagline ?? '',
