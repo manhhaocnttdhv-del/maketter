@@ -471,6 +471,7 @@ const defaultFooter: SiteContent['footer'] = {
   contactTitle: 'Kênh liên hệ:',
   contactLines: [
     'Trưởng Ban Tổ chức: 0369218999 (Nguyễn Thị Minh Hiền)',
+    'Trưởng Ban Chuyên môn: 0823328086 (Nguyễn Ngọc Bảo Anh)',
     'Trưởng Ban Truyền thông: 0822446348 (Nguyễn Trần Lâm Hoàng)',
   ],
   socials: [
